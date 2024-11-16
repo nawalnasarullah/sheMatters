@@ -27,6 +27,11 @@ export const error = (err, req, res, next )=>{
         error.message = message;
     }
 
+    if (err.name === 'TokenExpiredError') {
+        const message = 'Token has expired'
+        error.message = message;
+      }
+
     res.json({
         success: false,
         message: error.message || "Some kinda error!! :("

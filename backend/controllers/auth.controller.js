@@ -1,6 +1,7 @@
 import { User } from "../models/user.model.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import sendEmail from "../services/emailService.js";
 
 export default class Auth {
 
@@ -83,6 +84,60 @@ export default class Auth {
         });
     } catch (error) {
       next(error);
+    }
+  }
+
+  async forgotPassword(req, res, next) {
+    const { email } = req.body;
+    if (!email) return next(new Error("Please provide an email"));
+    const user = await User.findOne({ email });
+    if (!user) return next(new Error("User not found"));
+
+    const token = jwt.sign({ id: user._id, email: user.email,type: 'password-reset' }, process.env.JWT_SECRET, { expiresIn: '15m' });
+
+    const resetLink = `${process.env.CLIENT_URL}/resetPassword?token=${token}`;
+    user.resetPasswordToken = token;
+    user.resetPasswordExpires = Date.now() + 15 * 60 * 1000;
+    await user.save();
+
+    await sendEmail(user.email, resetLink);
+    
+
+    res.json({
+      success: true,
+      message: "Password reset link sent to your email",
+  });
+  }
+
+  async resetPassword(req, res, next) {
+    const { token, newPassword } = req.body;
+
+    if (!token || !newPassword) return next(new Error("Token and new password are required"));
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        if (decoded.type !== 'password-reset') {
+          return next(new Error('Invalid token type'));
+        }
+        const user = await User.findOne({
+          _id: decoded.id,
+          resetPasswordToken: token,
+          resetPasswordExpires: { $gt: Date.now() },
+        });
+
+        if (!user) return next(new Error("Invalid or expired token"));
+
+        user.password = await bcrypt.hash(newPassword, 10);
+        user.resetPasswordToken = undefined;
+        user.resetPasswordExpires = undefined;
+        await user.save();
+
+        res.json({
+            success: true,
+            message: "Password has been reset successfully",
+        });
+    } catch (error) {
+        next(error);
     }
   }
 }

@@ -50,7 +50,9 @@ const userSchema = new Schema({
 
   avatar : {
     type: String
-  }
+  },
+  resetPasswordToken: String,
+  resetPasswordExpires: Date,
 });
 
 export const User = mongoose.model("user", userSchema);
