@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useLoginUserMutation } from "../redux/api/authApi";
 import { useRegisterUserMutation } from "../redux/api/authApi";
@@ -138,7 +138,7 @@ function Login() {
   });
 
   return (
-    <div className={`container ${isSignUpMode ? "sign-up-mode" : ""}`}>
+    <div className={`div-container container ${isSignUpMode ? "sign-up-mode" : ""}`}>
       <ToastContainer
         position="top-center"
         autoClose={5000}
@@ -197,6 +197,10 @@ function Login() {
             <button type="submit" className="btn solid">
               Login
             </button>
+            <Link 
+                to="/forgotPassword" className="my-2 text-[12px] hover:text-primaryHover transition duration-300">
+              Forgot Password? Click Here
+            </Link>
           </form>
 
           {/* Sign Up Form */}

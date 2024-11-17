@@ -110,6 +110,7 @@ export default class Auth {
   }
 
   async resetPassword(req, res, next) {
+    console.log("Received request to reset password:", req.body);
     const { token, newPassword } = req.body;
 
     if (!token || !newPassword) return next(new Error("Token and new password are required"));

@@ -242,7 +242,9 @@ function NavBar() {
                 <ArrowDropDownRoundedIcon />
               </Button>
               <Button>For Business</Button>
-              <Button>Log in</Button>
+              <Button component={Link}
+                to="/login"
+              >Log in</Button>
               <Button
                 component={Link}
                 to="/login"
@@ -303,7 +305,8 @@ function NavBar() {
               <ArrowDropDownRoundedIcon />
             </Button>
             <Button>For Business</Button>
-            <Button>Log in</Button>
+            <Button component={Link}
+                to="/login">Log in</Button>
             <Button
               component={Link}
               to="/login"

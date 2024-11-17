@@ -33,13 +33,21 @@ app.use(express.urlencoded({limit: '50mb'}));
 app.use('/', authRoutes);
 app.use('/', userRoutes);
 
-app.use('*', (req, res, next)=>{
-    res.json({
-        message: "Some kinda error!! :("
-    })
-})
+// app.use('*', (req, res, next)=>{
+//     res.json({
+//         message: "Some kinda error!! :("
+//     })
+// })
 
 app.use(error)
+
+app.use((err, req, res, next) => {
+    console.error(err);
+    res.status(500).json({
+        success: false,
+        message: err.message || "An unexpected error occurred.",
+    });
+});
 
 app.listen(process.env.PORT, ()=>{
     console.log(`Server is running on port ${process.env.PORT}`);

@@ -22,6 +22,22 @@ export const authApi = createApi({
         body: data,
       }),
     }),
+
+    forgotPassword: builder.mutation({
+      query: (email) => ({
+        url: "auth/forgotPassword",
+        method: "POST",
+        body: { email },
+      }),
+    }),
+
+    resetPassword: builder.mutation({
+      query: ({ token, newPassword }) => ({
+        url: "auth/resetPassword",
+        method: "POST",
+        body: { token, newPassword },
+      }),
+    }),
     getMe: builder.query({
       query: () => "me",
       async onQueryStarted(arg, {dispatch, queryFulfilled}) {
@@ -46,4 +62,5 @@ export const authApi = createApi({
   }),
 });
 
-export const { useLoginUserMutation, useRegisterUserMutation, useGetMeQuery, useLazyLogoutQuery } = authApi;
+export const { useLoginUserMutation, useRegisterUserMutation,  useForgotPasswordMutation,
+  useResetPasswordMutation, useGetMeQuery, useLazyLogoutQuery } = authApi;

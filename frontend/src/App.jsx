@@ -4,6 +4,8 @@ import { createBrowserRouter } from "react-router-dom";
 import './App.css'
 import Login from './components/Login';
 import NavBar from './components/NavBar';
+import ForgotPassword from './components/ForgotPassword';
+import ResetPassword from './components/ResetPassword';
 
 
 
@@ -14,6 +16,8 @@ function App() {
       <Route>
         <Route path="/" element={<NavBar />} />
         <Route path="/login" element={<Login/>} />
+        <Route path="/forgotPassword" element={<ForgotPassword/>} />
+        <Route path="/resetPassword" element={<ResetPassword/>} />
       </Route>
     )
   )
