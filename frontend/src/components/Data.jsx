@@ -44,7 +44,7 @@ export const testimonials = [
     },
     {
       name: "Diana",
-      text: "I like that my Talkspace therapist is always checking up on me through text. She refers back to the issues we talked about last time.",
+      text: "I like that my Talkspace therapist is always checking up on me through text.",
       img: "/images/p4.jpg",
     },
     {

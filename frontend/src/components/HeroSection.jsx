@@ -7,7 +7,7 @@ import TherapyCard from "./TherapyCard";
 function HeroSection() {
   return (
     <ThemeProvider theme={theme}>
-      <Container className="mt-12">
+      <Container className="mt-12 mb-4">
         <Typography
           className="flex md:flex-row flex-col items-center justify-center"
           variant="h2"

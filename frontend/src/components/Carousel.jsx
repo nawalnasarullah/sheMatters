@@ -33,7 +33,7 @@ function Carousel() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Container className="mt-10">
+      <Container className="mt-12">
         <div>
           <Typography
             className="flex md:flex-row flex-col items-center justify-center"
@@ -49,8 +49,8 @@ function Carousel() {
               <div
                 key={index}
                 className={`testimonial-card rounded-lg ${
-                  index % 2 === 0 ? "mt-2" : "mt-8"
-                }  p-6 flex flex-col justify-between items-center`}
+                  index % 2 === 0 ? "mt-4" : "mt-12"
+                }  p-7 mb-5 flex flex-col justify-between items-center`}
               >
                 <img
                   src={testimonial.img}
@@ -74,7 +74,7 @@ function Carousel() {
         </div>
       </Container>
 
-      <div className="bg-primary mt-8 p-8">
+      <div className="bg-primary mt-16 p-8">
         <Container>
           <Typography
             className="flex md:flex-row flex-col items-center justify-center"
