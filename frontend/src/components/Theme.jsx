@@ -14,6 +14,9 @@ const theme = createTheme({
       dark: '#005368',
       light:'rgba(0, 92, 101, 0.04)'
     },
+    secondary: {
+      main: '#FCEAEA'
+    }
   },
   typography: {
     fontFamily: '"Khula", sans-serif', 
@@ -21,6 +24,9 @@ const theme = createTheme({
       fontFamily: '"Signika", sans-serif',
     },
     h2: {
+      fontFamily: '"Signika", sans-serif',
+    },
+    h5: {
       fontFamily: '"Signika", sans-serif',
     },
     body1: {

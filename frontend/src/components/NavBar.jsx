@@ -90,7 +90,9 @@ function NavBar() {
                 flexGrow: 1,
               }}
             >
-              <img src="/images/logo.svg" alt="Talkspace Logo" />
+              <Typography variant="h5" color="primary.main" sx={{ fontWeight: 600,  lineHeight: 1.2,  letterSpacing: "0.5px", fontSize: "1.6rem", }}>
+                SheMatters
+              </Typography>
             </Box>
 
             {/* Mobile size top right toggle drawer button */}

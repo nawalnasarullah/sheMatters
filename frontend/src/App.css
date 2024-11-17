@@ -9,12 +9,14 @@
   --black: #000;
   --white: #ffff;
   --web-primary: #005c65;
+  --web-secondary: #FCEAEA;
   --web-primary-hover: #004654;
   --dark-primary: #005368;
   --input-bg: #f0f0f0;
   --grey: #acacac;
   --brownish-grey: #aaa;
   --input-clr: #f0f0f0;
+
 
 
   --primary-font: "Signika", sans-serif;
@@ -395,6 +397,18 @@ form.sign-in-form {
     bottom: 28%;
     left: 50%;
   }
+}
+ 
+
+.hero-card {
+  cursor: pointer;
+}
+
+ .hero-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease-in-out;
+  background-color: #FCEAEA;
 }
 
 

@@ -6,6 +6,7 @@ import Login from './components/Login';
 import NavBar from './components/NavBar';
 import ForgotPassword from './components/ForgotPassword';
 import ResetPassword from './components/ResetPassword';
+import Home from './components/Home';
 
 
 
@@ -14,7 +15,7 @@ function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route>
-        <Route path="/" element={<NavBar />} />
+        <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login/>} />
         <Route path="/forgotPassword" element={<ForgotPassword/>} />
         <Route path="/resetPassword" element={<ResetPassword/>} />
