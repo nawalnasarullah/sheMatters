@@ -402,13 +402,24 @@ form.sign-in-form {
 
 .hero-card {
   cursor: pointer;
+  transition: transform 0.3s ease-in-out;
 }
 
  .hero-card:hover {
   transform: scale(1.05);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s ease-in-out;
-  background-color: #FCEAEA;
+  background-color: var(--web-secondary);
+}
+
+.testimonial-card {
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, background-color 0.3s ease-in-out;
+}
+
+.testimonial-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  background-color: var(--web-secondary);
 }
 
 

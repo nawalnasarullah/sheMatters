@@ -20,7 +20,7 @@ function HeroSection() {
 
         <TherapyCard />
       </Container>
-      <div className="bg-primary mt-8 p-8">
+      <div className="bg-primary mt-12 p-8">
         <Container>
           <Typography
             className="flex md:flex-row flex-col items-center justify-center"

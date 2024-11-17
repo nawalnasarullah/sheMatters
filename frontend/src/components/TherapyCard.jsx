@@ -16,7 +16,7 @@ function TherapyCard() {
             <Typography variant="h6" component="div" className="font-bold">
               {item.title}
             </Typography>
-            <Typography variant="body2" color="text.secondary" className="mb-2">
+            <Typography variant="body2" color="text.secondary" >
               {item.description}
             </Typography>
             <Button variant="text">
