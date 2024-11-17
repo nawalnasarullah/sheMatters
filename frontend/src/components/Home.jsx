@@ -2,6 +2,7 @@ import React from 'react'
 import NavBar from './NavBar'
 import HeroSection from './HeroSection'
 import Carousel from './Carousel'
+import WhySheMatters from './WhySheMatters'
 
 function Home() {
   return (
@@ -9,6 +10,7 @@ function Home() {
     <NavBar/>
     <HeroSection/>
     <Carousel/>
+    <WhySheMatters/>
     </>
   )
 }

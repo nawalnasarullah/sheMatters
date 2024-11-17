@@ -58,3 +58,24 @@ export const testimonials = [
       img: "/images/p6.jpg",
     },
   ];
+
+export  const reasons = [
+    {
+      id: 1,
+      title: "Online Psychological Care",
+      description:
+        "We're in-network with most major plans, and you can check your coverage in minutes. You can also pay out-of-pocket.",
+    },
+    {
+      id: 2,
+      title: "Get matched with a therapist",
+      description:
+        "Answer a few questions online and we'll match you with a licensed provider.",
+    },
+    {
+      id: 3,
+      title: "Start therapy",
+      description:
+        "Communicate with your therapist through live sessions, messaging, or both.",
+    },
+  ];
