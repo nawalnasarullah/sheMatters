@@ -18,8 +18,14 @@ import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import ArrowDropDownRoundedIcon from "@mui/icons-material/ArrowDropDownRounded";
 import theme from "./Theme";
 import { Link } from "react-router-dom";
+import { useGetMeQuery } from "../redux/api/authApi";
+import { useSelector } from "react-redux";
 
 function NavBar() {
+
+  const { data } = useGetMeQuery();
+  const {user, isAuthenticated} = useSelector(state => state.auth);
+  
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -244,9 +250,11 @@ function NavBar() {
                
               </Button>
               {/* <Button>For Business</Button> */}
-              <Button component={Link}
-                to="/login"
-              >Log in</Button>
+              {isAuthenticated ? <Button component={Link}
+                to="/"
+              >Log out</Button> : <Button component={Link}
+              to="/login"
+            >Log in</Button>}
               <Button
                 component={Link}
                 to="/login"
@@ -307,8 +315,10 @@ function NavBar() {
               
             </Button>
             {/* <Button>For Business</Button> */}
-            <Button component={Link}
+            {isAuthenticated ? <Button component={Link}
+                to="/">Log Out</Button> : <Button component={Link}
                 to="/login">Log in</Button>
+            }
             <Button
               component={Link}
               to="/login"
