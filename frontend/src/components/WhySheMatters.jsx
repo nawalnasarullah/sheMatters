@@ -27,7 +27,7 @@ function WhySheMatters() {
           {/* Text Section */}
           <div className="space-y-6 max-w-md">
             {reasons.map((reason) => (
-              <Card key={reason.id} className="border shadow-sm rounded-lg">
+              <Card key={reason.id} className="reason-card border shadow-sm rounded-lg">
                 <CardContent>
                   <Typography
                     variant="h6"

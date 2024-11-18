@@ -241,9 +241,9 @@ function NavBar() {
                 }}
               >
                 For Clinicians
-                <ArrowDropDownRoundedIcon />
+               
               </Button>
-              <Button>For Business</Button>
+              {/* <Button>For Business</Button> */}
               <Button component={Link}
                 to="/login"
               >Log in</Button>
@@ -304,9 +304,9 @@ function NavBar() {
             </Button>
             <Button>
               For Clinicians
-              <ArrowDropDownRoundedIcon />
+              
             </Button>
-            <Button>For Business</Button>
+            {/* <Button>For Business</Button> */}
             <Button component={Link}
                 to="/login">Log in</Button>
             <Button

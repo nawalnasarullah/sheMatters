@@ -91,7 +91,7 @@ export default class Auth {
     const { email } = req.body;
     if (!email) return next(new Error("Please provide an email"));
     const user = await User.findOne({ email });
-    if (!user) return next(new Error("User not found"));
+    if (!user) return next(new Error("Email not registered"));
 
     const token = jwt.sign({ id: user._id, email: user.email,type: 'password-reset' }, process.env.JWT_SECRET, { expiresIn: '15m' });
 

@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "./Theme";
 import { useForgotPasswordMutation } from "../redux/api/authApi";
-import { useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router";
 
 function ForgotPassword() {
   const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
   const [forgotPassword] = useForgotPasswordMutation();
 
@@ -14,13 +16,28 @@ function ForgotPassword() {
     e.preventDefault();
     try {
       const response = await forgotPassword(email).unwrap();
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000);
+      console.log(response);
+
       if (response.success) {
-        setMessage("Check your email for a password reset link.");
+        toast.success(response.message);
+        
+      } else {
+        toast.error(response.message || "An unexpected error occurred.");
       }
     } catch (error) {
-      setMessage("Failed to send reset link. Please try again.");
+      console.error(error);
+      if (error?.data?.message) {
+        toast.error(error.data.message);
+      } else {
+        toast.error("An error occurred. Please try again.");
+      }
     }
+
   };
+
   return (
     <ThemeProvider theme={theme}>
       <div className="container mt-36">
@@ -28,7 +45,6 @@ function ForgotPassword() {
           <h2 className="title font-primaryFont">Forgot Password?</h2>
           <h2 className=" font-primaryFont">Enter your email</h2>
 
-          {/* Email Input */}
           <div className="input-field">
             <i className="fas fa-envelope" />
             <input
@@ -45,11 +61,19 @@ function ForgotPassword() {
             Send Reset Link
           </button>
         </form>
-        {message && (
-          <p className="text-center flex justify-center items-center">
-            {message}
-          </p>
-        )}
+
+        <ToastContainer
+          position="top-center"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
       </div>
     </ThemeProvider>
   );
