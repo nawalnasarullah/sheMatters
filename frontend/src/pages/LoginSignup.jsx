@@ -8,7 +8,7 @@ import { useRegisterUserMutation } from "../redux/api/authApi";
 import { setUserInfo } from "../redux/features/authSlice";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-function Login() {
+function LoginSignup() {
   const [isSignUpMode, setIsSignUpMode] = useState(false);
 
   const handleSignUpClick = () => {
@@ -393,4 +393,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default LoginSignup;

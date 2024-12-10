@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { ThemeProvider } from '@mui/material/styles';
-import theme from './Theme';
+import theme from '../components/Theme';
 import { useResetPasswordMutation } from '../redux/api/authApi';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -44,6 +44,10 @@ function ResetPassword() {
         toast.error('Failed to reset password. Please try again.');
       }
     }
+
+    // Reset the form after successful password reset
+    setNewPassword('');
+    setConfirmPassword('');
   };
 
   return (

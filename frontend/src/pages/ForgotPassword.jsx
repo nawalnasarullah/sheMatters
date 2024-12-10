@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ThemeProvider } from "@mui/material/styles";
-import theme from "./Theme";
+import theme from "../components/Theme";
 import { useForgotPasswordMutation } from "../redux/api/authApi";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
