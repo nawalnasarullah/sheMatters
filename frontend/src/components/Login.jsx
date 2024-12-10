@@ -69,7 +69,14 @@ function Login() {
         )
         .required("Email is required")
         .trim(),
-      password: Yup.string().required("Password is required").trim(),
+      // password: Yup.string().required("Password is required").trim(),
+      password: Yup.string()
+        .matches(
+          /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
+          "Minimum eight characters, at least one letter, one number and one special character"
+        )
+        .required("password is required")
+        .trim(),
       cPassword: Yup.string()
         .oneOf([Yup.ref("password"), null], "Passwords must match") // Ensure passwords match
         .required("Confirm Password is required")
@@ -115,8 +122,14 @@ function Login() {
         )
         .required("Email is required")
         .trim(),
-      // password: Yup.string().matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/, 'Minimum eight characters, at least one letter, one number and one special character').required('password is required').trim(),
-      password: Yup.string().required("Password is required").trim(),
+      password: Yup.string()
+        .matches(
+          /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
+          "Minimum eight characters, at least one letter, one number and one special character"
+        )
+        .required("password is required")
+        .trim(),
+      // password: Yup.string().required("Password is required").trim(),
     }),
     onSubmit: async (values) => {
       const res = await loginUser(values).unwrap();
@@ -128,7 +141,7 @@ function Login() {
         toast.success(res.message, {
           progressClassName: "toast-progress-success",
         });
-        navigate('/');
+        navigate("/");
       } else {
         toast.error(res.message);
       }
@@ -138,7 +151,11 @@ function Login() {
   });
 
   return (
-    <div className={`div-container container ${isSignUpMode ? "sign-up-mode" : ""}`}>
+    <div
+      className={`div-container container ${
+        isSignUpMode ? "sign-up-mode" : ""
+      }`}
+    >
       <ToastContainer
         position="top-center"
         autoClose={5000}
@@ -197,8 +214,10 @@ function Login() {
             <button type="submit" className="btn solid">
               Login
             </button>
-            <Link 
-                to="/forgotPassword" className="my-2 text-[12px] hover:text-primaryHover transition duration-300">
+            <Link
+              to="/forgotPassword"
+              className="my-2 text-[12px] hover:text-primaryHover transition duration-300"
+            >
               Forgot Password? Click Here
             </Link>
           </form>
