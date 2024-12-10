@@ -18,13 +18,16 @@ import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import ArrowDropDownRoundedIcon from "@mui/icons-material/ArrowDropDownRounded";
 import theme from "./Theme";
 import { Link } from "react-router-dom";
-import { useGetMeQuery } from "../redux/api/authApi";
+import { useGetMeQuery, useLazyLogoutQuery } from "../redux/api/authApi";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 function NavBar() {
 
   const { data } = useGetMeQuery();
   const {user, isAuthenticated} = useSelector(state => state.auth);
+  const[logout] = useLazyLogoutQuery();
+  const  navigate  = useNavigate();
   
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -46,6 +49,12 @@ function NavBar() {
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
+
+  const handleLogout = async () => {
+    const res = await logout().unwrap()
+    console.log("logout", res);
+    navigate(0);
+  }
 
   const open = Boolean(anchorEl);
 
@@ -250,7 +259,7 @@ function NavBar() {
                
               </Button>
               {/* <Button>For Business</Button> */}
-              {isAuthenticated ? <Button component={Link}
+              {isAuthenticated ? <Button onClick={handleLogout} component={Link}
                 to="/"
               >Log out</Button> : <Button component={Link}
               to="/login"
@@ -315,7 +324,7 @@ function NavBar() {
               
             </Button>
             {/* <Button>For Business</Button> */}
-            {isAuthenticated ? <Button component={Link}
+            {isAuthenticated ? <Button onClick={handleLogout} component={Link}
                 to="/">Log Out</Button> : <Button component={Link}
                 to="/login">Log in</Button>
             }

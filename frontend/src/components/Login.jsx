@@ -69,14 +69,14 @@ function Login() {
         )
         .required("Email is required")
         .trim(),
-      // password: Yup.string().required("Password is required").trim(),
-      password: Yup.string()
-        .matches(
-          /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
-          "Minimum eight characters, at least one letter, one number and one special character"
-        )
-        .required("password is required")
-        .trim(),
+      password: Yup.string().required("Password is required").trim(),
+      // password: Yup.string()
+      //   .matches(
+      //     /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
+      //     "Minimum eight characters, at least one letter, one number and one special character"
+      //   )
+      //   .required("password is required")
+      //   .trim(),
       cPassword: Yup.string()
         .oneOf([Yup.ref("password"), null], "Passwords must match") // Ensure passwords match
         .required("Confirm Password is required")
@@ -122,14 +122,14 @@ function Login() {
         )
         .required("Email is required")
         .trim(),
-      password: Yup.string()
-        .matches(
-          /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
-          "Minimum eight characters, at least one letter, one number and one special character"
-        )
-        .required("password is required")
-        .trim(),
-      // password: Yup.string().required("Password is required").trim(),
+      // password: Yup.string()
+      //   .matches(
+      //     /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
+      //     "Minimum eight characters, at least one letter, one number and one special character"
+      //   )
+      //   .required("password is required")
+      //   .trim(),
+      password: Yup.string().required("Password is required").trim(),
     }),
     onSubmit: async (values) => {
       const res = await loginUser(values).unwrap();

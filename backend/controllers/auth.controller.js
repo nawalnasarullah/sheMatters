@@ -79,7 +79,7 @@ export default class Auth {
         .cookie("auth_token", null, { expiresIn: Date().now })
         .json({
           success: true,
-          token,
+          // token,
           message: "You are logged out"
         });
     } catch (error) {
@@ -111,34 +111,32 @@ export default class Auth {
 
   async resetPassword(req, res, next) {
     console.log("Received request to reset password:", req.body);
-    const { token, newPassword } = req.body;
+  const { token, newPassword } = req.body;
 
-    if (!token || !newPassword) return next(new Error("Token and new password are required"));
+  if (!newPassword) return next(new Error("New password is required"));
 
-    try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        if (decoded.type !== 'password-reset') {
-          return next(new Error('Invalid token type'));
-        }
-        const user = await User.findOne({
-          _id: decoded.id,
-          resetPasswordToken: token,
-          resetPasswordExpires: { $gt: Date.now() },
-        });
+  try {
+    const { id } = req.decoded; // Use decoded data from middleware
 
-        if (!user) return next(new Error("Invalid or expired token"));
+    const user = await User.findOne({
+      _id: id,
+      resetPasswordToken: token,
+      resetPasswordExpires: { $gt: Date.now() },
+    });
 
-        user.password = await bcrypt.hash(newPassword, 10);
-        user.resetPasswordToken = undefined;
-        user.resetPasswordExpires = undefined;
-        await user.save();
+    if (!user) return next(new Error("Invalid token or user not found"));
 
-        res.json({
-            success: true,
-            message: "Password has been reset successfully",
-        });
-    } catch (error) {
-        next(error);
-    }
+    user.password = await bcrypt.hash(newPassword, 10);
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+    await user.save();
+
+    res.json({
+      success: true,
+      message: "Password has been reset successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
   }
 }
