@@ -7,6 +7,8 @@ import ResetPassword from "./pages/ResetPassword";
 import Home from "./pages/Home";
 import Layout from "./components/Layout";
 import LoginSignUp from "./pages/LoginSignup";
+import UserProfile from "./pages/UserProfile";
+import ForClinicians from "./pages/ForClinicians";
 
 function App() {
   const router = createBrowserRouter(
@@ -14,10 +16,12 @@ function App() {
       <Route>
         <Route path="/" element={<Layout />}>
           <Route path="/" element={<Home />} />
+          <Route path="/clinicians" element={<ForClinicians />} />
         </Route>
         <Route path="/login" element={<LoginSignUp />} />
         <Route path="/forgotPassword" element={<ForgotPassword />} />
         <Route path="/resetPassword" element={<ResetPassword />} />
+        <Route path="/userProfile" element={<UserProfile />} />
       </Route>
     )
   );

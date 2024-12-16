@@ -16,6 +16,10 @@ const theme = createTheme({
     },
     secondary: {
       main: '#FCEAEA'
+    },
+    grey: {
+      main: '#acacac',
+      brownish: '#aaa'
     }
   },
   typography: {

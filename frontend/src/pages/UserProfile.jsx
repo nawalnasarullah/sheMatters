@@ -1,8 +1,14 @@
 import React from 'react'
+import SideBar from '../components/SideBar'
+import ProfileNav from '../components/ProfileNav'
+
 
 function UserProfile() {
   return (
-    <div>UserProfile</div>
+    <>
+   <SideBar/>
+   <ProfileNav/>
+    </>
   )
 }
 

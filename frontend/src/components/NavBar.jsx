@@ -80,7 +80,7 @@ function NavBar() {
             >
               <Button
                 component={Link}
-                to="/login"
+                to={isAuthenticated ? "/userProfile" : "/login"}
                 variant="contained"
                 sx={{
                   backgroundColor: "primary.main",
@@ -92,7 +92,7 @@ function NavBar() {
                   fontSize: "14px",
                 }}
               >
-                Get therapy
+                {isAuthenticated ? "Profile" : "Get Therapy"}
               </Button>
             </Box>
 
@@ -248,6 +248,8 @@ function NavBar() {
                 </Box>
               </Menu>
               <Button
+                component={Link}
+                to="/clinicians"
                 sx={{
                   "&:hover": {
                     backgroundColor: "rgba(0, 92, 101, 0.04)",
@@ -266,7 +268,7 @@ function NavBar() {
             >Log in</Button>}
               <Button
                 component={Link}
-                to="/login"
+                to={isAuthenticated ? "/userProfile" : "/login"}
                 variant="contained"
                 sx={{
                   backgroundColor: "primary.main",
@@ -276,7 +278,7 @@ function NavBar() {
                   color: "white",
                 }}
               >
-                Get therapy
+                {isAuthenticated ? "Profile" : "Get Therapy"}
               </Button>
             </Box>
           </Toolbar>
@@ -319,7 +321,10 @@ function NavBar() {
               Services
               <ArrowDropDownRoundedIcon />
             </Button>
-            <Button>
+            <Button
+              component={Link}
+              to="/clinicians"
+              >
               For Clinicians
               
             </Button>
@@ -330,7 +335,7 @@ function NavBar() {
             }
             <Button
               component={Link}
-              to="/login"
+              to={isAuthenticated ? "/userProfile" : "/login"}
               variant="contained"
               sx={{
                 backgroundColor: "primary.main",
@@ -340,7 +345,7 @@ function NavBar() {
                 color: "white.main",
               }}
             >
-              Get therapy
+              {isAuthenticated ? "Profile" : "Get Therapy"}
             </Button>
           </Box>
         </Drawer>

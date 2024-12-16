@@ -12,7 +12,9 @@ module.exports = {
         primary: '#005c65', 
         primaryHover: '#004654',  
         primaryDark: '#005368', 
-        secondary: '#FCEAEA',  
+        secondary: '#FCEAEA', 
+        grey: '#acacac',
+        brownishGrey: '#aaa', 
       },
       fontFamily: {
         primaryFont: ['Signika', 'sans-serif'], 
