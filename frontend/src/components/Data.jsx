@@ -25,7 +25,7 @@ export const cardData = [
     description: "Therapy for married women to address relationship challenges",
     cta: "Get started",
     img: "/images/c3.svg",
-    link: "/married",
+    link: "/marital",
   },
   {
     title: "Motherhood Support",
@@ -148,6 +148,60 @@ export const whySheMattersData = {
     ],
     imageSrc: "/images/teen-page.gif",
   },
+
+  Marital: {
+    title: "How",
+    highlight: "We Support You in Your Marriage?",
+    data: [
+      {
+        id: 1,
+        title: "Flexible Scheduling",
+        description:
+          "Access therapy sessions that fit around your family, work, and personal life – no added pressure.",
+      },
+      {
+        id: 2,
+        title: "Marriage-Specific Therapists",
+        description:
+          "Our therapists specialize in helping wives navigate the unique challenges of marriage and relationships.",
+      },
+      {
+        id: 3,
+        title: "Support Tailored to You",
+        description:
+          "Receive personalized care designed to address your unique relationship needs and emotional journey.",
+      },
+    ],
+    imageSrc: "/images/Wedding.gif",
+  },
+
+  Motherhood: {
+    title: "How",
+    highlight: "We Support You Through Motherhood?",
+    data: [
+      {
+        id: 1,
+        title: "Flexible Scheduling",
+        description:
+          "Get therapy sessions that fit into your busy schedule as a mother, balancing work, family, and self-care.",
+      },
+      {
+        id: 2,
+        title: "Motherhood-Specific Therapists",
+        description:
+          "Our therapists understand the emotional challenges mothers face and provide support tailored to your needs.",
+      },
+      {
+        id: 3,
+        title: "Your Journey, Your Way",
+        description:
+          "Receive care that acknowledges your motherhood journey and supports you in finding balance and peace.",
+      },
+    ],
+    imageSrc: "/images/Motherhood.gif",
+  },
+  
+  
 };
 
 export const benefits = [
@@ -205,5 +259,27 @@ export const heroSectionData = {
     buttonLink: "/login",
     imgSrc: "/images/teens.svg",
     footerText: "It's okay to not be okay, as long as you are not giving up.",
+  },
+  Marital: {
+    heading1: "Online Therapy",
+  heading2: "for",
+  heading3: "Wives",
+  content:
+    "A private space where you can share your thoughts, emotions, and struggles, and receive compassionate support from a licensed therapist specializing in marital challenges faced by wives.",
+  buttonText: "Start Your Healing Journey",
+  buttonLink: "/login",
+  imgSrc: "/images/c3.svg",
+  footerText: "Taking care of yourself is the first step to healing and growth.",
+  },
+  Motherhood: {
+    heading1: "Online Therapy",
+    heading2: "for",
+    heading3: "Mothers",
+    content:
+      "A safe and supportive space where you can share the challenges of motherhood, find comfort, and receive guidance from a licensed therapist who understands the unique emotional needs of mothers.",
+    buttonText: "Start Your Journey",
+    buttonLink: "/login",
+    imgSrc: "/images/motherhood.svg",
+    footerText: "You are doing your best, and that’s enough.",
   },
 };

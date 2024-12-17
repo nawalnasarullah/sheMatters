@@ -13,6 +13,8 @@ import AccountInformation from "./pages/AccountInformation";
 import DashboardLayout from "./components/DashboardLayout";
 import IndividualTherapy from "./pages/IndividualTherapy";
 import TeensTherapy from "./pages/TeensTherapy";
+import Maritaltherapy from "./pages/MaritalTherapy";
+import MotherhoodTherapy from "./pages/MotherhoodTherapy";
 
 function App() {
   const router = createBrowserRouter(
@@ -23,6 +25,8 @@ function App() {
           <Route path="/clinicians" element={<ForClinicians />} />
           <Route path="/individual" element={<IndividualTherapy />} />
           <Route path="/teens" element={<TeensTherapy />} />
+          <Route path="/marital" element={<Maritaltherapy />} />
+          <Route path="/motherhood" element={<MotherhoodTherapy />} />
         </Route>
         <Route path="/login" element={<LoginSignUp />} />
         <Route path="/forgotPassword" element={<ForgotPassword />} />
