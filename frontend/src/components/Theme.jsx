@@ -12,14 +12,17 @@ const theme = createTheme({
       main: '#005c65',
       hover:'#004654',
       dark: '#005368',
+      darker: '#003a40',
       light:'rgba(0, 92, 101, 0.04)'
+
     },
     secondary: {
       main: '#FCEAEA'
     },
     grey: {
       main: '#acacac',
-      brownish: '#aaa'
+      brownish: '#aaa',
+      light: '#f8f8f8'
     }
   },
   typography: {

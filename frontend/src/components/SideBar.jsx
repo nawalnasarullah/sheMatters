@@ -12,6 +12,7 @@ import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import EventNoteRoundedIcon from "@mui/icons-material/EventNoteRounded";
+import LibraryBooksRoundedIcon from '@mui/icons-material/LibraryBooksRounded';
 import { Link } from "react-router-dom";
 import { useGetMeQuery, useLazyLogoutQuery } from "../redux/api/authApi";
 import { useSelector } from "react-redux";
@@ -53,12 +54,11 @@ function SideBar() {
           <Box
             sx={{
               display: "flex",
-              justifyContent: "space-between", // Push items to far ends
+              justifyContent: "space-between", 
               alignItems: "center",
-              padding: "10px 16px", // Adjust padding for spacing
-              backgroundColor: "white", // Match the drawer background
-              borderBottom: "1px solid #e0e0e0", // Optional: subtle border
-              position: "sticky", // Keep it at the top
+              padding: "10px 16px", 
+              backgroundColor: "white", 
+              position: "sticky",
               top: 0,
               zIndex: 1200,
             }}
@@ -68,7 +68,7 @@ function SideBar() {
               color="primary.main"
               sx={{
                 fontWeight: 600,
-                marginLeft: "10px", // Adjust spacing for small screens
+                marginLeft: "10px", 
               }}
             >
               SheMatters
@@ -78,7 +78,7 @@ function SideBar() {
               onClick={toggleDrawer(true)}
               sx={{
                 color: "primary.main",
-                marginRight: "10px", // Space on the right
+                marginRight: "10px", 
               }}
             >
               <MenuRoundedIcon />
@@ -92,7 +92,7 @@ function SideBar() {
             onClose={toggleDrawer(false)}
             PaperProps={{
               sx: {
-                width: 260,
+                width: 220,
                 backgroundColor: "white.main",
               },
             }}
@@ -146,6 +146,19 @@ function SideBar() {
                 />
                 Consultation
               </Button>
+              <Button
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-start",
+                width: "100%",
+              }}
+            >
+              <LibraryBooksRoundedIcon
+                sx={{ marginRight: "10px", marginBottom: "3px" }}
+              />
+              Journaling
+            </Button>
             </Box>
             <Box
               sx={{
@@ -154,7 +167,7 @@ function SideBar() {
                 gap: 2,
                 alignItems: "center",
                 justifyContent: "center",
-                marginTop: "180px",
+                marginTop: "200px",
               }}
             >
               <Button onClick={handleLogout} component={Link} to="/">
@@ -163,6 +176,7 @@ function SideBar() {
 
               <Button
                 component={Link}
+                to="/dashboard/accountInfo"
                 variant="contained"
                 sx={{
                   backgroundColor: "primary.main",
@@ -183,10 +197,10 @@ function SideBar() {
           variant="permanent"
           PaperProps={{
             sx: {
-              width: 260,
+              width: 230,
               backgroundColor: "white.main",
-              padding: "25px",
-              borderWidth: "1px",
+              padding: "20px",
+              borderWidth: "0",
             },
           }}
         >
@@ -231,6 +245,19 @@ function SideBar() {
               />
               Consultation
             </Button>
+            <Button
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-start",
+                width: "100%",
+              }}
+            >
+              <LibraryBooksRoundedIcon
+                sx={{ marginRight: "10px", marginBottom: "3px" }}
+              />
+              Journaling
+            </Button>
           </Box>
           <Box
             sx={{
@@ -239,11 +266,12 @@ function SideBar() {
               gap: 2,
               alignItems: "center",
               justifyContent: "center",
-              marginTop: "190px",
+              marginTop: "200px",
             }}
           >
             <Button
               component={Link}
+              to="/dashboard/accountInfo"
               variant="contained"
               sx={{
                 backgroundColor: "primary.main",

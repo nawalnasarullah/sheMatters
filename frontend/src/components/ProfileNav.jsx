@@ -14,7 +14,7 @@ function ProfileNav() {
 
   return (
     <ThemeProvider theme={theme}>
-      <div className="flex justify-between items-center px-8 py-4 shadow-md ms-0 lg:ms-60 mt-3">
+      <div className="flex justify-between items-center px-5 py-5 shadow-md ms-0 lg:ms-[231px]">
         {/* Left Section */}
         <div>
           <Typography variant="h5" color="primary.main" sx={{ fontWeight: 600,  lineHeight: 1.2,  letterSpacing: "0.5px", fontSize: "1.2rem", }}>
@@ -34,7 +34,7 @@ function ProfileNav() {
           </IconButton>
           <Avatar
             src="https://i.pravatar.cc/150?img=3"
-            alt="Joe Brown"
+            alt="username"
             className="shadow-md"
           />
           <Typography variant="h5" color="primary.main" sx={{ fontWeight: 400,  lineHeight: 1.2,  letterSpacing: "0.5px", fontSize: "1rem", }}>

@@ -9,6 +9,8 @@ import Layout from "./components/Layout";
 import LoginSignUp from "./pages/LoginSignup";
 import UserProfile from "./pages/UserProfile";
 import ForClinicians from "./pages/ForClinicians";
+import AccountInformation from "./pages/AccountInformation";
+import DashboardLayout from "./components/DashboardLayout";
 
 function App() {
   const router = createBrowserRouter(
@@ -21,7 +23,10 @@ function App() {
         <Route path="/login" element={<LoginSignUp />} />
         <Route path="/forgotPassword" element={<ForgotPassword />} />
         <Route path="/resetPassword" element={<ResetPassword />} />
-        <Route path="/userProfile" element={<UserProfile />} />
+        <Route path="dashboard" element={<DashboardLayout />}>
+          <Route path="accountInfo" element={<AccountInformation />} />
+          <Route path="userProfile" element={<UserProfile />} />
+        </Route>
       </Route>
     )
   );
