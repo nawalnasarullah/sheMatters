@@ -1,6 +1,7 @@
 import React from "react";
 import { Typography, Button } from "@mui/material";
 import { cardData } from "./Data";
+import { Link } from "react-router-dom";
 
 
 function TherapyCard() {
@@ -19,7 +20,8 @@ function TherapyCard() {
             <Typography variant="body2" color="text.secondary" >
               {item.description}
             </Typography>
-            <Button variant="text">
+            <Button variant="text"  component={Link}
+              to={item.link}>
               {item.cta}{" "}
               <span>
                 <i class="fa-solid fa-chevron-right ps-1 pb-2 text-[10px]"></i>

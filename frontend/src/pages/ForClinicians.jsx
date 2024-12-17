@@ -4,12 +4,13 @@ import BenefitsSheMatters from '../components/BenefitsSheMatters'
 
 import Carousel from '../components/Carousel'
 import MediaSection from '../components/MediaSection'
+import { heroSectionData } from '../components/Data'
 
 
 function ForClinicians() {
   return (
     <>
-    <GeneralHeroSection/>
+    <GeneralHeroSection {...heroSectionData.Clinician} />
     <Carousel/>
     <BenefitsSheMatters/>
     <MediaSection/>

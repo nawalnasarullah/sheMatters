@@ -11,18 +11,21 @@ export const cardData = [
       description: "Therapy for mental health support for individuals 18+",
       cta: "Get started",
       img: "/images/c5.svg",
+      link: "/individual",
     },
     {
       title: "Teens",
       description: "Therapy for adolescent girls aged 13-17",
       cta: "Get started",
       img: "/images/c2.svg",
+      link: "/teens",
     },
     {
       title: "Married",
       description: "Therapy for married women to address relationship challenges",
       cta: "Get started",
       img: "/images/c3.svg",
+      link: "/married",
     },
     {
       title: "Motherhood Support",
@@ -30,6 +33,7 @@ export const cardData = [
         "Therapy for mothers, covering postpartum depression and stress",
       cta: "Get started",
       img: "/images/c4.svg",
+      link: "/motherhood",
     },
   ];
 
@@ -108,12 +112,28 @@ export const benefits = [
   },
 ];
 
-export const ClinicianHeroSectionData = [
-  {
-      heading1: "Helping therapists",
-      heading2: "provide quality",
-      heading3: "mental health care",
-      content:"Experience the benefits of private practice without the challenges of maintaining one. Make your own schedule and let us handle insurance billing, marketing and admin costs.",
-      img: "/images/doctor-2.svg"
-  }
-]
+export const heroSectionData = {
+  Clinician: {
+    heading1: "Helping therapists",
+    heading2: "provide quality",
+    heading3: "mental health care",
+    content:
+      "Experience the benefits of private practice without the challenges of maintaining one. Make your own schedule and let us handle insurance billing, marketing, and admin costs.",
+    buttonText: "Apply Now",
+    buttonLink: "/apply",
+    imgSrc: "/images/doctor-2.svg",
+    footerText: "Empowering doctors to transform mental health care, one patient at a time.",
+  },
+  Individual: {
+    heading1: "Online therapy",
+    heading2: "with a",
+    heading3: "Licensed Therapist",
+    content:
+      "We match patients with therapists based on their needs and preferences, ensuring personalized and effective mental health care.",
+    buttonText: "Get Started",
+    buttonLink: "/login",
+    imgSrc: "/images/individual.svg",
+    footerText: "No wait lists.  Match with a therapist today",
+  },
+};
+
