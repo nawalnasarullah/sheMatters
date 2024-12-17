@@ -12,6 +12,7 @@ import ForClinicians from "./pages/ForClinicians";
 import AccountInformation from "./pages/AccountInformation";
 import DashboardLayout from "./components/DashboardLayout";
 import IndividualTherapy from "./pages/IndividualTherapy";
+import TeensTherapy from "./pages/TeensTherapy";
 
 function App() {
   const router = createBrowserRouter(
@@ -21,6 +22,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/clinicians" element={<ForClinicians />} />
           <Route path="/individual" element={<IndividualTherapy />} />
+          <Route path="/teens" element={<TeensTherapy />} />
         </Route>
         <Route path="/login" element={<LoginSignUp />} />
         <Route path="/forgotPassword" element={<ForgotPassword />} />
