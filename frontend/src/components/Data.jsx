@@ -1,3 +1,10 @@
+import {
+  AttachMoney,
+  CardGiftcard,
+  Security,
+  AccessTime,
+} from "@mui/icons-material";
+
 export const cardData = [
     {
       title: "Individual",
@@ -79,3 +86,34 @@ export  const reasons = [
         "Communicate with your therapist through live sessions, messaging, or both.",
     },
   ];
+
+export const benefits = [
+  {
+    icon: <AttachMoney sx={{ fontSize: 24, color: "primary.main" }} />,
+    title: "Competitive pay",
+    description:
+      "Make almost 2x the hourly rate compared to other platforms - up to $67.90 per hour - for Live Sessions (via video, audio, or chat).",
+  },
+  {
+    icon: <CardGiftcard sx={{ fontSize: 24, color: "primary.main" }} />,
+    title: "Monthly bonus incentives",
+    description:
+      "Earn monthly bonuses up to $4,000* when you spend more time engaging with clients.",
+  },
+  {
+    icon: <AccessTime sx={{ fontSize: 24, color: "primary.main" }} />,
+    title: "Flexibility",
+    description:
+      "Choose your time commitment and set a schedule that works best for you and your clients.",
+  },
+];
+
+export const ClinicianHeroSectionData = [
+  {
+      heading1: "Helping therapists",
+      heading2: "provide quality",
+      heading3: "mental health care",
+      content:"Experience the benefits of private practice without the challenges of maintaining one. Make your own schedule and let us handle insurance billing, marketing and admin costs.",
+      img: "/images/doctor-2.svg"
+  }
+]
