@@ -1,6 +1,8 @@
 import express from "express";
 import authRoutes from "./routes/auth.routes.js";
-import userRoutes from "./routes/user.routes.js"
+import userRoutes from "./routes/user.routes.js";
+import psychologistAuthRoutes from "./routes/psychologist.auth.routes.js";
+import psychologistRoutes from "./routes/psychologist.routes.js";
 import cookieParser from "cookie-parser";
 import { connectDB } from "./config/db.js";
 import { v2 as cloudinary } from 'cloudinary';
@@ -32,6 +34,8 @@ app.use(express.urlencoded({limit: '50mb'}));
 
 app.use('/', authRoutes);
 app.use('/', userRoutes);
+app.use('/', psychologistAuthRoutes);
+app.use('/', psychologistRoutes);
 
 // app.use('*', (req, res, next)=>{
 //     res.json({
