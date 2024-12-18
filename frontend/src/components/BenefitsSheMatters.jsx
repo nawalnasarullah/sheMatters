@@ -139,7 +139,7 @@ function BenefitsSheMatters() {
 
               <Button
                 component={Link}
-                to="/apply"
+                to="/loginPsychologist"
                 variant="contained"
                 sx={{
                   bgcolor: "primary.main",

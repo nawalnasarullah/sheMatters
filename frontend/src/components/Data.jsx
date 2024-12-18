@@ -233,7 +233,7 @@ export const heroSectionData = {
     content:
       "Experience the benefits of private practice without the challenges of maintaining one. Make your own schedule and let us handle insurance billing, marketing, and admin costs.",
     buttonText: "Apply Now",
-    buttonLink: "/apply",
+    buttonLink: "/loginPsychologist",
     imgSrc: "/images/doctor-2.svg",
     footerText:
       "Empowering doctors to transform mental health care, one patient at a time.",

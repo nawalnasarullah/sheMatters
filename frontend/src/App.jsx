@@ -15,6 +15,7 @@ import IndividualTherapy from "./pages/IndividualTherapy";
 import TeensTherapy from "./pages/TeensTherapy";
 import Maritaltherapy from "./pages/MaritalTherapy";
 import MotherhoodTherapy from "./pages/MotherhoodTherapy";
+import LoginSignupPsychologist from "./pages/LoginSignupPsychologist";
 
 function App() {
   const router = createBrowserRouter(
@@ -29,6 +30,7 @@ function App() {
           <Route path="/motherhood" element={<MotherhoodTherapy />} />
         </Route>
         <Route path="/login" element={<LoginSignUp />} />
+        <Route path="/loginPsychologist" element={<LoginSignupPsychologist />} />
         <Route path="/forgotPassword" element={<ForgotPassword />} />
         <Route path="/resetPassword" element={<ResetPassword />} />
         <Route path="dashboard" element={<DashboardLayout />}>
