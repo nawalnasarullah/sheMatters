@@ -80,7 +80,7 @@ function NavBar() {
             >
               <Button
                 component={Link}
-                to={isAuthenticated ? "/userProfile" : "/login"}
+                to={isAuthenticated ? "/dashboard/userProfile" : "/login"}
                 variant="contained"
                 sx={{
                   backgroundColor: "primary.main",
@@ -268,7 +268,7 @@ function NavBar() {
             >Log in</Button>}
               <Button
                 component={Link}
-                to={isAuthenticated ? "/userProfile" : "/login"}
+                to={isAuthenticated ? "/dashboard/userProfile" : "/login"}
                 variant="contained"
                 sx={{
                   backgroundColor: "primary.main",
@@ -335,7 +335,7 @@ function NavBar() {
             }
             <Button
               component={Link}
-              to={isAuthenticated ? "/userProfile" : "/login"}
+              to={isAuthenticated ? "/dashboard/userProfile" : "/login"}
               variant="contained"
               sx={{
                 backgroundColor: "primary.main",

@@ -6,7 +6,10 @@ import sendEmail from "../services/emailService.js";
 export default class Auth {
 
   async signUp(req, res, next) {
+    console.log("signUp was called");
+    
     const psychologist = req.body;
+  
   
     try {
   

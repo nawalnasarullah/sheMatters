@@ -423,7 +423,7 @@ form.sign-in-form {
 }
 
 .reason-card {
-  cursor: pointer;
+  cursor: default;
   transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, background-color 0.3s ease-in-out !important;
 }
 
@@ -432,7 +432,6 @@ form.sign-in-form {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   background-color: var(--web-secondary);
 }
-
 
 @tailwind utilities;
 

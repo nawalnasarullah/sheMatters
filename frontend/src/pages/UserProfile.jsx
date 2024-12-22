@@ -7,7 +7,6 @@ function UserProfile() {
   return (
     <>
    <SideBar/>
-   <ProfileNav/>
     </>
   )
 }

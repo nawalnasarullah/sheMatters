@@ -3,9 +3,9 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { useLoginUserMutation } from "../redux/api/authApi";
-import { useRegisterUserMutation } from "../redux/api/authApi";
-import { setUserInfo } from "../redux/features/authSlice";
+import { useLoginPsychologistMutation } from "../redux/api/psychologistAuthApi";
+import { useRegisterPsychologistMutation } from "../redux/api/psychologistAuthApi";
+import { setPsychologistInfo } from "../redux/features/psychologistAuthSlice";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 function LoginSignupPsychologist() {
@@ -19,11 +19,14 @@ function LoginSignupPsychologist() {
     setIsSignUpMode(false);
   };
 
-//   const [registerUser] = useRegisterUserMutation();
-//   const [loginUser] = useLoginUserMutation();
+  const [registerPsychologist] = useRegisterPsychologistMutation();
 
-//   const navigate = useNavigate();
-//   const dispatch = useDispatch();
+  const [loginPsychologist] = useLoginPsychologistMutation();
+
+
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const {
     handleChange: onSignUpChange,
@@ -86,20 +89,19 @@ function LoginSignupPsychologist() {
       cnic: Yup.string().required("CNIC is required").trim(),
     }),
     onSubmit: async (values) => {
-    //   delete values.cPassword;
+      delete values.cPassword;
+      console.log("values", values);
 
-    //   const user = await registerUser(values).unwrap();
-    //   console.log("ggggggg", user);
-
-    //   if (user && user.success) {
-    //     toast.success(user.message, {
-    //       progressClassName: "toast-progress-success",
-    //     });
-    //   } else {
-    //     toast.error(user.message);
-    //   }
-
-    //   onSignUpReset();
+      const psychologist = await registerPsychologist(values).unwrap();
+      console.log("ggggggg", psychologist);
+      if (psychologist && psychologist.success) {
+        toast.success(psychologist.message, {
+          progressClassName: "toast-progress-success",
+        });
+      } else {
+        toast.error(psychologist.message);
+      }
+      onSignUpReset();
     },
   });
 
@@ -136,21 +138,23 @@ function LoginSignupPsychologist() {
       cnic: Yup.string().required("CNIC is required").trim(),
     }),
     onSubmit: async (values) => {
-    //   const res = await loginUser(values).unwrap();
+      const res = await loginPsychologist(values).unwrap();
 
-    //   if (res && res.success) {
-    //     dispatch(setUserInfo(res));
-    //     console.log(res);
+      console.log("login", values);
 
-    //     toast.success(res.message, {
-    //       progressClassName: "toast-progress-success",
-    //     });
-    //     navigate("/");
-    //   } else {
-    //     toast.error(res.message);
-    //   }
+      if (res && res.success) {
+        dispatch(setPsychologistInfo(res));
+        console.log(res);
 
-    //   onSignInReset();
+        toast.success(res.message, {
+          progressClassName: "toast-progress-success",
+        });
+        navigate("/");
+      } else {
+        toast.error(res.message);
+      }
+
+      onSignInReset();
     },
   });
 
@@ -292,13 +296,13 @@ function LoginSignupPsychologist() {
                 type="text"
                 placeholder="CNIC"
                 name="cnic" // Make sure this name matches initialValues.email
-                value={signInValues.cnic}
-                onChange={onSignInChange}
-                onBlur={onSignInBlur}
+                value={signUpValues.cnic}
+                onChange={onSignUpChange}
+                onBlur={onSignUpBlur}
               />
               <strong className="text-red-700 mx-2 text-[10px] w-[300%]">
-                {signInErrors.cnic && signInTouched.cnic
-                  ? signInErrors.cnic
+                {signUpErrors.cnic && signUpTouched.cnic
+                  ? signUpErrors.cnic
                   : null}
               </strong>
             </div>

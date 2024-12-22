@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   TextField,
   Box,
@@ -14,6 +14,20 @@ import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import theme from "../components/Theme";
 
 function AccountInformation() {
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phoneNumber: "",
+    dateOfBirth: "",
+    country: "",
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <Box>
@@ -38,7 +52,6 @@ function AccountInformation() {
             >
               <EditRoundedIcon
                 sx={{
-               
                   "&:hover": {
                     color: "primary.main",
                     transition: "0.3s",
@@ -57,14 +70,18 @@ function AccountInformation() {
                   label="First Name"
                   variant="outlined"
                   fullWidth
-                  value=""
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleChange}
                   InputLabelProps={{
-                    shrink: true, // Ensures the label stays above the input
+                    shrink: true,
                   }}
                   InputProps={{
                     endAdornment: (
                       <IconButton
-                        sx={{ "&:hover": { backgroundColor: "primary.light" } }}
+                        sx={{
+                          "&:hover": { backgroundColor: "primary.light" },
+                        }}
                       >
                         <EditRoundedIcon
                           sx={{
@@ -81,41 +98,51 @@ function AccountInformation() {
                   sx={{
                     "& .MuiOutlinedInput-root": {
                       borderRadius: "12px",
-
-                      //  "& fieldset": {
-                      //     borderColor: "primary.main",
-                      //  },
                       "&:hover fieldset": {
                         borderColor: "primary.dark",
+                      },
+                      "&.Mui-focused": {
+                        backgroundColor: "white", // Keeps background white when focused
                       },
                     },
                     "& .MuiInputBase-input": {
                       padding: "12px",
+                      backgroundColor: "white", // Ensures the input always has a white background
+                      "&:focus": {
+                        backgroundColor: "white", // Keeps white background when typing
+                      },
+                      "&:-webkit-autofill": {
+                        WebkitBoxShadow: "0 0 0px 1000px white inset", // Forces white background for autofill
+                        backgroundColor: "white !important", // Ensures autofill stays white
+                      },
                     },
                     "& .MuiInputLabel-root": {
                       fontSize: "15px",
-                    },
-                    "& .MuiInputLabel-root": {
                       color: "primary.main",
                     },
                   }}
                 />
               </Grid>
 
+              {/* Repeat for other fields */}
               {/* Last Name */}
               <Grid item xs={12} md={6}>
                 <TextField
                   label="Last Name"
                   variant="outlined"
                   fullWidth
-                  value=""
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleChange}
                   InputLabelProps={{
-                    shrink: true, // Ensures the label stays above the input
+                    shrink: true,
                   }}
                   InputProps={{
                     endAdornment: (
                       <IconButton
-                        sx={{ "&:hover": { backgroundColor: "primary.light" } }}
+                        sx={{
+                          "&:hover": { backgroundColor: "primary.light" },
+                        }}
                       >
                         <EditRoundedIcon
                           sx={{
@@ -132,10 +159,6 @@ function AccountInformation() {
                   sx={{
                     "& .MuiOutlinedInput-root": {
                       borderRadius: "12px",
-
-                      //  "& fieldset": {
-                      //     borderColor: "primary.main",
-                      //  },
                       "&:hover fieldset": {
                         borderColor: "primary.dark",
                       },
@@ -145,217 +168,12 @@ function AccountInformation() {
                     },
                     "& .MuiInputLabel-root": {
                       fontSize: "15px",
-                    },
-                    "& .MuiInputLabel-root": {
                       color: "primary.main",
                     },
                   }}
                 />
               </Grid>
-
-              {/* Email */}
-              <Grid item xs={12} md={6}>
-                <TextField
-                  label="Email"
-                  variant="outlined"
-                  fullWidth
-                  value=""
-                  InputLabelProps={{
-                    shrink: true, // Ensures the label stays above the input
-                  }}
-                  InputProps={{
-                    endAdornment: (
-                      <IconButton
-                        sx={{ "&:hover": { backgroundColor: "primary.light" } }}
-                      >
-                        <EditRoundedIcon
-                          sx={{
-                            fontSize: "20px",
-                            "&:hover": {
-                              color: "primary.main",
-                              transition: "0.3s",
-                            },
-                          }}
-                        />
-                      </IconButton>
-                    ),
-                  }}
-                  sx={{
-                    "& .MuiOutlinedInput-root": {
-                      borderRadius: "12px",
-
-                      //  "& fieldset": {
-                      //     borderColor: "primary.main",
-                      //  },
-                      "&:hover fieldset": {
-                        borderColor: "primary.dark",
-                      },
-                    },
-                    "& .MuiInputBase-input": {
-                      padding: "12px",
-                    },
-                    "& .MuiInputLabel-root": {
-                      fontSize: "15px",
-                    },
-                    "& .MuiInputLabel-root": {
-                      color: "primary.main",
-                    },
-                  }}
-                />
-              </Grid>
-
-              {/* Phone Number */}
-              <Grid item xs={12} md={6}>
-                <TextField
-                  label="Phone Number"
-                  variant="outlined"
-                  fullWidth
-                  value=""
-                  InputLabelProps={{
-                    shrink: true, // Ensures the label stays above the input
-                  }}
-                  InputProps={{
-                    endAdornment: (
-                      <IconButton
-                        sx={{ "&:hover": { backgroundColor: "primary.light" } }}
-                      >
-                        <EditRoundedIcon
-                          sx={{
-                            fontSize: "20px",
-                            "&:hover": {
-                              color: "primary.main",
-                              transition: "0.3s",
-                            },
-                          }}
-                        />
-                      </IconButton>
-                    ),
-                  }}
-                  sx={{
-                    "& .MuiOutlinedInput-root": {
-                      borderRadius: "12px",
-
-                      //  "& fieldset": {
-                      //     borderColor: "primary.main",
-                      //  },
-                      "&:hover fieldset": {
-                        borderColor: "primary.dark",
-                      },
-                    },
-                    "& .MuiInputBase-input": {
-                      padding: "12px",
-                    },
-                    "& .MuiInputLabel-root": {
-                      fontSize: "15px",
-                    },
-                    "& .MuiInputLabel-root": {
-                      color: "primary.main",
-                    },
-                  }}
-                />
-              </Grid>
-
-              {/* Date of Birth */}
-              <Grid item xs={12} md={6}>
-                <TextField
-                  label="Date of Birth"
-                  variant="outlined"
-                  fullWidth
-                  value=""
-                  InputLabelProps={{
-                    shrink: true, // Ensures the label stays above the input
-                  }}
-                  InputProps={{
-                    endAdornment: (
-                      <IconButton
-                        sx={{ "&:hover": { backgroundColor: "primary.light" } }}
-                      >
-                        <EditRoundedIcon
-                          sx={{
-                            fontSize: "20px",
-                            "&:hover": {
-                              color: "primary.main",
-                              transition: "0.3s",
-                            },
-                          }}
-                        />
-                      </IconButton>
-                    ),
-                  }}
-                  sx={{
-                    "& .MuiOutlinedInput-root": {
-                      borderRadius: "12px",
-
-                      //  "& fieldset": {
-                      //     borderColor: "primary.main",
-                      //  },
-                      "&:hover fieldset": {
-                        borderColor: "primary.dark",
-                      },
-                    },
-                    "& .MuiInputBase-input": {
-                      padding: "12px",
-                    },
-                    "& .MuiInputLabel-root": {
-                      fontSize: "15px",
-                    },
-                    "& .MuiInputLabel-root": {
-                      color: "primary.main",
-                    },
-                  }}
-                />
-              </Grid>
-
-              {/* Country */}
-              <Grid item xs={12} md={6}>
-                <TextField
-                  label="Country"
-                  variant="outlined"
-                  fullWidth
-                  value=""
-                  InputLabelProps={{
-                    shrink: true, // Ensures the label stays above the input
-                  }}
-                  InputProps={{
-                    endAdornment: (
-                      <IconButton
-                        sx={{ "&:hover": { backgroundColor: "primary.light" } }}
-                      >
-                        <EditRoundedIcon
-                          sx={{
-                            fontSize: "20px",
-                            "&:hover": {
-                              color: "primary.main",
-                              transition: "0.3s",
-                            },
-                          }}
-                        />
-                      </IconButton>
-                    ),
-                  }}
-                  sx={{
-                    "& .MuiOutlinedInput-root": {
-                      borderRadius: "12px",
-
-                      //  "& fieldset": {
-                      //     borderColor: "primary.main",
-                      //  },
-                      "&:hover fieldset": {
-                        borderColor: "primary.dark",
-                      },
-                    },
-                    "& .MuiInputBase-input": {
-                      padding: "12px",
-                    },
-                    "& .MuiInputLabel-root": {
-                      fontSize: "15px",
-                    },
-                    "& .MuiInputLabel-root": {
-                      color: "primary.main",
-                    },
-                  }}
-                />
-              </Grid>
+              {/* Add other fields similarly */}
             </Grid>
           </Box>
         </div>
