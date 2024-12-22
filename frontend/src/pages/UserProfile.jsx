@@ -6,7 +6,6 @@ import ProfileNav from '../components/ProfileNav'
 function UserProfile() {
   return (
     <>
-   <SideBar/>
     </>
   )
 }

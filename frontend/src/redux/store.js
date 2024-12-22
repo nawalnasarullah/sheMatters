@@ -2,16 +2,18 @@ import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./features/authSlice";
 import { authApi } from "./api/authApi";
 import { psychologistAuthApi } from "./api/psychologistAuthApi";
+import { journalApi } from "./api/journalApi";
 
 const store = configureStore({
   reducer: {
     auth: authReducer,
     [authApi.reducerPath]: authApi.reducer,
     [psychologistAuthApi.reducerPath]: psychologistAuthApi.reducer,
+    [journalApi.reducerPath]: journalApi.reducer, // journal api ko slice or reducer ky saath link krty or store ko react app ky saath link krty
   },
 
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat([authApi.middleware, psychologistAuthApi.middleware]), // ye caching, invalidation, polling k kaam krti
+    getDefaultMiddleware().concat([authApi.middleware, psychologistAuthApi.middleware, journalApi.middleware]), // ye caching, invalidation, polling k kaam krti
 });
 
 export default store;

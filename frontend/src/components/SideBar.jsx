@@ -11,6 +11,7 @@ import {
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
+import GroupRoundedIcon from "@mui/icons-material/GroupRounded";  
 import EventNoteRoundedIcon from "@mui/icons-material/EventNoteRounded";
 import LibraryBooksRoundedIcon from '@mui/icons-material/LibraryBooksRounded';
 import { Link } from "react-router-dom";
@@ -141,12 +142,27 @@ function SideBar() {
                   width: "100%",
                 }}
               >
+                <GroupRoundedIcon
+                  sx={{ marginRight: "10px", marginBottom: "3px" }}
+                />
+                Group Therapy
+              </Button>
+              <Button
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "flex-start",
+                  width: "100%",
+                }}
+              >
                 <EventNoteRoundedIcon
                   sx={{ marginRight: "10px", marginBottom: "3px" }}
                 />
                 Consultation
               </Button>
               <Button
+              component={Link}
+              to="/dashboard/journal"
               sx={{
                 display: "flex",
                 alignItems: "center",
@@ -167,7 +183,7 @@ function SideBar() {
                 gap: 2,
                 alignItems: "center",
                 justifyContent: "center",
-                marginTop: "200px",
+                marginTop: "150px",
               }}
             >
               <Button onClick={handleLogout} component={Link} to="/">
@@ -233,6 +249,19 @@ function SideBar() {
               Dashboard
             </Button>
             <Button
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "flex-start",
+                  width: "100%",
+                }}
+              >
+                <GroupRoundedIcon
+                  sx={{ marginRight: "10px", marginBottom: "3px" }}
+                />
+                Group Therapy
+              </Button>
+            <Button
               sx={{
                 display: "flex",
                 alignItems: "center",
@@ -246,6 +275,8 @@ function SideBar() {
               Consultation
             </Button>
             <Button
+            component={Link}
+              to="/dashboard/journal"
               sx={{
                 display: "flex",
                 alignItems: "center",
@@ -266,7 +297,7 @@ function SideBar() {
               gap: 2,
               alignItems: "center",
               justifyContent: "center",
-              marginTop: "200px",
+              marginTop: "150px",
             }}
           >
             <Button

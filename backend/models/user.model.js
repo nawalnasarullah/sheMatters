@@ -45,10 +45,19 @@ const userSchema = new Schema({
   roles: {
     type: String,
     default:'user',
-    enum:['user', 'customer', 'moderator', 'administrator']
+    enum:['user','administrator']
   },
 
   avatar : {
+    type: String
+  },
+  city: {
+    type: String
+  },
+  dateOfBirth: {
+    type: Date
+  },
+  about:{
     type: String
   },
   resetPasswordToken: String,
