@@ -8,8 +8,12 @@ import {
 } from "@mui/material";
 import { useCreateJournalMutation } from "../redux/api/journalApi";
 import theme from "../components/Theme";
+import { useSelector } from "react-redux";
 
 function Journal() {
+
+  const {user} = useSelector(state => state.auth);
+  console.log("Journal", user);
   const [formData, setFormData] = useState({
     date: "",
     day: "",
@@ -22,6 +26,7 @@ function Journal() {
       smiles: "",
       reminders: [],
     },
+    user: user.user._id
   });
 
   const [createJournal] = useCreateJournalMutation();
@@ -46,7 +51,7 @@ function Journal() {
   };
 
   const handleSubmit = async () => {
-    await createJournal(formData);
+    await createJournal({...formData, user: user.user._id});
     setFormData({
       date: "",
       day: "",
@@ -59,6 +64,7 @@ function Journal() {
         smiles: "",
         reminders: [],
       },
+      user: user.user._id
     });
   };
 
@@ -176,30 +182,30 @@ function Journal() {
 
         <Grid container spacing={2}>
           <Grid item xs={12} md={6}>
-          <TextField
-          label="Daily Affirmations"
-          name="affirmations"
-          value={formData.content.affirmations}
-          onChange={handleContentChange}
-          fullWidth
-          multiline
-          rows={3}
-          className="mt-2"
-          sx={inputStyle}
-        />
+            <TextField
+              label="Daily Affirmations"
+              name="affirmations"
+              value={formData.content.affirmations}
+              onChange={handleContentChange}
+              fullWidth
+              multiline
+              rows={3}
+              className="mt-2"
+              sx={inputStyle}
+            />
           </Grid>
           <Grid item xs={12} md={6}>
-          <TextField
-          label="Things that make me smile"
-          name="smiles"
-          value={formData.content.smiles}
-          onChange={handleContentChange}
-          fullWidth
-          multiline
-          rows={3}
-          className="mt-2"
-          sx={inputStyle}
-        />
+            <TextField
+              label="Things that make me smile"
+              name="smiles"
+              value={formData.content.smiles}
+              onChange={handleContentChange}
+              fullWidth
+              multiline
+              rows={3}
+              className="mt-2"
+              sx={inputStyle}
+            />
           </Grid>
         </Grid>
 

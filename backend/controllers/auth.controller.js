@@ -49,13 +49,13 @@ export default class Auth {
         role: user.roles,
       },
       process.env.JWT_SECRET,
-      { expiresIn: "1hr" }
+      { expiresIn: "24hr" }
     );
 
     try {
       res
         .cookie("auth_token", token, {
-          maxAge: 900000,
+          maxAge: 86400000,
           httpOnly: true,
           secure: true,
         })

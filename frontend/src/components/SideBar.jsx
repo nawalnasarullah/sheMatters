@@ -6,14 +6,16 @@ import {
   Box,
   IconButton,
   Button,
+  Menu,
+  MenuItem,
   useMediaQuery,
 } from "@mui/material";
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
-import GroupRoundedIcon from "@mui/icons-material/GroupRounded";  
+import GroupRoundedIcon from "@mui/icons-material/GroupRounded";
 import EventNoteRoundedIcon from "@mui/icons-material/EventNoteRounded";
-import LibraryBooksRoundedIcon from '@mui/icons-material/LibraryBooksRounded';
+import LibraryBooksRoundedIcon from "@mui/icons-material/LibraryBooksRounded";
 import { Link } from "react-router-dom";
 import { useGetMeQuery, useLazyLogoutQuery } from "../redux/api/authApi";
 import { useSelector } from "react-redux";
@@ -27,6 +29,10 @@ function SideBar() {
   const navigate = useNavigate();
 
   const [drawerOpen, setDrawerOpen] = useState(false);
+
+  // State for Journaling Dropdown
+  const [anchorEl, setAnchorEl] = useState(null);
+  const isDropdownOpen = Boolean(anchorEl);
 
   // Detect screen size
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
@@ -47,6 +53,14 @@ function SideBar() {
     navigate(0);
   };
 
+  const handleDropdownOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleDropdownClose = () => {
+    setAnchorEl(null);
+  };
+
   return (
     <ThemeProvider theme={theme}>
       {isSmallScreen ? (
@@ -55,10 +69,10 @@ function SideBar() {
           <Box
             sx={{
               display: "flex",
-              justifyContent: "space-between", 
+              justifyContent: "space-between",
               alignItems: "center",
-              padding: "10px 16px", 
-              backgroundColor: "white", 
+              padding: "10px 16px",
+              backgroundColor: "white",
               position: "sticky",
               top: 0,
               zIndex: 1200,
@@ -69,7 +83,7 @@ function SideBar() {
               color="primary.main"
               sx={{
                 fontWeight: 600,
-                marginLeft: "10px", 
+                marginLeft: "10px",
               }}
             >
               SheMatters
@@ -79,7 +93,7 @@ function SideBar() {
               onClick={toggleDrawer(true)}
               sx={{
                 color: "primary.main",
-                marginRight: "10px", 
+                marginRight: "10px",
               }}
             >
               <MenuRoundedIcon />
@@ -161,20 +175,56 @@ function SideBar() {
                 Consultation
               </Button>
               <Button
-              component={Link}
-              to="/dashboard/journal"
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "flex-start",
-                width: "100%",
-              }}
-            >
-              <LibraryBooksRoundedIcon
-                sx={{ marginRight: "10px", marginBottom: "3px" }}
-              />
-              Journaling
-            </Button>
+                onClick={handleDropdownOpen}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "flex-start",
+                  width: "100%",
+                }}
+              >
+                <LibraryBooksRoundedIcon
+                  sx={{ marginRight: "10px", marginBottom: "3px" }}
+                />
+                Journaling
+              </Button>
+              <Menu
+                anchorEl={anchorEl}
+                open={isDropdownOpen}
+                onClose={handleDropdownClose}
+                sx={{
+                  marginLeft: "10px",
+                }}
+              >
+                <MenuItem
+                  sx={{
+                    "&:hover": {
+                      backgroundColor: "primary.light",
+                      borderRadius: "6px",
+                    },
+                  }}
+                  component={Link}
+                  to="/dashboard/journal"
+                >
+                  <Typography variant="h5" color="primary.main" sx={{ fontSize: "0.8rem", fontWeight: "600", textTransform: "Uppercase" }}>
+                    Create Journal
+                  </Typography>
+                </MenuItem>
+                <MenuItem
+                  sx={{
+                    "&:hover": {
+                      backgroundColor: "primary.light",
+                      borderRadius: "6px",
+                    },
+                  }}
+                  component={Link}
+                  to="/dashboard/journal/create"
+                >
+                  <Typography variant="h5" color="primary.main" sx={{ fontSize: "0.8rem", fontWeight: "600", textTransform: "Uppercase" }}>
+                    All Journals
+                  </Typography>
+                </MenuItem>
+              </Menu>
             </Box>
             <Box
               sx={{
@@ -249,18 +299,18 @@ function SideBar() {
               Dashboard
             </Button>
             <Button
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "flex-start",
-                  width: "100%",
-                }}
-              >
-                <GroupRoundedIcon
-                  sx={{ marginRight: "10px", marginBottom: "3px" }}
-                />
-                Group Therapy
-              </Button>
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-start",
+                width: "100%",
+              }}
+            >
+              <GroupRoundedIcon
+                sx={{ marginRight: "10px", marginBottom: "3px" }}
+              />
+              Group Therapy
+            </Button>
             <Button
               sx={{
                 display: "flex",
@@ -275,8 +325,7 @@ function SideBar() {
               Consultation
             </Button>
             <Button
-            component={Link}
-              to="/dashboard/journal"
+              onClick={handleDropdownOpen}
               sx={{
                 display: "flex",
                 alignItems: "center",
@@ -289,6 +338,43 @@ function SideBar() {
               />
               Journaling
             </Button>
+            <Menu
+              anchorEl={anchorEl}
+              open={isDropdownOpen}
+              onClose={handleDropdownClose}
+              sx={{
+                marginLeft: "10px",
+              }}
+            >
+              <MenuItem
+                sx={{
+                  "&:hover": {
+                    backgroundColor: "primary.light",
+                    borderRadius: "6px",
+                  },
+                }}
+                component={Link}
+                to="/dashboard/journal"
+              >
+                <Typography variant="h5" color="primary.main" sx={{ fontSize: "0.8rem", fontWeight: "600", textTransform: "Uppercase" }}>
+                  Create Journal
+                </Typography>
+              </MenuItem>
+              <MenuItem
+                sx={{
+                  "&:hover": {
+                    backgroundColor: "primary.light",
+                    borderRadius: "6px",
+                  },
+                }}
+                component={Link}
+                to="/dashboard/journal/create"
+              >
+                <Typography variant="h5" color="primary.main" sx={{ fontSize: "0.8rem", fontWeight: "600", textTransform: "Uppercase"}}>
+                  All Journals
+                </Typography>
+              </MenuItem>
+            </Menu>
           </Box>
           <Box
             sx={{

@@ -210,7 +210,7 @@ function NavBar() {
                             },
                           }}
                         >
-                          Couples therapy
+                          Therapy for mothers
                         </MenuItem>
                         <MenuItem
                           sx={{
@@ -220,7 +220,7 @@ function NavBar() {
                             },
                           }}
                         >
-                          Therapy for veterans
+                          Group therapy
                         </MenuItem>
                         <MenuItem
                           sx={{
