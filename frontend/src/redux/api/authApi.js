@@ -8,6 +8,13 @@ export const authApi = createApi({
     credentials: "include",
   }),
   endpoints: (builder) => ({
+    UpdateUser: builder.mutation({
+      query: ({_id , ...data}) => ({
+        url: `auth/update-profile?id=${_id}`,
+        method: "PATCH",
+        body: data,
+      }),
+    }),
     loginUser: builder.mutation({
       query: (data) => ({
         url: "auth/login",
@@ -63,4 +70,4 @@ export const authApi = createApi({
 });
 
 export const { useLoginUserMutation, useRegisterUserMutation,  useForgotPasswordMutation,
-  useResetPasswordMutation, useGetMeQuery, useLazyLogoutQuery } = authApi;
+  useResetPasswordMutation, useGetMeQuery, useLazyLogoutQuery , useUpdateUserMutation} = authApi;

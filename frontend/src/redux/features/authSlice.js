@@ -14,10 +14,14 @@ const {actions, reducer} = createSlice({
         clearUserInfo: (state, action) => {
             state.user = null
             state.isAuthenticated = false
+        },
+        updateUserProfile: (state, action) => {
+            console.log('action payload : ' , action.payload)
+            state.user = action.payload
         }
     }
 });
 
-export const {setUserInfo, clearUserInfo} = actions
+export const {setUserInfo, clearUserInfo , updateUserProfile} = actions
 export default reducer
 

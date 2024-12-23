@@ -33,7 +33,7 @@ function ProfileNav() {
             <NotificationsNoneIcon color="grey.main" />
           </IconButton>
           <Avatar
-            src="https://i.pravatar.cc/150?img=3"
+            src= {user?.user?.avatar || "https://i.pravatar.cc/150?img=3"}
             alt="username"
             className="shadow-md"
           />
