@@ -11,6 +11,6 @@ router.route('/auth/login').post(authController.login);
 router.route('/auth/logout').get(authController.logout);
 router.route('/auth/forgotPassword').post(authController.forgotPassword);
 router.route('/auth/resetPassword').post(checkToken, authController.resetPassword);
-
+router.route('/auth/update-profile').patch(authController.UpdateUser);
 
 export default router;
