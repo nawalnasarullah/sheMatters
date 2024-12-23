@@ -3,10 +3,12 @@ import authReducer from "./features/authSlice";
 import { authApi } from "./api/authApi";
 import { psychologistAuthApi } from "./api/psychologistAuthApi";
 import { journalApi } from "./api/journalApi";
+import psychologistReducer from "./features/psychologistAuthSlice"
 
 const store = configureStore({
   reducer: {
     auth: authReducer,
+    psychologistAuth : psychologistReducer ,
     [authApi.reducerPath]: authApi.reducer,
     [psychologistAuthApi.reducerPath]: psychologistAuthApi.reducer,
     [journalApi.reducerPath]: journalApi.reducer, // journal api ko slice or reducer ky saath link krty or store ko react app ky saath link krty

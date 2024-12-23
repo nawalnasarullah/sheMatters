@@ -8,8 +8,8 @@ const {actions, reducer} = createSlice({
     },
     reducers: {
         setPsychologistInfo: (state, action) => {
-            console.log("payload : " , payload)
-            state.psychologist = action.payload
+            console.log("payload : " , action.payload)
+            state.psychologist = {...action.payload.psychologist}
             state.isAuthenticated = true
         },
         clearPsychologistInfo: (state, action) => {

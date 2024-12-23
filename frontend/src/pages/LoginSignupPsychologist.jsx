@@ -138,23 +138,30 @@ function LoginSignupPsychologist() {
       cnic: Yup.string().required("CNIC is required").trim(),
     }),
     onSubmit: async (values) => {
-      const res = await loginPsychologist(values).unwrap();
+      try{
 
-      console.log("login psychologist :", res);
-
-      if (res && res.success) {
-        dispatch(setPsychologistInfo(res));
-        console.log("dispatch psychologist");
-
-        toast.success(res.message, {
-          progressClassName: "toast-progress-success",
-        });
-        navigate("/clinician/dashboard");
-      } else {
-        toast.error(res.message);
+        const res = await loginPsychologist(values).unwrap();
+  
+        console.log("login psychologist :", res);
+  
+        if (res && res.success) {
+          dispatch(setPsychologistInfo(res));
+          console.log("dispatch psychologist");
+  
+          toast.success(res.message, {
+            progressClassName: "toast-progress-success",
+          });
+          navigate("/clinician/dashboard");
+        } else {
+          toast.error(res.message);
+        }
+  
+        onSignInReset();
       }
-
-      onSignInReset();
+      catch(err)
+      {
+        console.error("error signing in : " , err)
+      }
     },
   });
 

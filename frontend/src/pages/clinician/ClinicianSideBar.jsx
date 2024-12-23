@@ -24,7 +24,6 @@ import theme from "../../components/Theme.jsx";
 
 function SideBar() {
   const { data } = useGetMeQuery();
-  const { user, isAuthenticated } = useSelector((state) => state.auth);
   const [logout] = useLazyLogoutQuery();
   const navigate = useNavigate();
 

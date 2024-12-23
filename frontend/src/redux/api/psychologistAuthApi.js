@@ -41,15 +41,19 @@ export const psychologistAuthApi = createApi({
     getMe: builder.query({
       query: () => "psychologist/me",
       async onQueryStarted(arg, {dispatch, queryFulfilled}) {
-        console.log('starting');
         try{
+
           const {data} = await queryFulfilled;
-          console.log('success', data);
-          if(!data.success){
-            dispatch(clearPsychologistInfo());
-          }else{
+          console.log('refresh token response : ', data);
+
+          if(data.success)
+          {
             dispatch(setPsychologistInfo(data));
+            console.log("haha i am dispatching the thing")
           }
+          else
+            dispatch(clearPsychologistInfo());
+          
         }catch(err){
           console.log('error', err);
           dispatch(clearPsychologistInfo());
