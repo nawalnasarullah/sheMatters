@@ -13,7 +13,7 @@ import { useSelector } from "react-redux";
 function Journal() {
 
   const {user} = useSelector(state => state.auth);
-  console.log("Journal", user);
+
   const [formData, setFormData] = useState({
     date: "",
     day: "",
@@ -24,7 +24,7 @@ function Journal() {
       gratitude: "",
       affirmations: "",
       smiles: "",
-      reminders: [],
+      reminders: "",
     },
     user: user.user._id
   });
@@ -62,7 +62,7 @@ function Journal() {
         gratitude: "",
         affirmations: "",
         smiles: "",
-        reminders: [],
+        reminders: "",
       },
       user: user.user._id
     });
@@ -100,10 +100,11 @@ function Journal() {
     <ThemeProvider theme={theme}>
       <div className="bg-white rounded-lg p-6 shadow">
         <Typography
-          variant="h6"
+          variant="h5"
           color="primary.main"
           fontWeight="bold"
           gutterBottom
+          sx={{fontSize: "1.4rem"}}
         >
           Journal
         </Typography>
