@@ -45,7 +45,7 @@ const userSchema = new Schema({
   roles: {
     type: String,
     default:'user',
-    enum:['user','administrator']
+    enum:['user','admin']
   },
 
   avatar : {

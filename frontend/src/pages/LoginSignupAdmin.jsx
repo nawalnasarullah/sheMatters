@@ -8,7 +8,7 @@ import { useRegisterUserMutation } from "../redux/api/authApi";
 import { setUserInfo } from "../redux/features/authSlice";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-function LoginSignup() {
+function LoginSignupAdmin() {
   const [isSignUpMode, setIsSignUpMode] = useState(false);
 
   const handleSignUpClick = () => {
@@ -42,6 +42,7 @@ function LoginSignup() {
       password: "",
       cPassword: "",
       phoneNumber: "",
+      roles: "",
     },
     validationSchema: Yup.object({
       firstName: Yup.string()
@@ -58,7 +59,7 @@ function LoginSignup() {
         .trim(),
       username: Yup.string()
         .matches(/^[A-Za-z ]*$/, "Please enter valid Username")
-        .min(3, "Minimum 3 letters")
+        .min(5, "Minimum 5 letters")
         .max(25, "Maximum 25 letters")
         .required("Username is required")
         .trim(),
@@ -85,8 +86,10 @@ function LoginSignup() {
     }),
     onSubmit: async (values) => {
       delete values.cPassword;
+      values.roles = "admin";
 
       const user = await registerUser(values).unwrap();
+      console.log("ggggggg", user);
 
       if (user && user.success) {
         toast.success(user.message, {
@@ -131,10 +134,11 @@ function LoginSignup() {
       password: Yup.string().required("Password is required").trim(),
     }),
     onSubmit: async (values) => {
+    
       const res = await loginUser(values).unwrap();
- 
+      console.log("res", res);
 
-      if (res && res.success) {
+      if (res && res.success && res.user.roles=='admin') {
         dispatch(setUserInfo(res));
         console.log(res);
 
@@ -143,7 +147,7 @@ function LoginSignup() {
         });
         navigate("/");
       } else {
-        toast.error(res.message);
+        toast.error(res.message || "You do not have admin access.");
       }
 
       onSignInReset();
@@ -372,7 +376,7 @@ function LoginSignup() {
               Sign up
             </button>
           </div>
-          <img src="/images/login.svg" className="image" alt="" />
+          <img src="/images/admin-login.svg" className="image" alt="" />
         </div>
         <div className="panel right-panel">
           <div className="content">
@@ -386,11 +390,11 @@ function LoginSignup() {
               Sign in
             </button>
           </div>
-          <img src="/images/register.svg" className="image" alt="" />
+          <img src="/images/admin-signup.svg" className="image w-[80%]" alt="" />
         </div>
       </div>
     </div>
   );
 }
 
-export default LoginSignup;
+export default LoginSignupAdmin;

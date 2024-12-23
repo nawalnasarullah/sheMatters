@@ -16,6 +16,7 @@ import TeensTherapy from "./pages/TeensTherapy";
 import Maritaltherapy from "./pages/MaritalTherapy";
 import MotherhoodTherapy from "./pages/MotherhoodTherapy";
 import LoginSignupPsychologist from "./pages/LoginSignupPsychologist";
+import LoginSignupAdmin from "./pages/LoginSignupAdmin";
 import Journal from "./pages/Journal";
 
 function App() {
@@ -32,6 +33,7 @@ function App() {
         </Route>
         <Route path="/login" element={<LoginSignUp />} />
         <Route path="/loginPsychologist" element={<LoginSignupPsychologist />} />
+        <Route path="/loginAdmin" element={<LoginSignupAdmin />} />
         <Route path="/forgotPassword" element={<ForgotPassword />} />
         <Route path="/resetPassword" element={<ResetPassword />} />
         <Route path="/dashboard" element={<DashboardLayout />}>
