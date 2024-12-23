@@ -82,7 +82,7 @@ function AccountInformation() {
       dateOfBirth: user?.user?.dateOfBirth ? parseDate(user.user.dateOfBirth) : "" ,
       city: user?.user?.city || "" ,
       about: user?.user?.about || "" ,
-      avatar : user?.user?.avatar || "eee"
+      avatar : user?.user?.avatar || ""
     },
     validationSchema: Yup.object({
       firstName: Yup.string()
@@ -109,6 +109,7 @@ function AccountInformation() {
     }),
     onSubmit: async (values, errors) => {
       try {
+        console.log("submission errors : " ,errors)
         const res = await updateUser({ ...values, _id: user.user._id }).unwrap()
         dispatch(updateUserProfile({ user: res.user }))
         setIsDisabled(true)
@@ -643,7 +644,7 @@ function AccountInformation() {
                 </Grid>
               </Grid>
             </Box>
-            <Button type="submit" variant="contained" sx={{ mt: 2 }}>
+            <Button type="submit" disabled={isLoading} variant="contained" sx={{ mt: 2 }}>
               Save Changes
             </Button>
           </form>

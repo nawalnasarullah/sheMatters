@@ -34,6 +34,7 @@ export const error = (err, req, res, next )=>{
 
     res.json({
         success: false,
-        message: error.message || "Some kinda error!! :("
+        message: error.message || "Unknown error",
+        error : error
     })
 }

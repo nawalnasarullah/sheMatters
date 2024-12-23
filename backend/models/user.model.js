@@ -40,6 +40,7 @@ const userSchema = new Schema({
 
   phoneNumber: {
     type: String,
+    default : null
   },
 
   roles: {
@@ -49,16 +50,24 @@ const userSchema = new Schema({
   },
 
   avatar : {
-    type: String
+    type: String,
+    default : null
   },
   city: {
-    type: String
+    type: String,
+    default : null
   },
   dateOfBirth: {
-    type: Date
+    type: Date,
+    default : null
   },
   about:{
-    type: String
+    type: String,
+    default : null
+  },
+  labels : {
+    type : [String],
+    default : null
   },
   resetPasswordToken: String,
   resetPasswordExpires: Date,

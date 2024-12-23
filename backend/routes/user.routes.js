@@ -8,6 +8,6 @@ const user = new userController();
 router.route('/user/all').get(user.getAllUsers);
 router.route('/user/delete').delete(user.deleteUser);
 router.route('/me').get(isUserAuthenticated, user.getMe)
-//router.route('/user/update-profile').patch(user.UpdateUser);
+router.route('/user/assign-labels').patch(user.assignLabels);
 
 export default router;

@@ -69,6 +69,37 @@ export default class userController {
     }
   }
 
+  async assignLabels(req, res, next) {
+    const body = req.body
+    const { id } = req.query
+    
+    if(!body.labels)
+      return res.status(403).json({
+        message : 'missing labels in body',
+        success : false
+    })
+    
+
+    if(!id)
+      return res.status(403).json({
+        message : 'missing id in query params',
+        success : false
+    })
+    
+
+    try {
+      const user = await User.findByIdAndUpdate(id, { labels : body.labels })
+      res.json({
+        message: "Updated the user",
+        success : true ,
+        updatedUser : user
+      })
+      
+    } catch (error) {
+      next(error)
+    }
+  }
+
   async deleteUser(req, res, next) {
     const { id } = req.query
     try {

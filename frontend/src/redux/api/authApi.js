@@ -1,5 +1,5 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { clearUserInfo, setUserInfo } from "../features/authSlice";
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
+import { clearUserInfo, setUserInfo } from "../features/authSlice"
 
 export const authApi = createApi({
   reducerPath: "authApi",
@@ -9,7 +9,7 @@ export const authApi = createApi({
   }),
   endpoints: (builder) => ({
     UpdateUser: builder.mutation({
-      query: ({_id , ...data}) => ({
+      query: ({ _id, ...data }) => ({
         url: `auth/update-profile?id=${_id}`,
         method: "PATCH",
         body: data,
@@ -47,19 +47,19 @@ export const authApi = createApi({
     }),
     getMe: builder.query({
       query: () => "me",
-      async onQueryStarted(arg, {dispatch, queryFulfilled}) {
-        console.log('starting');
-        try{
-          const {data} = await queryFulfilled;
-          console.log('success', data);
-          if(!data.success){
-            dispatch(clearUserInfo());
-          }else{
-            dispatch(setUserInfo(data));
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        console.log("starting")
+        try {
+          const { data } = await queryFulfilled
+          console.log("success", data)
+          if (!data.success) {
+            dispatch(clearUserInfo())
+          } else {
+            dispatch(setUserInfo(data))
           }
-        }catch(err){
-          console.log('error', err);
-          dispatch(clearUserInfo());
+        } catch (err) {
+          console.log("error", err)
+          dispatch(clearUserInfo())
         }
       },
     }),
@@ -67,7 +67,14 @@ export const authApi = createApi({
       query: () => "auth/logout",
     }),
   }),
-});
+})
 
-export const { useLoginUserMutation, useRegisterUserMutation,  useForgotPasswordMutation,
-  useResetPasswordMutation, useGetMeQuery, useLazyLogoutQuery , useUpdateUserMutation} = authApi;
+export const {
+  useLoginUserMutation,
+  useRegisterUserMutation,
+  useForgotPasswordMutation,
+  useResetPasswordMutation,
+  useGetMeQuery,
+  useLazyLogoutQuery,
+  useUpdateUserMutation,
+} = authApi
