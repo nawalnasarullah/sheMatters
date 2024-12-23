@@ -2,6 +2,7 @@ import { User } from "../models/user.model.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import sendEmail from "../services/emailService.js";
+import { v2 as cloudinary } from 'cloudinary';
 
 export default class Auth {
 
@@ -139,4 +140,42 @@ export default class Auth {
     next(error);
   }
   }
+
+  async UpdateUser(req, res, next) {
+
+    try {
+      const data = req.body
+      const { id } = req.query
+
+      if(!id)
+        return res.status(403).json({
+          message: "Missing id in query param",
+        })
+      
+      if(data.avatar){
+        const imageURL = await cloudinary.uploader.upload(data.avatar , {folder : 'user-avatars'})
+        data.avatar = imageURL.secure_url
+      }
+      
+
+      let updatedUser = await User.findByIdAndUpdate( id , data , {new : true} )
+      if (updatedUser) {
+        updatedUser = updatedUser.toObject();
+      }
+
+      delete updatedUser.password
+      console.log("updated user : " , updatedUser)
+
+      return res.status(200).json({
+        message: "user updated successfully",
+        success: true,
+        user : updatedUser
+      })
+
+    } catch (error) {
+      console.log("error updating user profile : " , error)
+      next(error)
+    }
+  }
+
 }
