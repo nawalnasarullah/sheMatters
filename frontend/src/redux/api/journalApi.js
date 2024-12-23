@@ -39,4 +39,5 @@ export const {
   useCreateJournalMutation,
   useUpdateJournalMutation,
   useDeleteJournalMutation,
+  useGetJournalByIdQuery,
 } = journalApi;

@@ -2,6 +2,7 @@ import { Journal } from "../models/journal.model.js";
 
 export default class JournalController {
     async createNewJournal(req, res, next) {
+        
         try {
             const journal = new Journal(req.body);
             const savedJournal = await journal.save();
@@ -12,6 +13,8 @@ export default class JournalController {
             });
           } catch (err) {
             next(err);
+            console.log(err.message);
+            
           }
     }
 
@@ -29,8 +32,12 @@ export default class JournalController {
     }
 
     async getJournalById(req, res, next) {
+        console.log(req.params);
+        console.log('jjsjsjsjsjsj');
+        
+        
         try {
-            const { id } = req.query;
+            const { id } = req.params;
             const journal = await Journal.findById(id);
             if (!journal) {
                 return res.status(404).json({

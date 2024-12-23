@@ -218,7 +218,7 @@ function SideBar() {
                     },
                   }}
                   component={Link}
-                  to="/dashboard/journal/create"
+                  to="/dashboard/journal/all"
                 >
                   <Typography variant="h5" color="primary.main" sx={{ fontSize: "0.8rem", fontWeight: "600", textTransform: "Uppercase" }}>
                     All Journals
@@ -368,7 +368,7 @@ function SideBar() {
                   },
                 }}
                 component={Link}
-                to="/dashboard/journal/create"
+                to="/dashboard/journal/all"
               >
                 <Typography variant="h5" color="primary.main" sx={{ fontSize: "0.8rem", fontWeight: "600", textTransform: "Uppercase"}}>
                   All Journals

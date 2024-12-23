@@ -18,6 +18,8 @@ import MotherhoodTherapy from "./pages/MotherhoodTherapy";
 import LoginSignupPsychologist from "./pages/LoginSignupPsychologist";
 import LoginSignupAdmin from "./pages/LoginSignupAdmin";
 import Journal from "./pages/Journal";
+import AllJournals from "./pages/AllJournals";
+import JournalDetails from "./pages/JournalDetails";
 
 function App() {
   const router = createBrowserRouter(
@@ -40,6 +42,8 @@ function App() {
           <Route path="accountInfo" element={<AccountInformation />} />
           <Route path="userProfile" element={<UserProfile />} />
           <Route path="journal" element={<Journal />} />
+          <Route path="journal/all" element={<AllJournals />} />
+          <Route path="journal/:id" element={<JournalDetails />} />
         </Route>
       </Route>
     )

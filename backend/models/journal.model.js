@@ -22,12 +22,7 @@ const journalSchema = new mongoose.Schema({
     gratitude: { type: String, required: false },
     affirmations: { type: String, required: false },
     smiles: { type: String, required: false },
-    reminders: [
-      {
-        note: { type: String, required: true },
-        done: { type: Boolean, default: false },
-      },
-    ],
+    reminders: { type: String, required: false },
   },
 
   user: { 
