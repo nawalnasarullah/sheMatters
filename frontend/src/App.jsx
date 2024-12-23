@@ -22,6 +22,7 @@ import UserDashboardMain from "./pages/UserDashboardMain";
 import UserQuestionnaireForm from "./pages/UserQuestionnaireForm";
 import AllJournals from "./pages/AllJournals";
 import JournalDetails from "./pages/JournalDetails";
+import ClinicianDashboardLayout from "./pages/clinician/ClinicianDashboardLayout";
 
 function App() {
   const router = createBrowserRouter(
@@ -48,6 +49,8 @@ function App() {
           <Route path="journal" element={<Journal />} />
           <Route path="journal/all" element={<AllJournals />} />
           <Route path="journal/:id" element={<JournalDetails />} />
+        </Route>
+        <Route path="/clinician/dashboard" element={<ClinicianDashboardLayout />}>
         </Route>
       </Route>
     )

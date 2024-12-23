@@ -32,7 +32,6 @@ export default class psychologistController {
 
   async getPsychologist(req, res, next) {
     const {id} = req.query;
-    // console.log(id);
     try{
       const psychologist = await Psychologist.findById(id);
       res.json({
@@ -45,15 +44,17 @@ export default class psychologistController {
   }
 
   async getMe(req, res, next) {
-    const id = req.psychologist.id;
-    console.log(id);
+    const id = req.user.id;
+    console.log("getting psychologist :" , id);
     try{
       const psychologist = await Psychologist.findById(id);
+      console.log("getting psychologist :" , psychologist);
       res.json({
         psychologist,
         success: true
       });
     }catch(error){
+      console.log("error :" ,error)
       next(new Error(error));
     }
   }

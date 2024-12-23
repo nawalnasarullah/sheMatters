@@ -140,16 +140,16 @@ function LoginSignupPsychologist() {
     onSubmit: async (values) => {
       const res = await loginPsychologist(values).unwrap();
 
-      console.log("login", values);
+      console.log("login psychologist :", res);
 
       if (res && res.success) {
         dispatch(setPsychologistInfo(res));
-        console.log(res);
+        console.log("dispatch psychologist");
 
         toast.success(res.message, {
           progressClassName: "toast-progress-success",
         });
-        navigate("/");
+        navigate("/clinician/dashboard");
       } else {
         toast.error(res.message);
       }

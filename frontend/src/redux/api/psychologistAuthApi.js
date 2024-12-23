@@ -39,7 +39,7 @@ export const psychologistAuthApi = createApi({
       }),
     }),
     getMe: builder.query({
-      query: () => "me",
+      query: () => "psychologist/me",
       async onQueryStarted(arg, {dispatch, queryFulfilled}) {
         console.log('starting');
         try{

@@ -26,10 +26,25 @@ export default class Auth {
     }
   }
   
+  async getMe(req, res, next) {
+    const id = req.psychologist.id;
+    console.log("getting psychologist :" , id);
+    try{
+      const psychologist = await Psychologist.findById(id);
+      console.log("getting psychologist :" , psychologist);
+      res.json({
+        psychologist,
+        success: true
+      });
+    }catch(error){
+      console.log("error :" ,error)
+      next(new Error(error));
+    }
+  }
 
   async login(req, res, next) {
     const body = req.body;
-
+    console.log("loggin in as pyschologist")
     if (!body.email) return next(new Error("Provide the email"));
     if (!body.password) return next(new Error("Provide the password"));
 

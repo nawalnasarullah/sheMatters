@@ -7,6 +7,6 @@ const psychologist = new psychologistController();
 
 router.route('/psychologist/all').get(psychologist.getAllPsychologists);
 router.route('/psychologist/delete').delete(psychologist.deletePsychologist);
-router.route('/me').get(isUserAuthenticated, psychologist.getMe)
+router.route('/psychologist/me').get(isUserAuthenticated, psychologist.getMe)
 
 export default router;
