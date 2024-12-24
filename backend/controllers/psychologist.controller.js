@@ -70,8 +70,6 @@ export default class psychologistController {
           message : "missing id in query"
         })
 
-        const old_psychologist = await Psychologist.findById(id)
-
       if( data.avatar){
         const imageURL = await cloudinary.uploader.upload(data.avatar , {folder : 'psychologist-avatars'})
         data.avatar = imageURL.secure_url
@@ -87,7 +85,7 @@ export default class psychologistController {
         data.certification_url = imageURL.secure_url
       }
 
-      const psychologist = await Psychologist.findByIdAndUpdate(id, data);
+      const psychologist = await Psychologist.findByIdAndUpdate(id, data , {new : true});
       res.json({
         message: "Updated the psychologist",
         psychologist : psychologist
