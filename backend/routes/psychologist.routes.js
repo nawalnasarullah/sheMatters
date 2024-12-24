@@ -8,5 +8,6 @@ const psychologist = new psychologistController();
 router.route('/psychologist/all').get(psychologist.getAllPsychologists);
 router.route('/psychologist/delete').delete(psychologist.deletePsychologist);
 router.route('/psychologist/me').get(isUserAuthenticated, psychologist.getMe)
+router.route('/psychologist/update-profile').patch(psychologist.updatePsychologist);
 
 export default router;

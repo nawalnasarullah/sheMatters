@@ -24,7 +24,6 @@ const psychologistSchema = new Schema({
     unique: true,
   },
 
-
   email: {
     required: [true, "Please provide the email"],
     type: String,
@@ -40,6 +39,7 @@ const psychologistSchema = new Schema({
 
   phoneNumber: {
     type: String,
+    default : null
   },
 
   roles: {
@@ -53,9 +53,35 @@ const psychologistSchema = new Schema({
     required: [true, "Please provide the CNIC"],
     unique: true,
   },
-
+  cnic_url : {
+    type: String,
+    default : null
+  },
+  certification_url : {
+    type: String,
+    default : null
+  },
+  labels : {
+    type : [String],
+    default : null
+  },
   avatar : {
-    type: String
+    type: String,
+    default : null
+  },
+  assignedPatients : {
+    type : [mongoose.Types.ObjectId],
+    default : []
+  },
+  availability : {
+    startHour : {
+      type : String,
+      default : '9'
+    },
+    endHour : {
+      type : String,
+      default : '15'
+    }
   },
   resetPasswordToken: String,
   resetPasswordExpires: Date,

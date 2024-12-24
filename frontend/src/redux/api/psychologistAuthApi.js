@@ -63,8 +63,15 @@ export const psychologistAuthApi = createApi({
     logout: builder.query({
       query: () => "psychologist/auth/logout",
     }),
+    UpdatePsychologist: builder.mutation({
+      query: ({ _id, ...data }) => ({
+        url: `psychologist/update-profile?id=${_id}`,
+        method: "PATCH",
+        body: data,
+      }),
+    })
   }),
 });
 
-export const { useLoginPsychologistMutation, useRegisterPsychologistMutation,  useForgotPasswordMutation,
+export const { useLoginPsychologistMutation, useUpdatePsychologistMutation,  useRegisterPsychologistMutation,  useForgotPasswordMutation,
   useResetPasswordMutation, useGetMeQuery, useLazyLogoutQuery } = psychologistAuthApi;

@@ -135,6 +135,8 @@ function SideBar() {
                 SheMatters
               </Typography>
               <Button
+                component={Link}
+                to="/clinician/dashboard/"
                 sx={{
                   display: "flex",
                   alignItems: "center",
@@ -185,7 +187,7 @@ function SideBar() {
                 <LibraryBooksRoundedIcon
                   sx={{ marginRight: "10px", marginBottom: "3px" }}
                 />
-                Journaling
+                Patients
               </Button>
               <Menu
                 anchorEl={anchorEl}
@@ -271,12 +273,15 @@ function SideBar() {
               SheMatters
             </Typography>
             <Button
+            component={Link}
+                to="/clinician/dashboard/"
               sx={{
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "flex-start",
                 width: "100%",
               }}
+              
             >
               <HomeRoundedIcon
                 sx={{ marginRight: "10px", marginBottom: "3px" }}
@@ -310,7 +315,6 @@ function SideBar() {
               Consultation
             </Button>
             <Button
-              onClick={handleDropdownOpen}
               sx={{
                 display: "flex",
                 alignItems: "center",
@@ -321,45 +325,8 @@ function SideBar() {
               <LibraryBooksRoundedIcon
                 sx={{ marginRight: "10px", marginBottom: "3px" }}
               />
-              Journaling
+              View Patients
             </Button>
-            <Menu
-              anchorEl={anchorEl}
-              open={isDropdownOpen}
-              onClose={handleDropdownClose}
-              sx={{
-                marginLeft: "10px",
-              }}
-            >
-              <MenuItem
-                sx={{
-                  "&:hover": {
-                    backgroundColor: "primary.light",
-                    borderRadius: "6px",
-                  },
-                }}
-                component={Link}
-                to="/dashboard/journal"
-              >
-                <Typography variant="h5" color="primary.main" sx={{ fontSize: "0.8rem", fontWeight: "600", textTransform: "Uppercase" }}>
-                  Create Journal
-                </Typography>
-              </MenuItem>
-              <MenuItem
-                sx={{
-                  "&:hover": {
-                    backgroundColor: "primary.light",
-                    borderRadius: "6px",
-                  },
-                }}
-                component={Link}
-                to="/dashboard/journal/all"
-              >
-                <Typography variant="h5" color="primary.main" sx={{ fontSize: "0.8rem", fontWeight: "600", textTransform: "Uppercase"}}>
-                  All Journals
-                </Typography>
-              </MenuItem>
-            </Menu>
           </Box>
           <Box
             sx={{
@@ -373,7 +340,7 @@ function SideBar() {
           >
             <Button
               component={Link}
-              to="/dashboard/accountInfo"
+              to="/clinician/dashboard/accountInfo"
               variant="contained"
               sx={{
                 backgroundColor: "primary.main",

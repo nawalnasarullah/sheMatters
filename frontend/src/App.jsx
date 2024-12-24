@@ -23,6 +23,8 @@ import UserQuestionnaireForm from "./pages/UserQuestionnaireForm";
 import AllJournals from "./pages/AllJournals";
 import JournalDetails from "./pages/JournalDetails";
 import ClinicianDashboardLayout from "./pages/clinician/ClinicianDashboardLayout";
+import ClinicianAccountInformation from "./pages/clinician/ClinicianAccountInformation"
+import ClinicianDashboardMain from "./pages/clinician/ClinicianDashboardMain";
 
 function App() {
   const router = createBrowserRouter(
@@ -51,6 +53,8 @@ function App() {
           <Route path="journal/:id" element={<JournalDetails />} />
         </Route>
         <Route path="/clinician/dashboard" element={<ClinicianDashboardLayout />}>
+          <Route index element={<ClinicianDashboardMain/>} />
+          <Route path="accountInfo" element={<ClinicianAccountInformation />} />
         </Route>
       </Route>
     )
