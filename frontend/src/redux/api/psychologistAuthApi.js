@@ -69,9 +69,15 @@ export const psychologistAuthApi = createApi({
         method: "PATCH",
         body: data,
       }),
-    })
+    }),
+    GetRecommendedPyschologists : builder.query({
+      query: ({ _id }) => ({
+        url: `psychologist/recommended?id=${_id}`,
+        method: "GET"
+      }),
+    }),
   }),
 });
 
 export const { useLoginPsychologistMutation, useUpdatePsychologistMutation,  useRegisterPsychologistMutation,  useForgotPasswordMutation,
-  useResetPasswordMutation, useGetMeQuery, useLazyLogoutQuery } = psychologistAuthApi;
+  useResetPasswordMutation, useGetMeQuery, useLazyLogoutQuery , useGetRecommendedPyschologistsQuery } = psychologistAuthApi;

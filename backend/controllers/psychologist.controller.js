@@ -1,111 +1,191 @@
-import { Psychologist } from "../models/psychologist.model.js";
-import { v2 as cloudinary } from 'cloudinary';
+import { Psychologist } from "../models/psychologist.model.js"
+import { v2 as cloudinary } from "cloudinary"
+import { User } from "../models/user.model.js"
+import mongoose from "mongoose"
 
 export default class psychologistController {
-  
   async createNewPsychologist(req, res, next) {
+    const psychologist = req.body
+    try {
+      await Psychologist.create(psychologist)
 
-    const psychologist = req.body;
-    try{
-    await Psychologist.create(psychologist);
-
-    // console.log(req.body);
+      // console.log(req.body);
       res.json({
-        message: "New psychologists created successfully"
-      });
-    }catch(error){
-      next(error);
+        message: "New psychologists created successfully",
+      })
+    } catch (error) {
+      next(error)
     }
   }
 
   async getAllPsychologists(req, res, next) {
-    try{
-      const psychologists = await Psychologist.find();
+    try {
+      const psychologists = await Psychologist.find()
       res.json({
         success: true,
         message: "List of all Psychologists",
-        psychologists
-      });
-    }catch(error){
-      next(error);
+        psychologists,
+      })
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async getRecommendedPsychologist(req, res, next) {
+    try {
+      const { id: userId } = req.query
+      if(!userId || !mongoose.Types.ObjectId.isValid(userId)) 
+        return res.status(404).json({ message: "missing or invalid id"})
+
+      const user = await User.findById(userId)
+      const userLabels = user.labels
+
+      if (!userLabels || userLabels.length === 0) {
+        const recommendations = await Psychologist.find({})
+        return res.status(200).json({
+          success: true,
+          psychologists: recommendations,
+        })
+      }
+
+      const pipeline = [
+        {
+          $match: {
+            roles: "psychologist",
+          },
+        },
+        {
+          $addFields: {
+            commonLabels: {
+              $setIntersection: ["$labels", userLabels],
+            },
+          },
+        },
+        {
+          $addFields: {
+            matchCount: {
+              $size: "$commonLabels",
+            },
+          },
+        },
+        {
+          $sort: {
+            matchCount: -1, // Sort by match count in descending order
+          },
+        },
+        {
+          $project: {
+            firstName: 1,
+            lastName: 1,
+            username: 1,
+            email: 1,
+            labels: 1,
+            avatar: 1,
+            commonLabels: 1,
+            matchCount: 1,
+          },
+        },
+      ]
+
+      const recommendations = await Psychologist.aggregate(pipeline);
+      return res.status(200).json({
+        success: true,
+        psychologists: recommendations,
+      })
+
+
+    } catch (err) {
+      console.log("error getting recommendations : ", err)
+      return res.status(500).json({
+        message : "error getting recommendations",
+        success: false
+      })
     }
   }
 
   async getPsychologist(req, res, next) {
-    const {id} = req.query;
-    try{
-      const psychologist = await Psychologist.findById(id);
+    const { id } = req.query
+    try {
+      const psychologist = await Psychologist.findById(id)
       res.json({
-        message:"single psychologist called",
-        psychologist
-      });
-    }catch(error){
-      next(error);
+        message: "single psychologist called",
+        psychologist,
+      })
+    } catch (error) {
+      next(error)
     }
   }
 
   async getMe(req, res, next) {
-    const id = req.user.id;
-    console.log("getting psychologist :" , id);
-    try{
-      const psychologist = await Psychologist.findById(id);
-      console.log("getting psychologist :" , psychologist);
+    const id = req.user.id
+    console.log("getting psychologist :", id)
+    try {
+      const psychologist = await Psychologist.findById(id)
+      console.log("getting psychologist :", psychologist)
       res.json({
         psychologist,
-        success: true
-      });
-    }catch(error){
-      console.log("error :" ,error)
-      next(new Error(error));
+        success: true,
+      })
+    } catch (error) {
+      console.log("error :", error)
+      next(new Error(error))
     }
   }
 
   async updatePsychologist(req, res, next) {
-    try{
-      const data = req.body;
-      const {id} = req.query;
-      
-      if(!id)
+    try {
+      const data = req.body
+      const { id } = req.query
+
+      if (!id)
         return res.status(403).json({
-          message : "missing id in query"
+          message: "missing id in query",
         })
 
-      if( data.avatar){
-        const imageURL = await cloudinary.uploader.upload(data.avatar , {folder : 'psychologist-avatars'})
+      if (data.avatar) {
+        const imageURL = await cloudinary.uploader.upload(data.avatar, {
+          folder: "psychologist-avatars",
+        })
         data.avatar = imageURL.secure_url
       }
 
-      if(data.cnic_url){
-        const imageURL = await cloudinary.uploader.upload(data.cnic_url , {folder : 'psychologist-cnics'})
+      if (data.cnic_url) {
+        const imageURL = await cloudinary.uploader.upload(data.cnic_url, {
+          folder: "psychologist-cnics",
+        })
         data.cnic_url = imageURL.secure_url
       }
 
-      if(data.certification_url){
-        const imageURL = await cloudinary.uploader.upload(data.certification_url , {folder : 'psychologist-certifications'})
+      if (data.certification_url) {
+        const imageURL = await cloudinary.uploader.upload(
+          data.certification_url,
+          { folder: "psychologist-certifications" }
+        )
         data.certification_url = imageURL.secure_url
       }
 
-      const psychologist = await Psychologist.findByIdAndUpdate(id, data , {new : true});
+      const psychologist = await Psychologist.findByIdAndUpdate(id, data, {
+        new: true,
+      })
       res.json({
         message: "Updated the psychologist",
-        psychologist : psychologist
-      });
-
-    }catch(error){
-      console.log("error updating psychologist : " , error)
-      next(error);
+        psychologist: psychologist,
+      })
+    } catch (error) {
+      console.log("error updating psychologist : ", error)
+      next(error)
     }
   }
 
   async deletePsychologist(req, res, next) {
-    const {id} = req.query;
-    try{
-      const psychologist = await Psychologist.findByIdAndDelete(id);
+    const { id } = req.query
+    try {
+      const psychologist = await Psychologist.findByIdAndDelete(id)
       res.json({
         message: "Deleted the psychologist",
-      });
-    }catch(error){
-      next(error);
+      })
+    } catch (error) {
+      next(error)
     }
   }
 }

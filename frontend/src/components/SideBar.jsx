@@ -136,6 +136,8 @@ function SideBar() {
                 SheMatters
               </Typography>
               <Button
+                component={Link}
+                to="/dashboard"
                 sx={{
                   display: "flex",
                   alignItems: "center",
@@ -286,6 +288,8 @@ function SideBar() {
               SheMatters
             </Typography>
             <Button
+              component={Link}
+              to="/dashboard"
               sx={{
                 display: "flex",
                 alignItems: "center",
