@@ -10,5 +10,6 @@ router.route('/psychologist/delete').delete(psychologist.deletePsychologist);
 router.route('/psychologist/me').get(isUserAuthenticated, psychologist.getMe)
 router.route('/psychologist/update-profile').patch(psychologist.updatePsychologist);
 router.route('/psychologist/recommended').get(psychologist.getRecommendedPsychologist);
+router.route('/psychologist/:id').get(psychologist.getPsychologistById);
 
 export default router;

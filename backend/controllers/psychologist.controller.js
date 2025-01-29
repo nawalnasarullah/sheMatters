@@ -177,6 +177,33 @@ export default class psychologistController {
     }
   }
 
+  async getPsychologistById(req, res, next) {
+    try {
+      const { id } = req.params; 
+  
+
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).json({ success: false, message: "Invalid psychologist ID" });
+      }
+  
+      const psychologist = await Psychologist.findById(id);
+
+      if (!psychologist) {
+        return res.status(404).json({ success: false, message: "Psychologist not found" });
+      }
+  
+      res.status(200).json({
+        success: true,
+        message: "Psychologist details fetched successfully",
+        psychologist,
+      });
+    } catch (error) {
+      console.error("Error fetching psychologist by ID:", error);
+      next(error);
+    }
+  }
+  
+
   async deletePsychologist(req, res, next) {
     const { id } = req.query
     try {

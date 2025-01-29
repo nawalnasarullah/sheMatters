@@ -28,12 +28,12 @@ import { toast, ToastContainer } from "react-toastify"
 const options = [
   "depression",
   "anxiety",
-  "family_issues",
-  "self_harm",
+  "family issues",
+  "self harm",
   "addiction",
-  "sleep_issues",
+  "sleep issues",
   "trauma",
-  "menstrual_health",
+  "menstrual health",
 ]
 
 function AccountInformation() {
@@ -149,8 +149,12 @@ function AccountInformation() {
         console.log("update response : " , res)
         dispatch(setPsychologistInfo({ psychologist: res.psychologist }))
         setIsDisabled(true)
+        toast.success("Account information updated successfully!", {
+          progressClassName: "toast-progress-success",
+        })
       } catch (err) {
         console.log("error : ", err)
+        toast.error("Failed to update account information. Please try again.")
       }
     },
   })
@@ -159,6 +163,33 @@ function AccountInformation() {
   {
     console.log("not logged in")
       return <></>
+  }
+
+  const inputstyle ={
+    "& .MuiOutlinedInput-root": {
+      borderRadius: "12px",
+      "&:hover fieldset": {
+        borderColor: "primary.dark",
+      },
+      "&.Mui-focused": {
+        backgroundColor: "white",
+      },
+    },
+    "& .MuiInputBase-input": {
+      padding: "12px",
+      backgroundColor: "white",
+      "&:focus": {
+        backgroundColor: "white",
+      },
+      "&:-webkit-autofill": {
+        WebkitBoxShadow: "0 0 0px 1000px white inset",
+        backgroundColor: "white !important",
+      },
+    },
+    "& .MuiInputLabel-root": {
+      fontSize: "15px",
+      color: "primary.main",
+    },
   }
 
   return (
@@ -249,32 +280,7 @@ function AccountInformation() {
                         </IconButton>
                       ),
                     }}
-                    sx={{
-                      "& .MuiOutlinedInput-root": {
-                        borderRadius: "12px",
-                        "&:hover fieldset": {
-                          borderColor: "primary.dark",
-                        },
-                        "&.Mui-focused": {
-                          backgroundColor: "white",
-                        },
-                      },
-                      "& .MuiInputBase-input": {
-                        padding: "12px",
-                        backgroundColor: "white",
-                        "&:focus": {
-                          backgroundColor: "white",
-                        },
-                        "&:-webkit-autofill": {
-                          WebkitBoxShadow: "0 0 0px 1000px white inset",
-                          backgroundColor: "white !important",
-                        },
-                      },
-                      "& .MuiInputLabel-root": {
-                        fontSize: "15px",
-                        color: "primary.main",
-                      },
-                    }}
+                    sx={inputstyle}
                   />
                 </Grid>
                 <Grid item xs={12} md={6}>
@@ -309,32 +315,7 @@ function AccountInformation() {
                         </IconButton>
                       ),
                     }}
-                    sx={{
-                      "& .MuiOutlinedInput-root": {
-                        borderRadius: "12px",
-                        "&:hover fieldset": {
-                          borderColor: "primary.dark",
-                        },
-                        "&.Mui-focused": {
-                          backgroundColor: "white",
-                        },
-                      },
-                      "& .MuiInputBase-input": {
-                        padding: "12px",
-                        backgroundColor: "white",
-                        "&:focus": {
-                          backgroundColor: "white",
-                        },
-                        "&:-webkit-autofill": {
-                          WebkitBoxShadow: "0 0 0px 1000px white inset",
-                          backgroundColor: "white !important",
-                        },
-                      },
-                      "& .MuiInputLabel-root": {
-                        fontSize: "15px",
-                        color: "primary.main",
-                      },
-                    }}
+                    sx={inputstyle}
                   />
                 </Grid>
                 <Grid item xs={12} md={6}>
@@ -369,32 +350,7 @@ function AccountInformation() {
                         </IconButton>
                       ),
                     }}
-                    sx={{
-                      "& .MuiOutlinedInput-root": {
-                        borderRadius: "12px",
-                        "&:hover fieldset": {
-                          borderColor: "primary.dark",
-                        },
-                        "&.Mui-focused": {
-                          backgroundColor: "white",
-                        },
-                      },
-                      "& .MuiInputBase-input": {
-                        padding: "12px",
-                        backgroundColor: "white",
-                        "&:focus": {
-                          backgroundColor: "white",
-                        },
-                        "&:-webkit-autofill": {
-                          WebkitBoxShadow: "0 0 0px 1000px white inset",
-                          backgroundColor: "white !important",
-                        },
-                      },
-                      "& .MuiInputLabel-root": {
-                        fontSize: "15px",
-                        color: "primary.main",
-                      },
-                    }}
+                    sx={inputstyle}
                   />
                 </Grid>
                 <Grid item xs={12} md={6}>
@@ -428,32 +384,7 @@ function AccountInformation() {
                         </IconButton>
                       ),
                     }}
-                    sx={{
-                      "& .MuiOutlinedInput-root": {
-                        borderRadius: "12px",
-                        "&:hover fieldset": {
-                          borderColor: "primary.dark",
-                        },
-                        "&.Mui-focused": {
-                          backgroundColor: "white",
-                        },
-                      },
-                      "& .MuiInputBase-input": {
-                        padding: "12px",
-                        backgroundColor: "white",
-                        "&:focus": {
-                          backgroundColor: "white",
-                        },
-                        "&:-webkit-autofill": {
-                          WebkitBoxShadow: "0 0 0px 1000px white inset",
-                          backgroundColor: "white !important",
-                        },
-                      },
-                      "& .MuiInputLabel-root": {
-                        fontSize: "15px",
-                        color: "primary.main",
-                      },
-                    }}
+                    sx={inputstyle}
                   />
                 </Grid>
                 <Grid item xs={12} md={6}>
@@ -487,32 +418,7 @@ function AccountInformation() {
                         </IconButton>
                       ),
                     }}
-                    sx={{
-                      "& .MuiOutlinedInput-root": {
-                        borderRadius: "12px",
-                        "&:hover fieldset": {
-                          borderColor: "primary.dark",
-                        },
-                        "&.Mui-focused": {
-                          backgroundColor: "white",
-                        },
-                      },
-                      "& .MuiInputBase-input": {
-                        padding: "12px",
-                        backgroundColor: "white",
-                        "&:focus": {
-                          backgroundColor: "white",
-                        },
-                        "&:-webkit-autofill": {
-                          WebkitBoxShadow: "0 0 0px 1000px white inset",
-                          backgroundColor: "white !important",
-                        },
-                      },
-                      "& .MuiInputLabel-root": {
-                        fontSize: "15px",
-                        color: "primary.main",
-                      },
-                    }}
+                    sx={inputstyle}
                   />
                 </Grid>
                 <Grid item xs={12} md={6}>
@@ -548,32 +454,7 @@ function AccountInformation() {
                           </IconButton>
                         ),
                       }}
-                      sx={{
-                        "& .MuiOutlinedInput-root": {
-                          borderRadius: "12px",
-                          "&:hover fieldset": {
-                            borderColor: "primary.dark",
-                          },
-                          "&.Mui-focused": {
-                            backgroundColor: "white",
-                          },
-                        },
-                        "& .MuiInputBase-input": {
-                          padding: "12px",
-                          backgroundColor: "white",
-                          "&:focus": {
-                            backgroundColor: "white",
-                          },
-                          "&:-webkit-autofill": {
-                            WebkitBoxShadow: "0 0 0px 1000px white inset",
-                            backgroundColor: "white !important",
-                          },
-                        },
-                        "& .MuiInputLabel-root": {
-                          fontSize: "15px",
-                          color: "primary.main",
-                        },
-                      }}
+                      sx={inputstyle}
                     />
                   ) : (
                     <Box
@@ -652,32 +533,7 @@ function AccountInformation() {
                           </IconButton>
                         ),
                       }}
-                      sx={{
-                        "& .MuiOutlinedInput-root": {
-                          borderRadius: "12px",
-                          "&:hover fieldset": {
-                            borderColor: "primary.dark",
-                          },
-                          "&.Mui-focused": {
-                            backgroundColor: "white",
-                          },
-                        },
-                        "& .MuiInputBase-input": {
-                          padding: "12px",
-                          backgroundColor: "white",
-                          "&:focus": {
-                            backgroundColor: "white",
-                          },
-                          "&:-webkit-autofill": {
-                            WebkitBoxShadow: "0 0 0px 1000px white inset",
-                            backgroundColor: "white !important",
-                          },
-                        },
-                        "& .MuiInputLabel-root": {
-                          fontSize: "15px",
-                          color: "primary.main",
-                        },
-                      }}
+                      sx={inputstyle}
                     />
                   ) : (
                     <Box
@@ -724,10 +580,14 @@ function AccountInformation() {
                   )}
                 </Grid>
                 <Grid item xs={12} md={6}>
-                  <Typography variant="h6" gutterBottom>
+                  <Typography variant="h6" color="primary.main" fontWeight="bold" gutterBottom>
                     Select at least one Specialization:
                   </Typography>
-                  <FormGroup>
+                  <FormGroup style={{
+    display: "grid",
+    gridTemplateColumns: "3fr 3fr 3fr", // Two columns
+    gap: "12px", // Space between items
+  }}>
                     {options.map((option) => (
                       <FormControlLabel
                         key={option}
@@ -738,7 +598,13 @@ function AccountInformation() {
                             onChange={handleCheckboxChange}
                           />
                         }
-                        label={option}
+                        label={
+                          <Typography variant="h6" fontWeight="bold" sx={{ fontSize: "13px", textTransform: "uppercase" }}>
+                          {option}
+                        </Typography>
+                        }
+
+                        sx={{ "& .MuiCheckbox-root": { color: "primary.main" }}}
                       />
                     ))}
                   </FormGroup>
@@ -755,7 +621,17 @@ function AccountInformation() {
             </Button>
           </form>
         </div>
-        <ToastContainer />
+        <ToastContainer
+         position="top-center"
+         autoClose={5000}
+         hideProgressBar={false}
+         newestOnTop={false}
+         closeOnClick
+         rtl={false}
+         pauseOnFocusLoss
+         draggable
+         pauseOnHover
+         theme="light" />
       </Box>
     </ThemeProvider>
   )

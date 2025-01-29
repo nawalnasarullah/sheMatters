@@ -10,7 +10,7 @@ function ProfileNav() {
 
     
   const {isAuthenticated, psychologist} = useSelector(state => state.psychologistAuth);
-
+  
   return (
     <ThemeProvider theme={theme}>
       <div className="flex justify-between items-center px-5 py-5 shadow-md ms-0 lg:ms-[231px]">

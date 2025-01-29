@@ -7,7 +7,6 @@ import ResetPassword from "./pages/ResetPassword";
 import Home from "./pages/Home";
 import Layout from "./components/Layout";
 import LoginSignUp from "./pages/LoginSignup";
-import UserProfile from "./pages/UserProfile";
 import ForClinicians from "./pages/ForClinicians";
 import AccountInformation from "./pages/AccountInformation";
 import DashboardLayout from "./components/DashboardLayout";
@@ -18,13 +17,14 @@ import MotherhoodTherapy from "./pages/MotherhoodTherapy";
 import LoginSignupPsychologist from "./pages/LoginSignupPsychologist";
 import LoginSignupAdmin from "./pages/LoginSignupAdmin";
 import Journal from "./pages/Journal";
-import UserDashboardMain from "./pages/UserDashboardMain";
+import UserDashboardMain from "./pages/user/UserDashboardMain";
 import UserQuestionnaireForm from "./pages/UserQuestionnaireForm";
 import AllJournals from "./pages/AllJournals";
 import JournalDetails from "./pages/JournalDetails";
 import ClinicianDashboardLayout from "./pages/clinician/ClinicianDashboardLayout";
 import ClinicianAccountInformation from "./pages/clinician/ClinicianAccountInformation"
 import ClinicianDashboardMain from "./pages/clinician/ClinicianDashboardMain";
+import ClinicianProfile from "./pages/clinician/ClinicianProfile";
 
 function App() {
   const router = createBrowserRouter(
@@ -45,9 +45,9 @@ function App() {
         <Route path="/resetPassword" element={<ResetPassword />} />
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route index element={<UserDashboardMain/>} />
+          <Route path="psychologist/profile/:id" element={<ClinicianProfile/>} />
           <Route path="user/questionnaire" element={<UserQuestionnaireForm />} />
           <Route path="accountInfo" element={<AccountInformation />} />
-          <Route path="userProfile" element={<UserProfile />} />
           <Route path="journal" element={<Journal />} />
           <Route path="journal/all" element={<AllJournals />} />
           <Route path="journal/:id" element={<JournalDetails />} />

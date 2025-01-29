@@ -12,7 +12,7 @@ export default function ClinicianDashboardMain() {
 
   return (
     <section className='user-dashboard-main '>
-        <ClinicianProfileSetupReminder />
+        {/* <ClinicianProfileSetupReminder /> */}
     </section>
   )
 }

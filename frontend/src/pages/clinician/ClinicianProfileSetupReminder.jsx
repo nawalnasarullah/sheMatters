@@ -7,6 +7,8 @@ import {
     Typography,
   } from "@mui/material";
 import { Link } from "react-router-dom";
+import { ThemeProvider } from '@emotion/react';
+import theme from '../../components/Theme'
 
 const ClinicianProfileSetupReminder = () => {
 
@@ -17,7 +19,8 @@ const ClinicianProfileSetupReminder = () => {
     const profileComplete = isProfileComplete(psychologist)
     console.log('profileComplete', profileComplete)
     return (
-        <div className="max-w-[500px] mx-auto gap-5">
+        <ThemeProvider theme={theme}>
+            <div className="max-w-[500px] mx-auto gap-5">
         
         {
             !profileComplete ? 
@@ -25,9 +28,9 @@ const ClinicianProfileSetupReminder = () => {
                 <Link href="/">
                     <CardContent>
                     <Typography
-                        variant="h6"
+                        variant="h5"
                         color="primary.main"
-                        sx={{ fontWeight: 600 , marginBottom : '10px'}}
+                        sx={{ fontWeight: 400 , marginBottom : '10px', fontSize: "1.2rem" }}
                     >
                         Complete your profile to get started
                     </Typography>
@@ -41,7 +44,7 @@ const ClinicianProfileSetupReminder = () => {
                             bgcolor: "primary.hover",
                         },
                         color: "white",
-                        py: 1.5,
+                        py: 1,
                         px: 4,
                         textTransform: "uppercase",
                         borderRadius: 1,
@@ -59,6 +62,7 @@ const ClinicianProfileSetupReminder = () => {
         }
 
         </div>
+        </ThemeProvider>
     )
 }
 

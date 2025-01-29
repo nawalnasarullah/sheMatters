@@ -83,6 +83,12 @@ const psychologistSchema = new Schema({
       default : '15'
     }
   },
+  psychologistStatus: {
+    type: String,
+    enum: ['approved', 'not approved', 'pending'],
+    default: 'pending',
+    required: true
+  },
   resetPasswordToken: String,
   resetPasswordExpires: Date,
 });

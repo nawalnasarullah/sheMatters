@@ -283,3 +283,38 @@ export const heroSectionData = {
     footerText: "You are doing your best, and that’s enough.",
   },
 };
+
+export const questions = [
+  {
+      question: "Do you feel depressed or unmotivated?",
+      label: "depression",
+  },
+  {
+      question: "Do you feel anxious or worried often?",
+      label: "anxiety",
+  },
+  {
+      question: "Are any family-related issues causing you distress?",
+      label: "family_issues",
+  },
+  {
+      question: "Do you have thoughts about harming yourself or committing suicide?",
+      label: "self_harm",
+  },
+  {
+      question: "Are you struggling to deal with any addiction?",
+      label: "addiction",
+  },
+  {
+      question: "Do you have trouble sleeping at night or with the quality of your sleep?",
+      label: "sleep_issues",
+  },
+  {
+      question: "Have you experienced any traumatic experience?",
+      label: "trauma",
+  },
+  {
+      question: "Do you have regular menstrual cycles?",
+      label: "menstrual_health",
+  },
+];
