@@ -26,6 +26,7 @@ import ClinicianAccountInformation from "./pages/clinician/ClinicianAccountInfor
 import ClinicianDashboardMain from "./pages/clinician/ClinicianDashboardMain";
 import ClinicianProfile from "./pages/clinician/ClinicianProfile";
 
+
 function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(

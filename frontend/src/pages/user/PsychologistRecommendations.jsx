@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { useGetRecommendedPyschologistsQuery } from "../../redux/api/psychologistAuthApi";
-import { Typography, Card, CardContent, Button, CircularProgress } from "@mui/material";
+import { Typography, Card, CardContent, Button, CircularProgress, Box } from "@mui/material";
 import Pill from "./Pill";
 
 export default function PsychologistRecommendations() {
@@ -10,6 +10,8 @@ export default function PsychologistRecommendations() {
   const { data, isLoading, isError } = useGetRecommendedPyschologistsQuery({
     _id: user?.user?._id || "",
   });
+
+  console.log('ff',data);
 
   if (!isAuthenticated) return null;
 
@@ -52,6 +54,7 @@ export default function PsychologistRecommendations() {
 }
 
 const PsychologistCard = ({ psychologist }) => (
+  
   <Card
     className="border rounded-lg text-start"
     sx={{ marginBottom: "10px" }}
@@ -82,6 +85,21 @@ const PsychologistCard = ({ psychologist }) => (
           </>
         )}
       </div>
+      <Typography variant="h6" color="textPrimary" sx={{ fontSize: "16px", fontWeight: 600, marginTop: "20px" }}>
+        Fee per Session: <Box 
+    sx={{
+      backgroundColor: "secondary.main",
+      fontWeight: 700,
+      fontSize: "14px",
+      padding: "4px 10px",
+      borderRadius: "20px", 
+      marginLeft: "8px",
+      display: "inline-block",
+    }}
+  >
+    Rs. {psychologist.fee}
+  </Box>
+      </Typography>
       <Button
         variant="contained"
         component={Link}

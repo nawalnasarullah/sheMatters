@@ -73,16 +73,23 @@ const psychologistSchema = new Schema({
     type : [mongoose.Types.ObjectId],
     default : []
   },
-  availability : {
-    startHour : {
-      type : String,
-      default : '9'
-    },
-    endHour : {
-      type : String,
-      default : '15'
-    }
+  experience : {
+    type : String,
+    required : true
   },
+  available : {
+    type : Boolean,
+    default : true
+  },
+  fee : {
+    type : Number,
+    required : true
+  },
+  date: {
+    type: Number,
+    required : true
+  },
+ 
   psychologistStatus: {
     type: String,
     enum: ['approved', 'not approved', 'pending'],
@@ -91,6 +98,10 @@ const psychologistSchema = new Schema({
   },
   resetPasswordToken: String,
   resetPasswordExpires: Date,
-});
+  slots_booked : {
+    type : Object,
+    default : {}
+  }
+}, {minimize : false});
 
 export const Psychologist = mongoose.model("psychologist", psychologistSchema);
