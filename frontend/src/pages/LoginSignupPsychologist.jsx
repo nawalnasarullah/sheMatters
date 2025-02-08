@@ -94,7 +94,10 @@ function LoginSignupPsychologist() {
 
       const psychologist = await registerPsychologist(values).unwrap();
       console.log("ggggggg", psychologist);
+
       if (psychologist && psychologist.success) {
+        console.log('success', psychologist.success);
+        
         toast.success(psychologist.message, {
           progressClassName: "toast-progress-success",
         });

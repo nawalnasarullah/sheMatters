@@ -6,12 +6,9 @@ export default class AppointmentController {
   async bookAnAppointment(req, res, next) {
     try {
       const { psychologistId, userId, slotDate, slotTime } = req.body;
-      console.log("appointment data", psychologistId, userId, slotDate, slotTime);
+  
+      const psychologistData = await Psychologist.findById(psychologistId).select('-password');
       
-
-      const psychologistData = await Psychologist.findById(psychologistId).select('-password').lean();
-
-      console.log("psychologist data", psychologistData);
       if (!psychologistData) {
         return res.status(404).json({ message: 'Psychologist not found', success: false });
       }
@@ -31,11 +28,11 @@ export default class AppointmentController {
       slots_booked[slotDate] = slots_booked[slotDate] || [];
       slots_booked[slotDate].push(slotTime);
 
-      const userData = await User.findById(userId).select('-password').lean();
+      const userData = await User.findById(userId).select('-password');
       if (!userData) {
         return res.status(404).json({ message: 'User not found', success: false });
       }
-
+      
       delete psychologistData.slots_booked; 
 
       const appointmentData = {
@@ -54,8 +51,10 @@ export default class AppointmentController {
 
       // Saving new slot data
       await Psychologist.findByIdAndUpdate(psychologistId, { slots_booked });
+      console.log("slots_booked", slots_booked);
+      
 
-      res.json({ message: 'Appointment Booked Successfully', success: true, status: 'booked' });
+      res.json({ message: 'Appointment Booked Successfully', success: true, status: 'booked', available: false });
 
     } catch (err) {
       next(err);

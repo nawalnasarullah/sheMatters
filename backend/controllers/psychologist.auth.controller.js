@@ -9,8 +9,7 @@ export default class Auth {
     console.log("signUp was called");
     
     const psychologist = req.body;
-  
-  
+    
     try {
   
       psychologist.password = await bcrypt.hash(psychologist.password, 10);
