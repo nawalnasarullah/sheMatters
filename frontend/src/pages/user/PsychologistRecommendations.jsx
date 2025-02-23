@@ -53,11 +53,11 @@ export default function PsychologistRecommendations() {
     responsive: [
       {
         breakpoint: 1024,
-        settingsRec: { slidesToShow: 2, slidesToScroll: 1 },
+        settings: { slidesToShow: 2, slidesToScroll: 1 },
       },
       {
         breakpoint: 768,
-        settingsRec: { slidesToShow: 1, slidesToScroll: 1 },
+        settings: { slidesToShow: 1, slidesToScroll: 1 },
       },
     ],
   };
