@@ -89,7 +89,7 @@ export default function PsychologistRecommendations() {
 }
 
 const PsychologistCard = ({ psychologist }) => (
-  <Card className="border rounded-lg text-start" sx={{ margin: "10px" }}>
+  <Card className="border rounded-lg text-start" sx={{ marginRight: "15px" }}>
     <CardContent>
       <Typography variant="h5" color="textPrimary" sx={{ fontSize: "20px" }}>
         {psychologist.firstName} {psychologist.lastName}
