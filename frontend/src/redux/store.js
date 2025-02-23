@@ -5,6 +5,7 @@ import { psychologistAuthApi } from "./api/psychologistAuthApi";
 import { journalApi } from "./api/journalApi";
 import psychologistReducer from "./features/psychologistAuthSlice"
 import { psychologistApi } from "./api/psychologistApi";
+import { appointmentApi } from "./api/appointmentApi";
 
 const store = configureStore({
   reducer: {
@@ -14,10 +15,11 @@ const store = configureStore({
     [psychologistAuthApi.reducerPath]: psychologistAuthApi.reducer,
     [journalApi.reducerPath]: journalApi.reducer, // journal api ko slice or reducer ky saath link krty or store ko react app ky saath link krty
     [psychologistApi.reducerPath]: psychologistApi.reducer, // psychologist api ko slice or reducer ky
+    [appointmentApi.reducerPath]: appointmentApi.reducer, // appointment api ko slice or reducer ky
   },
 
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat([authApi.middleware, psychologistAuthApi.middleware, journalApi.middleware, psychologistApi.middleware]), // ye caching, invalidation, polling k kaam krti
+    getDefaultMiddleware().concat([authApi.middleware, psychologistAuthApi.middleware, journalApi.middleware, psychologistApi.middleware, appointmentApi.middleware ]), // ye caching, invalidation, polling k kaam krti
 });
 
 export default store;

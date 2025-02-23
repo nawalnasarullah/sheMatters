@@ -83,6 +83,8 @@ export default class psychologistController {
             avatar: 1,
             commonLabels: 1,
             matchCount: 1,
+            experience: 1,
+            fee: 1,
           },
         },
       ]
@@ -202,8 +204,6 @@ export default class psychologistController {
       next(error);
     }
   }
-  
-
   async deletePsychologist(req, res, next) {
     const { id } = req.query
     try {

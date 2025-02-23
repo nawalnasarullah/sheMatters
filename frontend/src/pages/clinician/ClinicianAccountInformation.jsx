@@ -1,5 +1,5 @@
-import React, { useState } from "react"
-import { useSelector } from "react-redux"
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import {
   TextField,
   Box,
@@ -13,17 +13,18 @@ import {
   Checkbox,
   FormControlLabel,
   FormGroup,
-} from "@mui/material"
+} from "@mui/material";
 
-import EditRoundedIcon from "@mui/icons-material/EditRounded"
-import { useFormik } from "formik"
-import * as Yup from "yup"
-import VerifiedUserRoundedIcon from "@mui/icons-material/VerifiedUserRounded"
-import theme from "../../components/Theme"
-import { useUpdatePsychologistMutation } from "../../redux/api/psychologistAuthApi"
-import { useDispatch } from "react-redux"
-import { setPsychologistInfo } from "../../redux/features/psychologistAuthSlice"
-import { toast, ToastContainer } from "react-toastify"
+import EditRoundedIcon from "@mui/icons-material/EditRounded";
+import InputAdornment from "@mui/material/InputAdornment";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import VerifiedUserRoundedIcon from "@mui/icons-material/VerifiedUserRounded";
+import theme from "../../components/Theme";
+import { useUpdatePsychologistMutation } from "../../redux/api/psychologistAuthApi";
+import { useDispatch } from "react-redux";
+import { setPsychologistInfo } from "../../redux/features/psychologistAuthSlice";
+import { toast, ToastContainer } from "react-toastify";
 
 const options = [
   "depression",
@@ -34,51 +35,58 @@ const options = [
   "sleep issues",
   "trauma",
   "menstrual health",
-]
+];
 
 function AccountInformation() {
-  const dispatch = useDispatch()
-  const [updatePyschologist, { isLoading, isSuccess, isError, error }] =useUpdatePsychologistMutation()
-  const {isAuthenticated, psychologist} = useSelector(state => state.psychologistAuth);
+  const dispatch = useDispatch();
+  const [updatePyschologist, { isLoading, isSuccess, isError, error }] =
+    useUpdatePsychologistMutation();
+  const { isAuthenticated, psychologist } = useSelector(
+    (state) => state.psychologistAuth
+  );
 
-  const [isDisabled, setIsDisabled] = useState(true)
-  const [selectedOptions, setSelectedOptions] = useState(psychologist?.labels || [])
+  console.log("psychologist : ", psychologist);
+
+  const [isDisabled, setIsDisabled] = useState(true);
+  const [selectedOptions, setSelectedOptions] = useState(
+    psychologist?.labels || []
+  );
 
   const toggleEdit = () => {
-    setIsDisabled((state) => !state)
-  }
+    setIsDisabled((state) => !state);
+  };
 
   const parseDate = (dateString) => {
-    const date = new Date(dateString)
+    const date = new Date(dateString);
 
-    const day = String(date.getDate()).padStart(2, "0")
-    const month = String(date.getMonth() + 1).padStart(2, "0")
-    const year = date.getFullYear()
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
 
     // Return the formatted date
-    return `${day}/${month}/${year}`
-  }
+    return `${day}/${month}/${year}`;
+  };
 
   let handleImageUpload = (image) => {
-    console.log(image)
-    console.log(image.target.files[0])
-    const fieldName = image.target.name
+    console.log(image);
+    console.log(image.target.files[0]);
+    const fieldName = image.target.name;
 
     if (image.target.files[0].size > 5097152) {
       //for 5MB
-      console.log("Image size too large")
-      formik.setFieldError(fieldName, "image size should not exceed 4MB")
-      toast.error("Image size should not exceed 4MB")
-      return
+      console.log("Image size too large");
+      formik.setFieldError(fieldName, "image size should not exceed 4MB");
+      toast.error("Image size should not exceed 4MB");
+      return;
     }
 
-    let reader = new FileReader()
-    reader.readAsDataURL(image.target.files[0])
+    let reader = new FileReader();
+    reader.readAsDataURL(image.target.files[0]);
 
     reader.onload = () => {
-      if (reader.readyState === 2) setFieldValue(fieldName, reader.result)
-    }
-  }
+      if (reader.readyState === 2) setFieldValue(fieldName, reader.result);
+    };
+  };
 
   const handleCheckboxChange = (event) => {
     const { name, checked } = event.target;
@@ -111,6 +119,8 @@ function AccountInformation() {
       certification_url: psychologist?.certification_url || "",
       certification_url: psychologist?.certification_url || "",
       availability: psychologist?.availability || "",
+      experience: psychologist?.experience || "",
+      fee: psychologist?.fee || "",
     },
     validationSchema: Yup.object({
       firstName: Yup.string()
@@ -138,34 +148,33 @@ function AccountInformation() {
     }),
     onSubmit: async (values, errors) => {
       try {
-        console.log("submission errors : ", errors)
-        console.log(values)
-        console.log("speciaiozliaiton : " , selectedOptions)
+        console.log("submission errors : ", errors);
+        console.log(values);
+        console.log("speciaiozliaiton : ", selectedOptions);
         const res = await updatePyschologist({
           ...values,
-          labels : selectedOptions ,
+          labels: selectedOptions,
           _id: psychologist._id,
-        }).unwrap()
-        console.log("update response : " , res)
-        dispatch(setPsychologistInfo({ psychologist: res.psychologist }))
-        setIsDisabled(true)
+        }).unwrap();
+        console.log("update response : ", res);
+        dispatch(setPsychologistInfo({ psychologist: res.psychologist }));
+        setIsDisabled(true);
         toast.success("Account information updated successfully!", {
           progressClassName: "toast-progress-success",
-        })
+        });
       } catch (err) {
-        console.log("error : ", err)
-        toast.error("Failed to update account information. Please try again.")
+        console.log("error : ", err);
+        toast.error("Failed to update account information. Please try again.");
       }
     },
-  })
+  });
 
-  if(!psychologist || !isAuthenticated)
-  {
-    console.log("not logged in")
-      return <></>
+  if (!psychologist || !isAuthenticated) {
+    console.log("not logged in");
+    return <></>;
   }
 
-  const inputstyle ={
+  const inputstyle = {
     "& .MuiOutlinedInput-root": {
       borderRadius: "12px",
       "&:hover fieldset": {
@@ -190,7 +199,7 @@ function AccountInformation() {
       fontSize: "15px",
       color: "primary.main",
     },
-  }
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -248,7 +257,7 @@ function AccountInformation() {
             {/* Input Fields Section */}
             <Box sx={{ mt: 2 }}>
               <Grid container spacing={3}>
-                <Grid item xs={12} md={12}>
+                <Grid item xs={12} md={6}>
                   <TextField
                     disabled={isDisabled}
                     label="User Name"
@@ -261,6 +270,44 @@ function AccountInformation() {
                       shrink: true,
                     }}
                     InputProps={{
+                      endAdornment: (
+                        <IconButton
+                          sx={{
+                            "&:hover": { backgroundColor: "primary.light" },
+                          }}
+                        >
+                          <EditRoundedIcon
+                            onClick={toggleEdit}
+                            sx={{
+                              fontSize: "20px",
+                              "&:hover": {
+                                color: "primary.main",
+                                transition: "0.3s",
+                              },
+                            }}
+                          />
+                        </IconButton>
+                      ),
+                    }}
+                    sx={inputstyle}
+                  />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    disabled={isDisabled}
+                    label="Fee per Session"
+                    variant="outlined"
+                    fullWidth
+                    name="fee"
+                    value={values.fee}
+                    onChange={handleChange}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">Rupees</InputAdornment>
+                      ),
                       endAdornment: (
                         <IconButton
                           sx={{
@@ -579,35 +626,95 @@ function AccountInformation() {
                     </Box>
                   )}
                 </Grid>
-                <Grid item xs={12} md={6}>
-                  <Typography variant="h6" color="primary.main" fontWeight="bold" gutterBottom>
+                <Grid item xs={12} md={12}>
+                  <Typography
+                    variant="h6"
+                    color="primary.main"
+                    fontWeight="bold"
+                    gutterBottom
+                  >
                     Select at least one Specialization:
                   </Typography>
-                  <FormGroup style={{
-    display: "grid",
-    gridTemplateColumns: "3fr 3fr 3fr", // Two columns
-    gap: "12px", // Space between items
-  }}>
+                  <FormGroup
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "3fr 3fr 3fr",
+                      gap: "12px",
+                    }}
+                  >
                     {options.map((option) => (
                       <FormControlLabel
                         key={option}
                         control={
                           <Checkbox
                             name={option}
-                            checked={selectedOptions.includes(option) }
+                            checked={selectedOptions.includes(option)}
                             onChange={handleCheckboxChange}
                           />
                         }
                         label={
-                          <Typography variant="h6" fontWeight="bold" sx={{ fontSize: "13px", textTransform: "uppercase" }}>
-                          {option}
-                        </Typography>
+                          <Typography
+                            variant="h6"
+                            fontWeight="bold"
+                            sx={{
+                              fontSize: "13px",
+                              textTransform: "uppercase",
+                            }}
+                          >
+                            {option}
+                          </Typography>
                         }
-
-                        sx={{ "& .MuiCheckbox-root": { color: "primary.main" }}}
+                        sx={{
+                          "& .MuiCheckbox-root": { color: "primary.main" },
+                        }}
                       />
                     ))}
                   </FormGroup>
+                </Grid>
+                <Grid item xs={12} md={12}>
+                <Typography
+                    variant="h6"
+                    color="primary.main"
+                    fontWeight="bold"
+                    gutterBottom
+                  >
+                    About Your Experience:
+                  </Typography>
+                  <TextField
+                    disabled={isDisabled}
+                    label="About Your Experience"
+                    multiline
+                    rows={2}
+                    variant="outlined"
+                    fullWidth
+                    name="experience"
+                    value={values.experience}
+                    onChange={handleChange}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    InputProps={{
+                      endAdornment: (
+                        <IconButton
+                          sx={{
+                            "&:hover": { backgroundColor: "primary.light" },
+                          }}
+                        >
+                          <EditRoundedIcon
+                            onClick={toggleEdit}
+                            sx={{
+                              fontSize: "20px",
+                              "&:hover": {
+                                color: "primary.main",
+                                transition: "0.3s",
+                              },
+                            }}
+                          />
+                        </IconButton>
+                      ),
+                    }}
+                    sx={inputstyle}
+                  />
                 </Grid>
               </Grid>
             </Box>
@@ -622,19 +729,20 @@ function AccountInformation() {
           </form>
         </div>
         <ToastContainer
-         position="top-center"
-         autoClose={5000}
-         hideProgressBar={false}
-         newestOnTop={false}
-         closeOnClick
-         rtl={false}
-         pauseOnFocusLoss
-         draggable
-         pauseOnHover
-         theme="light" />
+          position="top-center"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
       </Box>
     </ThemeProvider>
-  )
+  );
 }
 
-export default AccountInformation
+export default AccountInformation;

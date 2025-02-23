@@ -1,6 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useGetPsychologistByIdQuery } from "../../redux/api/psychologistApi";
+import { useBookAppointmentMutation } from "../../redux/api/appointmentApi";
 import {
   Typography,
   Card,
@@ -13,6 +14,8 @@ import {
 } from "@mui/material";
 import Pill from "../user/Pill";
 import theme from "../../components/Theme";
+import AvailableSlots from "../../components/AvailableSlots";
+import { useSelector } from "react-redux";
 
 export default function PsychologistProfile() {
   const { id } = useParams(); // Get the psychologist ID from the URL params
@@ -20,6 +23,13 @@ export default function PsychologistProfile() {
 
   // Fetch psychologist details by ID
   const { data, isLoading, isError } = useGetPsychologistByIdQuery(id);
+  const { user } = useSelector((state) => state.auth);
+
+  const [slotIndex, setSlotIndex] = useState([]);
+  const [slotTime, setSlotTime] = useState("");
+  const [selectedDate, setSelectedDate] = useState("");
+
+  const [bookAppointment, { isLoading: isBooking }] = useBookAppointmentMutation();
 
   useEffect(() => {
     if (isError) {
@@ -27,6 +37,25 @@ export default function PsychologistProfile() {
       navigate("/");
     }
   }, [isError, navigate]);
+
+  const handleBookAppointment = async () => {
+    if (!slotTime || !selectedDate) {
+      alert("Please select a slot before booking.");
+      return;
+    }
+
+    try {
+      await bookAppointment({
+        psychologistId: id,
+        userId: user?.user?._id,
+        slotDate: selectedDate,
+        slotTime,
+      }).unwrap();
+      alert("Appointment booked successfully!");
+    } catch (error) {
+      alert(error?.data?.message || "Failed to book appointment.");
+    }
+  };
 
   if (isLoading) {
     return (
@@ -59,7 +88,7 @@ export default function PsychologistProfile() {
 
           <Box sx={{ display: "flex", gap: 2 }}>
             <Typography
-              sx={{ fontSize: "1.2rem" }}
+              sx={{ fontSize: "1rem" }}
               variant="h5"
               color="textSecondary"
               gutterBottom
@@ -68,7 +97,7 @@ export default function PsychologistProfile() {
             </Typography>
 
             <Typography
-              sx={{ fontSize: "1.2rem" }}
+              sx={{ fontSize: "1rem" }}
               variant="h5"
               color="primary.main"
               gutterBottom
@@ -79,7 +108,7 @@ export default function PsychologistProfile() {
 
           <Box sx={{ display: "flex", gap: 2 }}>
             <Typography
-              sx={{ fontSize: "1.2rem" }}
+              sx={{ fontSize: "1rem" }}
               variant="h5"
               color="textSecondary"
               gutterBottom
@@ -88,7 +117,7 @@ export default function PsychologistProfile() {
             </Typography>
 
             <Typography
-              sx={{ fontSize: "1.2rem" }}
+              sx={{ fontSize: "1rem" }}
               variant="h5"
               color="primary.main"
               gutterBottom
@@ -100,7 +129,7 @@ export default function PsychologistProfile() {
 
           <Box sx={{ display: "flex", gap: 2 }}>
             <Typography
-              sx={{ fontSize: "1.2rem" }}
+              sx={{ fontSize: "1rem" }}
               variant="h5"
               color="textSecondary"
               gutterBottom
@@ -109,7 +138,7 @@ export default function PsychologistProfile() {
             </Typography>
 
             <Typography
-              sx={{ fontSize: "1.2rem" }}
+              sx={{ fontSize: "1rem" }}
               variant="h5"
               color="primary.main"
               gutterBottom
@@ -118,11 +147,11 @@ export default function PsychologistProfile() {
             </Typography>
           </Box>
 
-          <div className="mt-5">
+          <div className="mt-3">
             <Typography
               variant="h5"
               color="primary.main"
-              sx={{ marginBottom: "10px", fontSize: "1.4rem" }}
+              sx={{ marginBottom: "10px", fontSize: "1.2rem" }}
             >
               Specializations:
             </Typography>
@@ -139,23 +168,31 @@ export default function PsychologistProfile() {
             )}
           </div>
 
-          <div className="mt-5">
+          <div className="mt-3">
             <Typography
               variant="h5"
               color="primary.main"
-              sx={{ marginBottom: "10px", fontSize: "1.4rem" }}
+              sx={{ marginBottom: "10px", fontSize: "1.2rem" }}
             >
-              Availability:
+              Experience:
             </Typography>
             <Typography
-              sx={{ fontSize: "1.2rem" }}
+              sx={{ fontSize: "1rem" }}
               variant="h5"
               color="textSecondary"
             >
-              {`Available from ${
-                psychologist?.availability?.startHour || "9"
-              }:00 to ${psychologist?.availability?.endHour || "15"}:00`}
+              {psychologist?.experience}
             </Typography>
+          </div>
+
+          <div className="mt-3">
+            <AvailableSlots   psychologistId={id}
+              slotIndex={slotIndex}
+              setSlotIndex={setSlotIndex}
+              slotTime={slotTime}
+              setSlotTime={setSlotTime}
+              selectedDate={selectedDate}
+              setSelectedDate={setSelectedDate}/>
           </div>
 
           <Button
@@ -173,6 +210,24 @@ export default function PsychologistProfile() {
             }}
           >
             Back
+          </Button>
+          <Button
+            variant="contained"
+            onClick={handleBookAppointment}
+            disabled={isBooking}
+            sx={{
+              bgcolor: "primary.main",
+              "&:hover": { bgcolor: "primary.hover" },
+              color: "white",
+              py: 1,
+              px: 4,
+              textTransform: "uppercase",
+              borderRadius: 1,
+              mt: 3,
+              ml: 1,
+            }}
+          >
+              {isBooking ? "Booking..." : "Book Appointment"}
           </Button>
         </CardContent>
       </Card>
