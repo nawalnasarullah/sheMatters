@@ -17,7 +17,7 @@ export const appointmentApi = createApi({
     }),
 
     getAppointmentById: builder.query({
-      query: (id) => `appointment/${id}`,
+      query: (userId) => `appointment/${userId}/`,
     }),
   }),
 });

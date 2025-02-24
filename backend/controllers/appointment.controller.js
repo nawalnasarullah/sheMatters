@@ -96,8 +96,10 @@ export default class AppointmentController {
 
   async getAppointmentById(req, res, next) {
     try {
-      const { id } = req.params;
-      const appointment = await Appointment.findById(id)
+      
+      const { userId } = req.params;
+      const appointment = await Appointment.find({ userId });
+
 
       if (!appointment) {
         return res

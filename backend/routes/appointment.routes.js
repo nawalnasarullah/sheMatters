@@ -6,6 +6,6 @@ const appointment = new appointmentController();
 
 router.route('/appointment/book').post(appointment.bookAnAppointment);
 router.route('/appointment/all').get(appointment.getAllAppointments);
-router.route('/appointment/:id').get(appointment.getAppointmentById);
+router.route('/appointment/:userId').get(appointment.getAppointmentById);
 
 export default router;
