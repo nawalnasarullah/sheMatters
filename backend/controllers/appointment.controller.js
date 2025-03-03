@@ -98,9 +98,7 @@ export default class AppointmentController {
     try {
       
       const { userId } = req.params;
-      const appointment = await Appointment.find({ userId });
-
-
+      const appointment = await Appointment.find({ userId })
       if (!appointment) {
         return res
           .status(404)
@@ -116,4 +114,51 @@ export default class AppointmentController {
       next(err);
     }
   }
+
+  async cancelAppointment(req, res, next) {
+    try {
+      const { appointmentId } = req.params;
+ 
+      const appointment = await Appointment.findById(appointmentId);
+      if (!appointment) {
+        return res
+          .status(404)
+          .json({ message: "Appointment not found", success: false });
+      }
+
+      const psychologist = await Psychologist.findById(appointment.psychologistId);
+      if (!psychologist) {
+        return res
+          .status(404)
+          .json({ message: "Psychologist not found", success: false });
+      }
+  
+      // Free up the slot
+      if (psychologist.slots_booked[appointment.slotDate]) {
+        psychologist.slots_booked[appointment.slotDate] = psychologist.slots_booked[
+          appointment.slotDate
+        ].filter((slot) => slot !== appointment.slotTime);
+  
+        // If no slots are left for that date, delete the key
+        if (psychologist.slots_booked[appointment.slotDate].length === 0) {
+          delete psychologist.slots_booked[appointment.slotDate];
+        }
+      }
+  
+      // Save the updated psychologist data
+      await psychologist.save();
+  
+      // Remove appointment from database
+      await Appointment.findByIdAndDelete(appointmentId);
+  
+      res.json({
+        message: "Appointment cancelled successfully",
+        success: true,
+        cancelled: true,
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+  
 }

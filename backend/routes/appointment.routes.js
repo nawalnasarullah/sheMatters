@@ -7,5 +7,6 @@ const appointment = new appointmentController();
 router.route('/appointment/book').post(appointment.bookAnAppointment);
 router.route('/appointment/all').get(appointment.getAllAppointments);
 router.route('/appointment/:userId').get(appointment.getAppointmentById);
+router.route('/appointment/cancel/:appointmentId').delete(appointment.cancelAppointment);
 
 export default router;
