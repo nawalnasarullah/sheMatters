@@ -1,4 +1,5 @@
 import express from "express";
+import 'dotenv/config'
 import authRoutes from "./routes/auth.routes.js";
 import userRoutes from "./routes/user.routes.js";
 import psychologistAuthRoutes from "./routes/psychologist.auth.routes.js";
@@ -6,9 +7,9 @@ import psychologistRoutes from "./routes/psychologist.routes.js";
 import appointmentRoutes from "./routes/appointment.routes.js";
 import journalRoutes from "./routes/journal.routes.js";
 import cookieParser from "cookie-parser";
+import "./services/reminderNotificationService.js";
 import { connectDB } from "./config/db.js";
 import { v2 as cloudinary } from 'cloudinary';
-import 'dotenv/config'
 import { error } from "./middleware/error.js";
 import cors from "cors";
 
