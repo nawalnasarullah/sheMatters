@@ -98,7 +98,7 @@ export default class AppointmentController {
     try {
       
       const { userId } = req.params;
-      const appointment = await Appointment.find({ userId })
+      const appointment = await Appointment.find({ userId, isCompleted: false });
       if (!appointment) {
         return res
           .status(404)
@@ -155,6 +155,33 @@ export default class AppointmentController {
         message: "Appointment cancelled successfully",
         success: true,
         cancelled: true,
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+  
+  async markAppointmentCompleted(req, res, next) {
+
+    try {
+      const { appointmentId } = req.params;
+  
+      const appointment = await Appointment.findById(appointmentId);
+      if (!appointment) {
+        return res.status(404).json({ message: "Appointment not found", success: false });
+      }
+  
+      if (appointment.status === "completed") {
+        return res.status(400).json({ message: "Appointment is already completed", success: false });
+      }
+  
+      appointment.isCompleted = true;
+      await appointment.save();
+  
+      res.json({
+        message: "Appointment marked as completed successfully",
+        success: true,
+        isCompleted: true,
       });
     } catch (err) {
       next(err);

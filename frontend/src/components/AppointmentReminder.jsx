@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import {
   useGetAppointmentByIdQuery,
   useDeleteAppointmentByIdMutation,
+  useMarkAppointmentCompletedMutation
 } from "../redux/api/appointmentApi";
 import { Typography, ThemeProvider, Card, Button } from "@mui/material";
 import theme from "./Theme";
@@ -9,8 +10,8 @@ import theme from "./Theme";
 function AppointmentReminder({ userId }) {
   const { data, error, isLoading, refetch } =
     useGetAppointmentByIdQuery(userId);
-  const [deleteAppointmentById, { isLoading: isDeleting }] =
-    useDeleteAppointmentByIdMutation();
+  const [deleteAppointmentById] = useDeleteAppointmentByIdMutation();
+  const [markAppointmentCompleted] = useMarkAppointmentCompletedMutation();
 
   useEffect(() => {
     if (!data?.appointment) return;
@@ -73,6 +74,20 @@ function AppointmentReminder({ userId }) {
     }
   };
 
+  const handleCompleteAppointment = async (appointmentId) => {
+    if (!window.confirm("Are you sure you want to complete this appointment?"))
+      return;
+      try {
+        await markAppointmentCompleted(appointmentId).unwrap();
+        alert("Appointment completed successfully!");
+
+        refetch();
+      } catch (error) { 
+        console.error("Error completing appointment:", error);
+        alert("An error occurred while completing the appointment.");
+        }
+  }
+
   if (isLoading) return <p>Loading appointments...</p>;
   if (error) return <p>Error fetching appointments.</p>;
 
@@ -134,6 +149,7 @@ function AppointmentReminder({ userId }) {
                     <Button
                       variant="contained"
                       size="small"
+                      onClick={() => handleCompleteAppointment(appointment?._id)}
                       sx={{
                         backgroundColor: "primary.main",
                         "&:hover": { backgroundColor: "primary.hover" },

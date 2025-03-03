@@ -26,6 +26,13 @@ export const appointmentApi = createApi({
         method: "DELETE",
       }),
     }),
+
+    markAppointmentCompleted: builder.mutation({
+      query: (appointmentId) => ({
+        url: `/appointment/complete/${appointmentId}`,
+        method: "PATCH",
+      }),
+    })
   }),
 });
 
@@ -34,4 +41,5 @@ export const {
   useGetAllAppointmentsQuery,
   useGetAppointmentByIdQuery,
   useDeleteAppointmentByIdMutation,
+  useMarkAppointmentCompletedMutation
 } = appointmentApi;
