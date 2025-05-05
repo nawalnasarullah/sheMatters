@@ -3,7 +3,6 @@ import cron from "node-cron";
 import { Appointment } from "../models/appointment.model.js";
 import { User } from "../models/user.model.js";
 
-// Configure email transport
 const transporter = nodemailer.createTransport({
   service: "gmail", // You can change this if using another email provider
   auth: {
@@ -12,17 +11,16 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// Function to send email reminders
 const sendEmailReminder = async (appointment) => {
   try {
-    // Fetch the user details using userId
+   
     const user = await User.findById(appointment.userId);
     if (!user || !user.email) {
       console.log(`User not found or email missing for appointment ${appointment._id}`);
       return;
     }
 
-    // Email options
+
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: user.email,
@@ -67,16 +65,16 @@ cron.schedule("* * * * *", async () => {
   }
 });
 
-const testReminder = async () => {
-  console.log("Triggering test reminder...");
-  const appointment = await Appointment.findOne(); // Fetch one appointment from DB
+// const testReminder = async () => {
+//   console.log("Triggering test reminder...");
+//   const appointment = await Appointment.findOne(); // Fetch one appointment from DB
 
-  if (appointment) {
-    await sendEmailReminder(appointment);
-  } else {
-    console.log("No appointments found for testing.");
-  }
-};
+//   if (appointment) {
+//     await sendEmailReminder(appointment);
+//   } else {
+//     console.log("No appointments found for testing.");
+//   }
+// };
 
-testReminder();
+// testReminder();
 

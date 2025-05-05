@@ -42,6 +42,7 @@ export default function PsychologistRecommendations() {
   }
 
   const settingsRec = {
+    variableWidth:true,
     dots: false,
     infinite: true,
     speed: 500,

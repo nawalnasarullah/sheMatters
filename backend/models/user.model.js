@@ -43,10 +43,10 @@ const userSchema = new Schema({
     default : null
   },
 
-  roles: {
+  role: {
     type: String,
     default:'user',
-    enum:['user','admin']
+    enum: ['user'],
   },
 
   avatar : {

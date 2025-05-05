@@ -7,12 +7,15 @@ import {
   } from "@mui/material";
 import { Link } from "react-router-dom";
 import ClinicianProfileSetupReminder from './ClinicianProfileSetupReminder';
+import AppointmentReminder from '../../components/AppointmentReminder';
 
 export default function ClinicianDashboardMain() {
 
+  const {psychologist} = useSelector(state => state.psychologistAuth);
+
   return (
     <section className='user-dashboard-main '>
-        {/* <ClinicianProfileSetupReminder /> */}
+      <AppointmentReminder userId={psychologist?._id} />
     </section>
   )
 }

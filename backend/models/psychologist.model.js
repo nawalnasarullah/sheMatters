@@ -42,10 +42,10 @@ const psychologistSchema = new Schema({
     default : null
   },
 
-  roles: {
+  role: {
     type: String,
     default:'psychologist',
-    enum:['user', 'customer', 'psychologist', 'administrator']
+    enum: ["psychologist"],
   },
 
   cnic: {
@@ -88,7 +88,6 @@ const psychologistSchema = new Schema({
   date: {
     type: Number,
   },
- 
   psychologistStatus: {
     type: String,
     enum: ['approved', 'not approved', 'pending'],

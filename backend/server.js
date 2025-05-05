@@ -6,6 +6,7 @@ import psychologistAuthRoutes from "./routes/psychologist.auth.routes.js";
 import psychologistRoutes from "./routes/psychologist.routes.js";
 import appointmentRoutes from "./routes/appointment.routes.js";
 import journalRoutes from "./routes/journal.routes.js";
+import messageRoutes from "./routes/message.routes.js";
 import cookieParser from "cookie-parser";
 import "./services/reminderNotificationService.js";
 import { connectDB } from "./config/db.js";
@@ -41,6 +42,7 @@ app.use('/', psychologistAuthRoutes);
 app.use('/', psychologistRoutes);
 app.use('/', journalRoutes);
 app.use('/', appointmentRoutes);
+app.use('/', messageRoutes);
 
 // app.use('*', (req, res, next)=>{
 //     res.json({
