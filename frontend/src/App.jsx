@@ -25,6 +25,7 @@ import ClinicianDashboardLayout from "./pages/clinician/ClinicianDashboardLayout
 import ClinicianAccountInformation from "./pages/clinician/ClinicianAccountInformation"
 import ClinicianDashboardMain from "./pages/clinician/ClinicianDashboardMain";
 import ClinicianProfile from "./pages/clinician/ClinicianProfile";
+import UserConsultingPage from "./pages/user/UserConsultingPage";
 
 
 function App() {
@@ -52,11 +53,13 @@ function App() {
           <Route path="journal" element={<Journal />} />
           <Route path="journal/all" element={<AllJournals />} />
           <Route path="journal/:id" element={<JournalDetails />} />
+          <Route path="user/consultations" element={<UserConsultingPage />} />
         </Route>
         <Route path="/clinician/dashboard" element={<ClinicianDashboardLayout />}>
           <Route index element={<ClinicianDashboardMain/>} />
           <Route path="accountInfo" element={<ClinicianAccountInformation />} />
         </Route>
+        
       </Route>
     )
   );

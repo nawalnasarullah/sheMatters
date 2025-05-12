@@ -23,7 +23,8 @@ const theme = createTheme({
     grey: {
       main: '#acacac',
       brownish: '#aaa',
-      light: '#f8f8f8'
+      light: '#f8f8f8',
+      chatgrey: '#e0e0e0',
     }
   },
   typography: {

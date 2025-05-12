@@ -42,7 +42,7 @@ app.use('/', psychologistAuthRoutes);
 app.use('/', psychologistRoutes);
 app.use('/', journalRoutes);
 app.use('/', appointmentRoutes);
-app.use('/', messageRoutes);
+app.use('/messages', messageRoutes);
 
 // app.use('*', (req, res, next)=>{
 //     res.json({

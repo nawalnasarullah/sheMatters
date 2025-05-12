@@ -4,6 +4,9 @@ import {
   Security,
   AccessTime,
 } from "@mui/icons-material";
+import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
+import GroupRoundedIcon from "@mui/icons-material/GroupRounded";
+import EventNoteRoundedIcon from "@mui/icons-material/EventNoteRounded";
 
 export const cardData = [
   {
@@ -317,4 +320,22 @@ export const questions = [
       question: "Do you have regular menstrual cycles?",
       label: "menstrual_health",
   },
+];
+
+export const menuItemsSidebar = [
+  {
+    label: "Dashboard",
+    icon: <HomeRoundedIcon sx={{ marginRight: "10px", marginBottom: "3px" }} />,
+    to: "/dashboard",
+  },
+  {
+    label: "Consultation",
+    icon: <EventNoteRoundedIcon sx={{ marginRight: "10px", marginBottom: "3px" }} />,
+    to: "/dashboard/user/consultations",
+  },
+  {
+    label: "Group Therapy",
+    icon: <GroupRoundedIcon sx={{ marginRight: "10px", marginBottom: "3px" }} />,
+  },
+  
 ];

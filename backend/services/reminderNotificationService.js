@@ -39,7 +39,7 @@ const sendEmailReminder = async (appointment) => {
 // Cron Job to check upcoming appointments every minute
 cron.schedule("* * * * *", async () => {
   try {
-    console.log("Checking for upcoming appointments...");
+    // console.log("Checking for upcoming appointments...");
 
     const now = new Date();
     const today = now.toISOString().split("T")[0]; // Get current date (YYYY-MM-DD)
