@@ -13,19 +13,19 @@ export const chatApi = createApi({
       query: (userId) => `/messages/${userId}`,
       providesTags: (result, error, userId) => [{ type: 'Messages', id: userId }],
     }),
-    // sendMessage: builder.mutation({
-    //   query: ({ userId, messageData }) => ({
-    //     url: `/messages/send/${userId}`,
-    //     method: 'POST',
-    //     body: messageData,
-    //   }),
-    //   invalidatesTags: (result, error, { userId }) => [{ type: 'Messages', id: userId }],
-    // }),
+    sendMessage: builder.mutation({
+      query: ({ userId, messageData }) => ({
+        url: `/messages/send/${userId}`,
+        method: 'POST',
+        body: messageData,
+      }),
+      invalidatesTags: (result, error, { userId }) => [{ type: 'Messages', id: userId }],
+    }),
   }),
 });
 
 export const {
   useGetUsersQuery,
   useGetMessagesQuery,
-  // useSendMessageMutation
+  useSendMessageMutation
 } = chatApi;

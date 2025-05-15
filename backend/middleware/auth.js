@@ -15,9 +15,9 @@ export const isUserAuthenticated = (req, res, next) => {
     }
 }
 
-export const isUserAuthorised = (...roles) => {  
+export const isUserAuthorised = (...role) => {  
     return (req, res, next)=>{
-        if(!roles.includes(req.user.role)){
+        if(!role.includes(req.user.role)){
             return next(new Error("Unauthorized User"))
         }
         next()

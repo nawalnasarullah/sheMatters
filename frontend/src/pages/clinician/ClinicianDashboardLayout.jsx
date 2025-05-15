@@ -12,7 +12,7 @@ function ClinicianDashboardLayout() {
   const { isAuthenticated, psychologist } = useSelector(state => state.psychologistAuth);
   const location = useLocation(); 
 
-  if (!isAuthenticated) return <></>; // Ensure user is authenticated before rendering
+  // if (!isAuthenticated) return <></>; 
 
   const profileComplete = isProfileComplete(psychologist); // Check if profile is complete
 

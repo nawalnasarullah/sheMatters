@@ -52,7 +52,7 @@ export default function ProfileSetupReminder() {
           <Link to="/questionnaire">
             <CardContent>
               <Typography
-                variant="h6"
+                variant="h5"
                 color="primary.main"
                 sx={{ fontWeight: 600, marginBottom: "10px" }}
               >

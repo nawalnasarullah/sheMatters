@@ -63,7 +63,7 @@ export default class Auth {
         id: psychologist._id,
         username: psychologist.username,
         email: psychologist.email,
-        role: psychologist.roles,
+        role: psychologist.role,
       },
       process.env.JWT_SECRET,
       { expiresIn: "24hr" }

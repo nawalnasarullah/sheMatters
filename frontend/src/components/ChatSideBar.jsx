@@ -8,24 +8,23 @@ import {
   ListItemText,
   Button,
   ListItemButton,
+  ListItemAvatar,
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import { useGetUsersQuery } from "../redux/api/chatApi";
 import { useDispatch, useSelector } from "react-redux";
 import { setSelectedUser } from "../redux/features/chatSlice";
-import { useGetMeQuery, useLazyLogoutQuery } from "../redux/api/authApi";
+import { useLazyLogoutQuery } from "../redux/api/authApi";
 import theme from "./Theme";
 
 function ChatSidebar() {
-    const { data } = useGetMeQuery();
-    const { user, isAuthenticated } = useSelector((state) => state.auth);
     const [logout] = useLazyLogoutQuery();
     const navigate = useNavigate();
 
   const dispatch = useDispatch();
   const selectedUser = useSelector((state) => state.chat.selectedUser);
   const { data: users = [], isLoading, isError } = useGetUsersQuery();
-
+  
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
 
    const handleLogout = async () => {
@@ -58,6 +57,17 @@ function ChatSidebar() {
               },
             }}
           >
+            <ListItemAvatar>
+              <img
+                src={user.avatar}
+                alt={user.username}
+                style={{
+                  width: "40px",
+                  height: "40px",
+                  borderRadius: "50%",
+                }}
+              />
+            </ListItemAvatar>
             <ListItemText
               primary={
                 <Typography fontWeight={600}>{user.username}</Typography>

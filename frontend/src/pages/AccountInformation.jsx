@@ -84,6 +84,7 @@ function AccountInformation() {
       about: user?.user?.about || "" ,
       avatar : user?.user?.avatar || ""
     },
+    enableReinitialize: true,
     validationSchema: Yup.object({
       firstName: Yup.string()
         .matches(/^[A-Za-z ]*$/, "Please enter valid first name")

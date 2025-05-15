@@ -5,7 +5,7 @@ import { v2 as cloudinary } from "cloudinary";
 
 export default class MessageController {
   async getUsersForSidebar(req, res, next) {
-    console.log('ggggg');
+  
     try {
       const { _id, role } = req.user;
 
@@ -53,10 +53,17 @@ export default class MessageController {
   }
 
   async sendMessage(req, res, next) {
+    console.log("Sending message");
+    
     try {
       const { message, image } = req.body;
       const { id: receiverId } = req.params;
+      console.log(receiverId);
+      
       const senderId = req.user._id;
+      const senderModel = req.user.role;
+
+      const receiverModel = senderModel === 'user' ? 'psychologist' : 'user';
 
       let imageUrl;
 
@@ -65,14 +72,28 @@ export default class MessageController {
         imageUrl = uploadResponse.secure_url;
       }
 
+      console.log(
+        senderId,
+  receiverId,
+  message,
+  image,
+      );
+      
+
       const newMessage = await Message.create({
         senderId,
+        senderModel,
         receiverId,
+        receiverModel,
         message,
-        image: imageUrl,
+        image: imageUrl || null,
       });
 
+      
+      
+
       await newMessage.save();
+      console.log("Message saved:", newMessage);
 
       res.status(201).json(newMessage);
     } catch (err) {

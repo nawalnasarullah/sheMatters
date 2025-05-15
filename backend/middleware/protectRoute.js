@@ -10,7 +10,7 @@ export const protectRoute = async (req, res, next) => {
     }
 
     const decoded = jwt.verify(auth_token, process.env.JWT_SECRET);
-    console.log(decoded);
+
     
 
     if (!decoded) {
@@ -18,7 +18,7 @@ export const protectRoute = async (req, res, next) => {
     }
 
     const user = await User.findById(decoded.id).select("-password");
-    console.log(user);
+
     
 
     if (!user) {
