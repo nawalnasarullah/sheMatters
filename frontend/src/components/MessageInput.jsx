@@ -1,25 +1,46 @@
-import { useState, useRef } from "react";
-import { Box, TextField, IconButton, ThemeProvider } from "@mui/material";
+import { useState, useRef, useEffect } from "react";
+import {
+  Box,
+  TextField,
+  IconButton,
+  ThemeProvider,
+} from "@mui/material";
 import {
   Send,
   Image as ImageIcon,
   Close as CloseIcon,
+  EmojiEmotions as EmojiIcon,
 } from "@mui/icons-material";
 import { useSendMessageMutation } from "../redux/api/chatApi";
 import theme from "./Theme";
 import { useSelector } from "react-redux";
+import Picker from "@emoji-mart/react";
+import data from "@emoji-mart/data";
 
 function MessageInput() {
-
   const selectedUser = useSelector((state) => state.chat.selectedUser);
-  
-  
   const [text, setText] = useState("");
   const [imagePreview, setImagePreview] = useState(null);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const fileInputRef = useRef(null);
+  const emojiPickerRef = useRef(null);
   const [sendMessage] = useSendMessageMutation();
 
-   if (!selectedUser) return null;
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (
+        emojiPickerRef.current &&
+        !emojiPickerRef.current.contains(e.target)
+      ) {
+        setShowEmojiPicker(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  if (!selectedUser) return null;
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -40,30 +61,34 @@ function MessageInput() {
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
+  const handleEmojiSelect = (emoji) => {
+    setText((prev) => prev + emoji.native);
+  };
+
   const handleSendMessage = async (e) => {
-  e.preventDefault();
-  if (!text.trim() && !imagePreview) return;
+    e.preventDefault();
+    if (!text.trim() && !imagePreview) return;
 
-  try {
-    await sendMessage({
-      userId: selectedUser._id, 
-      messageData: {
-        message: text.trim(),   
-        image: imagePreview,
-      },
-    }).unwrap();
+    try {
+      await sendMessage({
+        userId: selectedUser._id,
+        messageData: {
+          message: text.trim(),
+          image: imagePreview,
+        },
+      }).unwrap();
 
-    setText("");
-    setImagePreview(null);
-    if (fileInputRef.current) fileInputRef.current.value = "";
-  } catch (error) {
-    console.error("Failed to send message:", error);
-  }
-};
+      setText("");
+      setImagePreview(null);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    } catch (error) {
+      console.error("Failed to send message:", error);
+    }
+  };
 
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={{ width: "100%" }}>
+      <Box sx={{ width: "100%", position: "relative" }}>
         {imagePreview && (
           <Box sx={{ mb: 2, display: "flex", alignItems: "center", gap: 2 }}>
             <Box sx={{ position: "relative" }}>
@@ -97,6 +122,21 @@ function MessageInput() {
           </Box>
         )}
 
+        {/* Emoji Picker */}
+        {showEmojiPicker && (
+          <Box
+            ref={emojiPickerRef}
+            sx={{
+              position: "absolute",
+              bottom: 70,
+              left: 70,
+              zIndex: 9999,
+            }}
+          >
+            <Picker data={data} onEmojiSelect={handleEmojiSelect} theme="light" />
+          </Box>
+        )}
+
         {/* Message input row */}
         <Box
           component="form"
@@ -119,14 +159,14 @@ function MessageInput() {
             sx={{
               flex: 1,
               "& .MuiOutlinedInput-root": {
-                borderRadius: "29px", 
-                backgroundColor: "primary.light", 
+                borderRadius: "29px",
+                backgroundColor: "primary.light",
                 "& fieldset": {
-                  borderColor: "primary.main", 
+                  borderColor: "primary.main",
                 },
               },
               "& .MuiOutlinedInput-input": {
-                padding: "13px 13px", 
+                padding: "13px 13px",
               },
             }}
           />
@@ -141,17 +181,34 @@ function MessageInput() {
 
           <IconButton
             onClick={() => fileInputRef.current?.click()}
-            sx={{ flexShrink: 0,
-                 color: "primary.main", 
-                 ":hover": {
-                  backgroundColor: "primary.light", 
-                },
+            sx={{
+              flexShrink: 0,
+              color: "primary.main",
+              ":hover": {
+                backgroundColor: "primary.light",
+              },
               "& .MuiSvgIcon-root": {
                 fontSize: "1.7rem",
-                },
+              },
             }}
           >
             <ImageIcon />
+          </IconButton>
+
+          <IconButton
+            onClick={() => setShowEmojiPicker((prev) => !prev)}
+            sx={{
+              flexShrink: 0,
+              color: "primary.main",
+              ":hover": {
+                backgroundColor: "primary.light",
+              },
+              "& .MuiSvgIcon-root": {
+                fontSize: "1.7rem",
+              },
+            }}
+          >
+            <EmojiIcon />
           </IconButton>
 
           <IconButton

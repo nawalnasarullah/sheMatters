@@ -1,14 +1,23 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useGetMessagesQuery } from "../redux/api/chatApi";
 import ChatHeader from "./ChatHeader";
 import MessageInput from "./MessageInput";
-import { Box, Avatar, Typography } from "@mui/material";
+import {
+  Box,
+  Avatar,
+  Typography,
+  Dialog,
+  DialogContent,
+  IconButton,
+} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 
 const ChatContainer = () => {
   const selectedUser = useSelector((state) => state.chat.selectedUser);
   const { user } = useSelector((state) => state.auth);
   const messageEndRef = useRef(null);
+  const [previewImage, setPreviewImage] = useState(null);
 
   const {
     data: messages = [],
@@ -44,13 +53,11 @@ const ChatContainer = () => {
   }
 
   return (
-    <Box  sx={{ height: "100vh", display: "flex", flexDirection: "column"}}>
-      {/* Fixed Header */}
-      <Box sx={{ position: "sticky", top: "15px", zIndex: 10,  }}>
+    <Box sx={{ height: "100vh", display: "flex", flexDirection: "column" }}>
+      <Box sx={{ position: "sticky", top: "15px", zIndex: 10 }}>
         <ChatHeader />
       </Box>
 
-      {/* Scrollable Messages */}
       <Box
         sx={{
           flex: 1,
@@ -70,21 +77,18 @@ const ChatContainer = () => {
               flexDirection:
                 message.senderId === user?.user?._id ? "row-reverse" : "row",
               alignItems: "baseline",
-              marginRight:
-                message.senderId === user?.user?._id ? 6 : 1,
+              marginRight: message.senderId === user?.user?._id ? 6 : 1,
             }}
           >
-            <Box>
-              <Avatar
-                src={
-                  message.senderId === user?.user?._id
-                    ? user.avatar || "/avatar.png"
-                    : selectedUser.avatar || "/avatar.png"
-                }
-                alt="profile pic"
-                sx={{ width: 50, height: 50 }}
-              />
-            </Box>
+            <Avatar
+              src={
+                message.senderId === user?.user?._id
+                  ? user.avatar || "/avatar.png"
+                  : selectedUser.avatar || "/avatar.png"
+              }
+              alt="profile pic"
+              sx={{ width: 50, height: 50 }}
+            />
 
             <Box sx={{ maxWidth: "70%" }}>
               <Box
@@ -107,7 +111,17 @@ const ChatContainer = () => {
                     component="img"
                     src={message.image}
                     alt="Attachment"
-                    sx={{ maxWidth: 200, borderRadius: 1, mb: 2 }}
+                    onClick={() => setPreviewImage(message.image)}
+                    sx={{
+                      maxWidth: 200,
+                      borderRadius: 1,
+                      mb: 2,
+                      cursor: "pointer",
+                      transition: "0.2s",
+                      "&:hover": {
+                        opacity: 0.8,
+                      },
+                    }}
                   />
                 )}
                 {message.message && (
@@ -134,10 +148,27 @@ const ChatContainer = () => {
         <div ref={messageEndRef} />
       </Box>
 
-      {/* Fixed Input */}
       <Box sx={{ position: "sticky", bottom: "20px", zIndex: 10 }}>
         <MessageInput refetchMessages={refetch} />
       </Box>
+
+      {/* Image Preview Dialog */}
+      <Dialog open={!!previewImage} onClose={() => setPreviewImage(null)} maxWidth="md">
+        <DialogContent sx={{ position: "relative", p: 0 }}>
+          <IconButton
+            onClick={() => setPreviewImage(null)}
+            sx={{ position: "absolute", top: 8, right: 8, zIndex: 10 }}
+          >
+            <CloseIcon />
+          </IconButton>
+          <Box
+            component="img"
+            src={previewImage}
+            alt="Preview"
+            sx={{ width: "100%", maxHeight: "90vh", objectFit: "contain" }}
+          />
+        </DialogContent>
+      </Dialog>
     </Box>
   );
 };
