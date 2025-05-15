@@ -95,16 +95,24 @@ export default class AppointmentController {
   }
 
   async getAppointmentById(req, res, next) {
+    console.log("getAppointmentById");
+    
     try {
       
       const { userId } = req.params;
-      const appointment = await Appointment.find({ userId, isCompleted: false });
-      if (!appointment) {
+      console.log("userId", userId);
+      const appointment = await Appointment.find({ $or: [
+    { userId: userId, isCompleted: false },
+    { psychologistId: userId, isCompleted: false }
+  ] });
+      console.log("appointmentnhnh", appointment);
+      if (!appointment || appointment.length === 0) {
         return res
           .status(404)
           .json({ message: "Appointment not found", success: false });
       }
 
+      console.log("appointment", appointment);
       res.json({
         appointment,
         message: "Appointment retrieved successfully",

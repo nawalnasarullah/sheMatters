@@ -12,6 +12,8 @@ import AppointmentReminder from '../../components/AppointmentReminder';
 export default function ClinicianDashboardMain() {
 
   const {psychologist} = useSelector(state => state.psychologistAuth);
+ 
+  
 
   return (
     <section className='user-dashboard-main '>

@@ -27,10 +27,10 @@ export default class Auth {
   
   async getMe(req, res, next) {
     const id = req.psychologist.id;
-    console.log("getting psychologist :" , id);
+ 
     try{
       const psychologist = await Psychologist.findById(id);
-      console.log("getting psychologist :" , psychologist);
+   
       res.json({
         psychologist,
         success: true

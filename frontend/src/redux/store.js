@@ -35,7 +35,7 @@ const persistConfig = {
     psychologistApi.reducerPath,
     appointmentApi.reducerPath,
     chatApi.reducerPath
-  ] // Explicitly don't persist API caches
+  ] // Don't persist API caches
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -59,3 +59,16 @@ const store = configureStore({
 
 export const persistor = persistStore(store);
 export default store;
+
+/* 
+
+api-> reducer or hooks deti
+slice-> reducer or action deta
+                    |
+                    v
+phir api or slice dono ko store ky saath link krty or phir store ko react app ky saath link krty
+                    |
+                    v
+phir call krty waqt data fetch krein ge api se and wapis la kr slice ko dein ge and slice puri application mein data rotate karay gi
+
+*/
