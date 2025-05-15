@@ -7,15 +7,9 @@ import { Box, Avatar, Typography } from "@mui/material";
 
 const ChatContainer = () => {
   const selectedUser = useSelector((state) => state.chat.selectedUser);
-
-  const {isAuthenticated, user} = useSelector(state => state.auth);
-
-
-  console.log('user in chat container:', user);
-  
-
+  const { user } = useSelector((state) => state.auth);
   const messageEndRef = useRef(null);
-  
+
   const {
     data: messages = [],
     isLoading: isMessagesLoading,
@@ -24,12 +18,13 @@ const ChatContainer = () => {
     skip: !selectedUser,
   });
 
-  console.log(
-    messages.senderId,
-  );
-  
+  const formatTime = (timestamp) => {
+    return new Date(timestamp).toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
 
- 
   useEffect(() => {
     if (messageEndRef.current && messages.length > 0) {
       messageEndRef.current.scrollIntoView({ behavior: "smooth" });
@@ -38,23 +33,30 @@ const ChatContainer = () => {
 
   if (isMessagesLoading || !selectedUser) {
     return (
-      <div className="flex-1 flex flex-col overflow-auto">
-        <ChatHeader />
-        <MessageInput />
+      <div className="flex-1 flex items-center justify-center mt-24 animate-pulse">
+        <img
+          src="/images/undraw_chat.svg"
+          alt="loading"
+          className="max-w-[400px] w-full"
+        />
       </div>
     );
   }
 
   return (
-    <div className="flex-1 flex flex-col overflow-auto">
-      <ChatHeader />
+    <Box  sx={{ height: "100vh", display: "flex", flexDirection: "column"}}>
+      {/* Fixed Header */}
+      <Box sx={{ position: "sticky", top: "15px", zIndex: 10,  }}>
+        <ChatHeader />
+      </Box>
 
-       <Box
+      {/* Scrollable Messages */}
+      <Box
         sx={{
           flex: 1,
           overflowY: "auto",
           p: 4,
-          pl: 28,
+          pl: 12,
           display: "flex",
           flexDirection: "column",
           gap: 2,
@@ -65,13 +67,14 @@ const ChatContainer = () => {
             key={message._id}
             sx={{
               display: "flex",
-              flexDirection: message.senderId === user?.user?._id ? "row-reverse" : "row",
-              alignItems: "flex-start",
-              marginBottom: 2,
+              flexDirection:
+                message.senderId === user?.user?._id ? "row-reverse" : "row",
+              alignItems: "baseline",
+              marginRight:
+                message.senderId === user?.user?._id ? 6 : 1,
             }}
-            ref={messageEndRef}
           >
-            <Box sx={{ marginRight: 2 }}>
+            <Box>
               <Avatar
                 src={
                   message.senderId === user?.user?._id
@@ -79,17 +82,21 @@ const ChatContainer = () => {
                     : selectedUser.avatar || "/avatar.png"
                 }
                 alt="profile pic"
-                sx={{ width: 40, height: 40 }}
+                sx={{ width: 50, height: 50 }}
               />
             </Box>
 
             <Box sx={{ maxWidth: "70%" }}>
               <Box
                 sx={{
-                  backgroundColor: message.senderId === user?.user?._id ? "primary.main" : "grey.300",
+                  backgroundColor:
+                    message.senderId === user?.user?._id
+                      ? "primary.chatBar"
+                      : "secondary.chatBar",
                   borderRadius: 2,
-                  p: 2,
-                  color: message.senderId === user?.user?._id ? "white" : "black",
+                  p: "14px",
+                  marginRight: message.senderId === user?.user?._id ? 2 : 0,
+                  marginLeft: message.senderId === user?.user?._id ? 2 : 0,
                   display: "flex",
                   flexDirection: "column",
                   wordWrap: "break-word",
@@ -103,17 +110,35 @@ const ChatContainer = () => {
                     sx={{ maxWidth: 200, borderRadius: 1, mb: 2 }}
                   />
                 )}
-                {message.text && <Typography variant="body2">{message.text}</Typography>}
+                {message.message && (
+                  <Typography variant="body2">{message.message}</Typography>
+                )}
               </Box>
+              <Typography
+                variant="caption"
+                sx={{
+                  color: "grey.main",
+                  mt: 1,
+                  display: "flex",
+                  justifyContent:
+                    message.senderId === user?.user?._id
+                      ? "flex-end"
+                      : "flex-start",
+                }}
+              >
+                {formatTime(message.createdAt)}
+              </Typography>
             </Box>
           </Box>
         ))}
-        {/* Ref point for scrolling to the bottom */}
         <div ref={messageEndRef} />
       </Box>
 
-      <MessageInput refetchMessages={refetch} />
-    </div>
+      {/* Fixed Input */}
+      <Box sx={{ position: "sticky", bottom: "20px", zIndex: 10 }}>
+        <MessageInput refetchMessages={refetch} />
+      </Box>
+    </Box>
   );
 };
 

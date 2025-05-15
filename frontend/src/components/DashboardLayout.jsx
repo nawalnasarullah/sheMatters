@@ -18,8 +18,8 @@ function DashboardLayout() {
         {!shouldHideLayout && <SideBar menuItemsSidebar={menuItemsSidebar} />}
         {!shouldHideLayout && <ProfileNav />}
         <Box
-          className={`pt-[20px] pb-[20px] ${
-            !shouldHideLayout ? "ps-[20px] md:ps-[270px] pr-[33px] bg-lightGrey" : ""
+          className={` ${
+            !shouldHideLayout ? "pt-[20px] pb-[20px] ps-[20px] md:ps-[270px] pr-[33px] bg-lightGrey" : ""
           }`}
         >
           <Outlet />

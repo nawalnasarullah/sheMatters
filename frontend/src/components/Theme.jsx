@@ -13,12 +13,13 @@ const theme = createTheme({
       hover:'#004654',
       dark: '#005368',
       darker: '#003a40',
-      light:'rgba(0, 92, 101, 0.04)'
-
+      light:'rgba(0, 92, 101, 0.04)',
+      chatBar: 'rgba(0, 92, 101, 0.4)'
     },
     secondary: {
       main: '#FCEAEA',
-      dark: '#f8cccc'
+      dark: '#f8cccc',
+      chatBar: 'rgba(248, 204, 204, 0.4)',
     },
     grey: {
       main: '#acacac',

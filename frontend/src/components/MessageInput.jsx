@@ -106,6 +106,7 @@ function MessageInput() {
             flexDirection: { xs: "column", sm: "row" },
             alignItems: "center",
             gap: 1,
+            padding: "10px 60px",
           }}
         >
           <TextField

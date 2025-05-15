@@ -15,7 +15,8 @@ function ChatHeader() {
   return (
     <Box
       sx={{
-        padding: "10px 90px",
+        padding: "5px 50px",
+        marginBottom: '10px',
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",

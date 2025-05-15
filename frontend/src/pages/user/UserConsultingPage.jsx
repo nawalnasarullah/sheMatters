@@ -11,7 +11,7 @@ function UserConsultingPage() {
     <ThemeProvider theme={theme}>
       <ChatSidebar />
 
-      <Box className="ps-[14px] md:ps-[200px] ">
+      <Box className="ps-[14px] md:ps-[230px] ">
         <ChatContainer/>
       </Box>
     </ThemeProvider>
