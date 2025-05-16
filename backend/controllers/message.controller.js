@@ -5,6 +5,7 @@ import { v2 as cloudinary } from "cloudinary";
 
 export default class MessageController {
   async getUsersForSidebar(req, res, next) {
+
   
     try {
       const { _id, role } = req.user;

@@ -5,8 +5,12 @@ import messageController from "../controllers/message.controller.js";
 
 const message = new messageController();
 
+console.log("Message routes loaded");
+
+
 router.route('/users').get(protectRoute, message.getUsersForSidebar);
-router.route('/:id').get(protectRoute, message.getMessages);
 router.route('/send/:id').post(protectRoute, message.sendMessage);
+router.route('/:id').get(protectRoute, message.getMessages);
+
 
 export default router;

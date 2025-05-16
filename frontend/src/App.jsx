@@ -29,6 +29,7 @@ import ClinicianAccountInformation from "./pages/clinician/ClinicianAccountInfor
 import ClinicianDashboardMain from "./pages/clinician/ClinicianDashboardMain";
 import ClinicianProfile from "./pages/clinician/ClinicianProfile";
 import UserConsultingPage from "./pages/user/UserConsultingPage";
+import ClinicianConsultingPage from "./pages/clinician/ClinicianConsultingPage";
 
 
 function App() {
@@ -61,6 +62,7 @@ function App() {
         <Route path="/clinician/dashboard" element={<ClinicianDashboardLayout />}>
           <Route index element={<ClinicianDashboardMain/>} />
           <Route path="accountInfo" element={<ClinicianAccountInformation />} />
+          <Route path="consultations" element={<ClinicianConsultingPage />} />
         </Route>
         
       </Route>

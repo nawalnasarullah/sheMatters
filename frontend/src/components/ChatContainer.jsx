@@ -13,9 +13,8 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
-const ChatContainer = () => {
+const ChatContainer = ({ userId }) => {
   const selectedUser = useSelector((state) => state.chat.selectedUser);
-  const { user } = useSelector((state) => state.auth);
   const messageEndRef = useRef(null);
   const [previewImage, setPreviewImage] = useState(null);
 
@@ -75,15 +74,15 @@ const ChatContainer = () => {
             sx={{
               display: "flex",
               flexDirection:
-                message.senderId === user?.user?._id ? "row-reverse" : "row",
+                message.senderId === userId ? "row-reverse" : "row",
               alignItems: "baseline",
-              marginRight: message.senderId === user?.user?._id ? 6 : 1,
+              marginRight: message.senderId === userId ? 6 : 1,
             }}
           >
             <Avatar
               src={
-                message.senderId === user?.user?._id
-                  ? user.avatar || "/avatar.png"
+                message.senderId === userId
+                  ? userId.avatar || "/avatar.png"
                   : selectedUser.avatar || "/avatar.png"
               }
               alt="profile pic"
@@ -94,13 +93,13 @@ const ChatContainer = () => {
               <Box
                 sx={{
                   backgroundColor:
-                    message.senderId === user?.user?._id
+                    message.senderId === userId
                       ? "primary.chatBar"
                       : "secondary.chatBar",
                   borderRadius: 2,
                   p: "14px",
-                  marginRight: message.senderId === user?.user?._id ? 2 : 0,
-                  marginLeft: message.senderId === user?.user?._id ? 2 : 0,
+                  marginRight: message.senderId === userId ? 2 : 0,
+                  marginLeft: message.senderId === userId ? 0 : 2,
                   display: "flex",
                   flexDirection: "column",
                   wordWrap: "break-word",
@@ -135,7 +134,7 @@ const ChatContainer = () => {
                   mt: 1,
                   display: "flex",
                   justifyContent:
-                    message.senderId === user?.user?._id
+                    message.senderId === userId
                       ? "flex-end"
                       : "flex-start",
                 }}
@@ -152,7 +151,7 @@ const ChatContainer = () => {
         <MessageInput refetchMessages={refetch} />
       </Box>
 
-      {/* Image Preview Dialog */}
+      {/* Image Preview */}
       <Dialog open={!!previewImage} onClose={() => setPreviewImage(null)} maxWidth="md">
         <DialogContent sx={{ position: "relative", p: 0 }}>
           <IconButton

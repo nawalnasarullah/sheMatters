@@ -157,10 +157,10 @@ function SideBar() {
                   width: "100%",
                 }}
               >
-                <GroupRoundedIcon
+                <EventNoteRoundedIcon
                   sx={{ marginRight: "10px", marginBottom: "3px" }}
                 />
-                Group Therapy
+                Consultation
               </Button>
               <Button
                 sx={{
@@ -170,11 +170,12 @@ function SideBar() {
                   width: "100%",
                 }}
               >
-                <EventNoteRoundedIcon
+                <GroupRoundedIcon
                   sx={{ marginRight: "10px", marginBottom: "3px" }}
                 />
-                Consultation
+                Group Therapy
               </Button>
+              
               <Button
                 onClick={handleDropdownOpen}
                 sx={{
@@ -296,10 +297,10 @@ function SideBar() {
                 width: "100%",
               }}
             >
-              <GroupRoundedIcon
+              <EventNoteRoundedIcon
                 sx={{ marginRight: "10px", marginBottom: "3px" }}
               />
-              Group Therapy
+              Consultation
             </Button>
             <Button
               sx={{
@@ -309,11 +310,12 @@ function SideBar() {
                 width: "100%",
               }}
             >
-              <EventNoteRoundedIcon
+              <GroupRoundedIcon
                 sx={{ marginRight: "10px", marginBottom: "3px" }}
               />
-              Consultation
+              Group Therapy
             </Button>
+            
             <Button
               sx={{
                 display: "flex",

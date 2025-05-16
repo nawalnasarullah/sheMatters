@@ -23,6 +23,7 @@ function ChatSidebar() {
 
   const dispatch = useDispatch();
   const selectedUser = useSelector((state) => state.chat.selectedUser);
+  
   const { data: users = [], isLoading, isError } = useGetUsersQuery();
   
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));

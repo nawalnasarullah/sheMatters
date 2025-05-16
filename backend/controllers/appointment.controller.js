@@ -106,7 +106,7 @@ export default class AppointmentController {
     { psychologistId: userId, isCompleted: false }
   ] });
       console.log("appointmentnhnh", appointment);
-      if (!appointment || appointment.length === 0) {
+      if (!appointment) {
         return res
           .status(404)
           .json({ message: "Appointment not found", success: false });

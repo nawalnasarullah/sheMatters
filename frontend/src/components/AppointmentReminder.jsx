@@ -8,7 +8,8 @@ import { Typography, ThemeProvider, Card, Button } from "@mui/material";
 import theme from "./Theme";
 
 function AppointmentReminder({ userId }) {
-  const { data, error, isLoading, refetch } = useGetAppointmentByIdQuery(userId);
+  const { data, error, isLoading, refetch } =
+    useGetAppointmentByIdQuery(userId);
   const [deleteAppointmentById] = useDeleteAppointmentByIdMutation();
   const [markAppointmentCompleted] = useMarkAppointmentCompletedMutation();
 
@@ -22,7 +23,8 @@ function AppointmentReminder({ userId }) {
 
       data.appointment.forEach((appointment) => {
         if (
-          (appointment.userId === userId || appointment.psychologistData?._id === userId) &&
+          (appointment.userId === userId ||
+            appointment.psychologistData?._id === userId) &&
           !notifiedAppointments.current.has(appointment._id)
         ) {
           const [hours, minutes] = appointment.slotTime.split(":");
@@ -64,7 +66,8 @@ function AppointmentReminder({ userId }) {
   };
 
   const handleCancelAppointment = async (appointmentId) => {
-    if (!window.confirm("Are you sure you want to cancel this appointment?")) return;
+    if (!window.confirm("Are you sure you want to cancel this appointment?"))
+      return;
     try {
       await deleteAppointmentById(appointmentId).unwrap();
       alert("Appointment cancelled successfully!");
@@ -76,7 +79,8 @@ function AppointmentReminder({ userId }) {
   };
 
   const handleCompleteAppointment = async (appointmentId) => {
-    if (!window.confirm("Are you sure you want to complete this appointment?")) return;
+    if (!window.confirm("Are you sure you want to complete this appointment?"))
+      return;
     try {
       await markAppointmentCompleted(appointmentId).unwrap();
       alert("Appointment completed successfully!");
@@ -88,7 +92,12 @@ function AppointmentReminder({ userId }) {
   };
 
   if (isLoading) return <p>Loading appointments...</p>;
-  if (error) return <p>Error fetching appointments.</p>;
+  if (error) {
+    const errorMessage =
+      error?.data?.message || error?.message || "Something went wrong";
+
+    return <p>Error: {errorMessage}</p>;
+  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -110,19 +119,32 @@ function AppointmentReminder({ userId }) {
               >
                 <div>
                   <p className="text-gray-600 flex items-baseline">
-                    <Typography variant="h6" sx={{ fontSize: "1rem", fontWeight: "bold" }}>
+                    <Typography
+                      variant="h6"
+                      sx={{ fontSize: "1rem", fontWeight: "bold" }}
+                    >
                       Date:
                     </Typography>
-                    <Typography sx={{ paddingLeft: "5px" }}>{appointment.slotDate}</Typography>
+                    <Typography sx={{ paddingLeft: "5px" }}>
+                      {appointment.slotDate}
+                    </Typography>
                   </p>
                   <p className="text-gray-600 flex items-baseline">
-                    <Typography variant="h6" sx={{ fontSize: "1rem", fontWeight: "bold" }}>
+                    <Typography
+                      variant="h6"
+                      sx={{ fontSize: "1rem", fontWeight: "bold" }}
+                    >
                       Time:
                     </Typography>
-                    <Typography sx={{ paddingLeft: "5px" }}>{appointment.slotTime}</Typography>
+                    <Typography sx={{ paddingLeft: "5px" }}>
+                      {appointment.slotTime}
+                    </Typography>
                   </p>
                   <p className="text-gray-600 flex items-baseline">
-                    <Typography variant="h6" sx={{ fontSize: "1rem", fontWeight: "bold" }}>
+                    <Typography
+                      variant="h6"
+                      sx={{ fontSize: "1rem", fontWeight: "bold" }}
+                    >
                       With:
                     </Typography>
                     <Typography sx={{ paddingLeft: "5px" }}>

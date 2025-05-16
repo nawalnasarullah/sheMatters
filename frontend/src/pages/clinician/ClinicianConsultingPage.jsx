@@ -6,12 +6,14 @@ import ChatContainer from '../../components/ChatContainer';
 import { Box } from '@mui/material';
 import { useSelector } from 'react-redux';
 
-function UserConsultingPage() {
+function ClinicianConsultingPage() {
 
-   const { user } = useSelector((state) => state.auth);
+   const { psychologist } = useSelector((state) => state.psychologistAuth);
 
-   const userId = user?.user?._id;
-   console.log(userId);
+   console.log('psychologist', psychologist);
+   
+   const userId = psychologist?._id;
+
    
   return (
     <>
@@ -27,4 +29,4 @@ function UserConsultingPage() {
   )
 }
 
-export default UserConsultingPage;
+export default ClinicianConsultingPage;
