@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
-const ChatContainer = ({ userId }) => {
+const ChatContainer = ({ user }) => {
   const selectedUser = useSelector((state) => state.chat.selectedUser);
   const messageEndRef = useRef(null);
   const [previewImage, setPreviewImage] = useState(null);
@@ -74,15 +74,15 @@ const ChatContainer = ({ userId }) => {
             sx={{
               display: "flex",
               flexDirection:
-                message.senderId === userId ? "row-reverse" : "row",
+                message.senderId === user._id ? "row-reverse" : "row",
               alignItems: "baseline",
-              marginRight: message.senderId === userId ? 6 : 1,
+              marginRight: message.senderId === user._id ? 6 : 1,
             }}
           >
             <Avatar
               src={
-                message.senderId === userId
-                  ? userId.avatar || "/avatar.png"
+                message.senderId === user._id
+                  ? user.avatar || "/avatar.png"
                   : selectedUser.avatar || "/avatar.png"
               }
               alt="profile pic"
@@ -93,13 +93,13 @@ const ChatContainer = ({ userId }) => {
               <Box
                 sx={{
                   backgroundColor:
-                    message.senderId === userId
+                    message.senderId === user._id
                       ? "primary.chatBar"
                       : "secondary.chatBar",
                   borderRadius: 2,
                   p: "14px",
-                  marginRight: message.senderId === userId ? 2 : 0,
-                  marginLeft: message.senderId === userId ? 0 : 2,
+                  marginRight: message.senderId === user._id ? 2 : 0,
+                  marginLeft: message.senderId === user._id ? 0 : 2,
                   display: "flex",
                   flexDirection: "column",
                   wordWrap: "break-word",
@@ -134,7 +134,7 @@ const ChatContainer = ({ userId }) => {
                   mt: 1,
                   display: "flex",
                   justifyContent:
-                    message.senderId === userId
+                    message.senderId === user._id
                       ? "flex-end"
                       : "flex-start",
                 }}

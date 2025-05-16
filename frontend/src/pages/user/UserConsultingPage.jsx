@@ -8,10 +8,10 @@ import { useSelector } from 'react-redux';
 
 function UserConsultingPage() {
 
-   const { user } = useSelector((state) => state.auth);
+   const { user: data } = useSelector((state) => state.auth);
 
-   const userId = user?.user?._id;
-   console.log(userId);
+   const user = data.user;
+   
    
   return (
     <>
@@ -19,7 +19,7 @@ function UserConsultingPage() {
       <ChatSidebar />
 
       <Box className="ps-[14px] md:ps-[230px] ">
-        <ChatContainer userId={userId} />
+        <ChatContainer user={user} />
       </Box>
     </ThemeProvider>
 

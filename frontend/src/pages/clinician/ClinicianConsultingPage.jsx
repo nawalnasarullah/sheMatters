@@ -12,7 +12,7 @@ function ClinicianConsultingPage() {
 
    console.log('psychologist', psychologist);
    
-   const userId = psychologist?._id;
+   const user = psychologist;
 
    
   return (
@@ -21,7 +21,7 @@ function ClinicianConsultingPage() {
       <ChatSidebar />
 
       <Box className="ps-[14px] md:ps-[230px] ">
-        <ChatContainer userId={userId} />
+        <ChatContainer user={user} />
       </Box>
     </ThemeProvider>
 
