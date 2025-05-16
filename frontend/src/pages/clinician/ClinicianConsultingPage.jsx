@@ -18,7 +18,7 @@ function ClinicianConsultingPage() {
   return (
     <>
     <ThemeProvider theme={theme}>
-      <ChatSidebar />
+      <ChatSidebar user={user} />
 
       <Box className="ps-[14px] md:ps-[230px] ">
         <ChatContainer user={user} />

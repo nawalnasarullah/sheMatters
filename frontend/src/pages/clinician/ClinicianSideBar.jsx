@@ -20,6 +20,7 @@ import { Link } from "react-router-dom";
 import { useGetMeQuery, useLazyLogoutQuery } from "../../redux/api/psychologistAuthApi";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { disconnectSocket } from "../../utils/socket";
 import theme from "../../components/Theme.jsx";
 
 function SideBar() {
@@ -49,6 +50,7 @@ function SideBar() {
   const handleLogout = async () => {
     const res = await logout().unwrap();
     console.log("logout", res);
+    disconnectSocket();
     navigate(0);
   };
 

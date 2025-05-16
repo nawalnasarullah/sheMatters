@@ -1,19 +1,37 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { IconButton, Avatar, Typography, Box } from "@mui/material";
+import { IconButton, Avatar, Typography, Box, ThemeProvider } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import CallIcon from "@mui/icons-material/Call";
 import VideocamIcon from '@mui/icons-material/Videocam';
 import { setSelectedUser } from "../redux/features/chatSlice/";
+import { connectSocket, disconnectSocket } from "../utils/socket";
+import theme from "./Theme";
 
-function ChatHeader() {
+function ChatHeader({currentUser}) {
+
+  const [onlineUsers, setOnlineUsers] = useState([]);
+  const currentUserId = currentUser._id;
+
+  console.log("currentUserId", currentUserId);
+    useEffect(() => {
+      const socket = connectSocket(currentUserId, (users) => {
+        setOnlineUsers(users);
+        console.log("Online users:", users);
+      });
+  
+      return () => {
+        disconnectSocket();
+      };
+    }, [currentUserId]);
   const dispatch = useDispatch();
   const selectedUser = useSelector((state) => state.chat.selectedUser);
 
   if (!selectedUser) return null;
 
   return (
-    <Box
+    <ThemeProvider theme={theme}>
+      <Box
       sx={{
         padding: "5px 50px",
         marginBottom: '10px',
@@ -25,8 +43,8 @@ function ChatHeader() {
       <Box sx={{ display: "flex", alignItems: "center" }}>
         <Avatar
           sx={{
-            width: 40,
-            height: 40,
+            width: 50,
+            height: 50,
             marginRight: 2,
           }}
           src={selectedUser.avatar || "/avatar.png"}
@@ -36,6 +54,16 @@ function ChatHeader() {
           <Typography variant="h5" sx={{ fontWeight: "bold", color: 'primary.main', fontSize: 18 }}>
             {selectedUser.firstName} {selectedUser.lastName}
           </Typography>
+          <Typography
+  sx={{
+    fontSize: 14,
+    color: onlineUsers.includes(selectedUser._id)
+      ? "primary.main"
+      : "theme.palette.grey[500]",
+  }}
+>
+  {onlineUsers.includes(selectedUser._id) ? "Online" : "Offline"}
+</Typography>
         </Box>
       </Box>
 
@@ -51,6 +79,7 @@ function ChatHeader() {
         </IconButton>
       </Box>
     </Box>
+    </ThemeProvider>
   );
 }
 

@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 import { clearUserInfo, setUserInfo } from "../features/authSlice"
+import { connectSocket, disconnectSocket } from "../../utils/socket";
 
 export const authApi = createApi({
   reducerPath: "authApi",
@@ -54,8 +55,10 @@ export const authApi = createApi({
           console.log("success", data)
           if (!data.success) {
             dispatch(clearUserInfo())
+            disconnectSocket();
           } else {
             dispatch(setUserInfo(data))
+            connectSocket(data.user._id);
           }
         } catch (err) {
           console.log("error", err)

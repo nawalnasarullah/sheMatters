@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Typography,
@@ -15,21 +15,38 @@ import { useGetUsersQuery } from "../redux/api/chatApi";
 import { useDispatch, useSelector } from "react-redux";
 import { setSelectedUser } from "../redux/features/chatSlice";
 import { useLazyLogoutQuery } from "../redux/api/authApi";
+import { connectSocket, disconnectSocket } from "../utils/socket";
 import theme from "./Theme";
 
-function ChatSidebar() {
-    const [logout] = useLazyLogoutQuery();
-    const navigate = useNavigate();
+function ChatSidebar({ user }) {
+  const [logout] = useLazyLogoutQuery();
+  const navigate = useNavigate();
+
+  const currentUserId = user._id;
+  console.log("currentUserId", currentUserId);
+
+  const [onlineUsers, setOnlineUsers] = useState([]);
+  useEffect(() => {
+    const socket = connectSocket(currentUserId, (users) => {
+      setOnlineUsers(users);
+      console.log("Online users:", users);
+    });
+
+    return () => {
+      disconnectSocket();
+    };
+  }, [currentUserId]);
 
   const dispatch = useDispatch();
   const selectedUser = useSelector((state) => state.chat.selectedUser);
-  
+
   const { data: users = [], isLoading, isError } = useGetUsersQuery();
-  
+
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
 
-   const handleLogout = async () => {
+  const handleLogout = async () => {
     await logout().unwrap();
+    disconnectSocket();
     navigate(0);
   };
 
@@ -58,7 +75,7 @@ function ChatSidebar() {
               },
             }}
           >
-            <ListItemAvatar>
+            <ListItemAvatar sx={{ position: "relative" }}>
               <img
                 src={user.avatar}
                 alt={user.username}
@@ -68,12 +85,37 @@ function ChatSidebar() {
                   borderRadius: "50%",
                 }}
               />
+              <Box
+                sx={{
+                  position: "absolute",
+                  bottom: 0,
+                  right: 0,
+                  width: 12,
+                  height: 12,
+                  borderRadius: "50%",
+                  backgroundColor: onlineUsers.includes(user._id)
+                    ? "primary.main"
+                    : theme.palette.grey[400],
+                  border: "2px solid white",
+                }}
+              />
             </ListItemAvatar>
+
             <ListItemText
               primary={
                 <Typography fontWeight={600}>{user.username}</Typography>
               }
-              secondary="2:49 PM"
+              secondary={
+                <Typography
+                  sx={{
+                    color: onlineUsers.includes(user._id)
+                      ? "primary.main"
+                      : theme.palette.grey[500],
+                  }}
+                >
+                  {onlineUsers.includes(user._id) ? "Online" : "Offline"}
+                </Typography>
+              }
             />
           </ListItemButton>
         </ListItem>
@@ -82,33 +124,33 @@ function ChatSidebar() {
   );
 
   const accountAndLogoutButtons = (
-      <Box
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 2,
+        alignItems: "center",
+        justifyContent: "center",
+        marginTop: "150px",
+      }}
+    >
+      <Button
+        component={Link}
+        to="/dashboard/accountInfo"
+        variant="contained"
         sx={{
-          display: "flex",
-          flexDirection: "column",
-          gap: 2,
-          alignItems: "center",
-          justifyContent: "center",
-          marginTop: "150px",
+          backgroundColor: "primary.main",
+          color: "white.main",
+          "&:hover": { backgroundColor: "primary.hover" },
         }}
       >
-        <Button
-          component={Link}
-          to="/dashboard/accountInfo"
-          variant="contained"
-          sx={{
-            backgroundColor: "primary.main",
-            color: "white.main",
-            "&:hover": { backgroundColor: "primary.hover" },
-          }}
-        >
-          Account
-        </Button>
-        <Button onClick={handleLogout} component={Link} to="/">
-          Log Out
-        </Button>
-      </Box>
-    );
+        Account
+      </Button>
+      <Button onClick={handleLogout} component={Link} to="/">
+        Log Out
+      </Button>
+    </Box>
+  );
 
   if (isLoading) return <Typography sx={{ p: 2 }}>Loading...</Typography>;
   if (isError)
@@ -147,11 +189,7 @@ function ChatSidebar() {
             overflowY: "auto",
           }}
         >
-          <Typography
-            variant="h5"
-            fontWeight={600}
-            color="primary.main"
-          >
+          <Typography variant="h5" fontWeight={600} color="primary.main">
             SheMatters
           </Typography>
           {renderUserList()}

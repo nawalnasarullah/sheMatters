@@ -54,7 +54,7 @@ const ChatContainer = ({ user }) => {
   return (
     <Box sx={{ height: "100vh", display: "flex", flexDirection: "column" }}>
       <Box sx={{ position: "sticky", top: "15px", zIndex: 10 }}>
-        <ChatHeader />
+        <ChatHeader currentUser={user}/>
       </Box>
 
       <Box

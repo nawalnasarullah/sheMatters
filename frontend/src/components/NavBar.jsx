@@ -19,6 +19,7 @@ import ArrowDropDownRoundedIcon from "@mui/icons-material/ArrowDropDownRounded";
 import theme from "./Theme";
 import { Link } from "react-router-dom";
 import { useGetMeQuery, useLazyLogoutQuery } from "../redux/api/authApi";
+import { disconnectSocket } from "../utils/socket";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
@@ -52,6 +53,7 @@ function NavBar() {
 
   const handleLogout = async () => {
     const res = await logout().unwrap()
+    disconnectSocket();
     console.log("logout", res);
     navigate(0);
   }

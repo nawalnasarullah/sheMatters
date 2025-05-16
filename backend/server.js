@@ -13,13 +13,14 @@ import { connectDB } from "./config/db.js";
 import { v2 as cloudinary } from 'cloudinary';
 import { error } from "./middleware/error.js";
 import cors from "cors";
+import { app, server,  initSocket } from "./config/socket.js";
 
 const corsOption = {
     origin: "http://localhost:5173",
     credentials: true
 }
 
-const app = express();
+// const app = express();
 connectDB();
 cloudinary.config({ 
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME, 
@@ -60,7 +61,8 @@ app.use((err, req, res, next) => {
     });
 });
 
-app.listen(process.env.PORT, ()=>{
+initSocket();
+server.listen(process.env.PORT, ()=>{
     console.log(`Server is running on port ${process.env.PORT}`);
 })
 

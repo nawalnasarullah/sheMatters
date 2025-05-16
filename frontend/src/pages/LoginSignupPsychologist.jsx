@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { useLoginPsychologistMutation } from "../redux/api/psychologistAuthApi";
 import { useRegisterPsychologistMutation } from "../redux/api/psychologistAuthApi";
 import { setPsychologistInfo } from "../redux/features/psychologistAuthSlice";
+import { connectSocket } from "../utils/socket";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 function LoginSignupPsychologist() {
@@ -149,7 +150,9 @@ function LoginSignupPsychologist() {
   
         if (res && res.success) {
           dispatch(setPsychologistInfo(res));
-          console.log("dispatch psychologist");
+          
+          connectSocket(res.psychologist._id);
+          console.log("dispatch psychologist", res);
   
           toast.success(res.message, {
             progressClassName: "toast-progress-success",
