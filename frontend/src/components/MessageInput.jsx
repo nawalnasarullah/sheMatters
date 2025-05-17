@@ -4,6 +4,7 @@ import {
   TextField,
   IconButton,
   ThemeProvider,
+  useMediaQuery,
 } from "@mui/material";
 import {
   Send,
@@ -25,13 +26,11 @@ function MessageInput() {
   const fileInputRef = useRef(null);
   const emojiPickerRef = useRef(null);
   const [sendMessage] = useSendMessageMutation();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   useEffect(() => {
     const handleClickOutside = (e) => {
-      if (
-        emojiPickerRef.current &&
-        !emojiPickerRef.current.contains(e.target)
-      ) {
+      if (emojiPickerRef.current && !emojiPickerRef.current.contains(e.target)) {
         setShowEmojiPicker(false);
       }
     };
@@ -88,37 +87,40 @@ function MessageInput() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={{ width: "100%", position: "relative" }}>
+      <Box sx={{ width: "100%", position: "relative", px: isSmallScreen ? 1 : 4 }}>
         {imagePreview && (
-          <Box sx={{ mb: 2, display: "flex", alignItems: "center", gap: 2 }}>
-            <Box sx={{ position: "relative" }}>
-              <img
-                src={imagePreview}
-                alt="Preview"
-                style={{
-                  position: "relative",
-                  left: 90,
-                  width: "90px",
-                  height: "90px",
-                  objectFit: "cover",
-                  borderRadius: "8px",
-                  border: "1px solid #ccc",
-                }}
-              />
-              <IconButton
-                sx={{
-                  position: "absolute",
-                  color: "primary.main",
-                  top: -8,
-                  left: 150,
-                  padding: 1,
-                  borderRadius: "50%",
-                }}
-                onClick={removeImage}
-              >
-                <CloseIcon fontSize="small" />
-              </IconButton>
-            </Box>
+          <Box sx={{ 
+            mb: 2, 
+            display: "flex", 
+            alignItems: "center", 
+            justifyContent: "center",
+            position: "relative" 
+          }}>
+            <img
+              src={imagePreview}
+              alt="Preview"
+              style={{
+                width: "90px",
+                height: "90px",
+                objectFit: "cover",
+                borderRadius: "8px",
+                border: "1px solid #ccc",
+              }}
+            />
+            <IconButton
+              sx={{
+                position: "absolute",
+                color: "primary.main",
+                top: -8,
+                right: -8,
+                padding: 1,
+                borderRadius: "50%",
+                backgroundColor: "white",
+              }}
+              onClick={removeImage}
+            >
+              <CloseIcon fontSize="small" />
+            </IconButton>
           </Box>
         )}
 
@@ -129,24 +131,29 @@ function MessageInput() {
             sx={{
               position: "absolute",
               bottom: 70,
-              left: 70,
+              left: isSmallScreen ? 10 : 70,
               zIndex: 9999,
             }}
           >
-            <Picker data={data} onEmojiSelect={handleEmojiSelect} theme="light" />
+            <Picker 
+              data={data} 
+              onEmojiSelect={handleEmojiSelect} 
+              theme="light" 
+              previewPosition="none"
+              skinTonePosition="none"
+            />
           </Box>
         )}
 
-        {/* Message input row */}
+        {/* Message input row - always horizontal */}
         <Box
           component="form"
           onSubmit={handleSendMessage}
           sx={{
             display: "flex",
-            flexDirection: { xs: "column", sm: "row" },
             alignItems: "center",
             gap: 1,
-            padding: "10px 60px",
+            width: "100%",
           }}
         >
           <TextField
@@ -179,56 +186,60 @@ function MessageInput() {
             onChange={handleImageChange}
           />
 
-          <IconButton
-            onClick={() => fileInputRef.current?.click()}
-            sx={{
-              flexShrink: 0,
-              color: "primary.main",
-              ":hover": {
-                backgroundColor: "primary.light",
-              },
-              "& .MuiSvgIcon-root": {
-                fontSize: "1.7rem",
-              },
-            }}
-          >
-            <ImageIcon />
-          </IconButton>
-
-          <IconButton
-            onClick={() => setShowEmojiPicker((prev) => !prev)}
-            sx={{
-              flexShrink: 0,
-              color: "primary.main",
-              ":hover": {
-                backgroundColor: "primary.light",
-              },
-              "& .MuiSvgIcon-root": {
-                fontSize: "1.7rem",
-              },
-            }}
-          >
-            <EmojiIcon />
-          </IconButton>
-
-          <IconButton
-            type="submit"
-            color="primary"
-            disabled={!text.trim() && !imagePreview}
-            sx={{
-              backgroundColor: "primary.main",
-              color: "white.main",
-              "&:hover": {
-                color: "primary.dark",
-              },
-              flexShrink: 0,
-              "&:disabled": {
+          <Box sx={{ 
+            display: "flex", 
+            gap: 1,
+            flexShrink: 0,
+            ml: isSmallScreen ? 0 : 1
+          }}>
+            <IconButton
+              onClick={() => fileInputRef.current?.click()}
+              sx={{
                 color: "primary.main",
-              },
-            }}
-          >
-            <Send />
-          </IconButton>
+                ":hover": {
+                  backgroundColor: "primary.light",
+                },
+                "& .MuiSvgIcon-root": {
+                  fontSize: "1.7rem",
+                },
+              }}
+            >
+              <ImageIcon />
+            </IconButton>
+
+            <IconButton
+              onClick={() => setShowEmojiPicker((prev) => !prev)}
+              sx={{
+                color: "primary.main",
+                ":hover": {
+                  backgroundColor: "primary.light",
+                },
+                "& .MuiSvgIcon-root": {
+                  fontSize: "1.7rem",
+                },
+              }}
+            >
+              <EmojiIcon />
+            </IconButton>
+
+            <IconButton
+              type="submit"
+              color="primary"
+              disabled={!text.trim() && !imagePreview}
+              sx={{
+                backgroundColor: "primary.main",
+                color: "white.main",
+                "&:hover": {
+                  backgroundColor: "primary.dark",
+                },
+                "&:disabled": {
+                  color: "primary.main",
+                },
+              }}
+            >
+              <Send />
+            </IconButton>
+          </Box>
         </Box>
       </Box>
     </ThemeProvider>

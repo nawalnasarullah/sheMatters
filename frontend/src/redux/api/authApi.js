@@ -59,6 +59,8 @@ export const authApi = createApi({
           } else {
             dispatch(setUserInfo(data))
             connectSocket(data.user._id);
+            console.log("user", data.user)
+            console.log("socket", connectSocket(data.user._id))
           }
         } catch (err) {
           console.log("error", err)

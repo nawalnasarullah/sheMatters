@@ -12,8 +12,14 @@ const io = new Server(server, {
   },
 });
 
+
+
 // Track online users
 const userSocketMap = {}; // { userId: socket.id }
+
+export function getReceiverSocketId(userId) {
+  return userSocketMap[userId];
+}
 
 const initSocket = () => {
   io.on("connection", (socket) => {
@@ -21,7 +27,7 @@ const initSocket = () => {
 
     if (userId) {
       userSocketMap[userId] = socket.id;
-      socket.join(userId); // Optional, still useful
+      socket.join(userId); 
 
       console.log(`User ${userId} connected with socket ${socket.id}`);
       
@@ -40,7 +46,7 @@ const initSocket = () => {
         }
       }
 
-      // Emit updated online users list
+      // Emit updated online users list and phir yahan se frontend wali socket file mein recieve karna hai
       io.emit("get-online-users", Object.keys(userSocketMap));
     });
   });

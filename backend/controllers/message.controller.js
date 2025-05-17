@@ -2,7 +2,7 @@ import { Message } from "../models/message.model.js";
 import { User } from "../models/user.model.js";
 import { Psychologist } from "../models/psychologist.model.js";
 import { v2 as cloudinary } from "cloudinary";
-import { io } from "../config/socket.js";
+import { io, getReceiverSocketId } from "../config/socket.js";
 
 export default class MessageController {
   async getUsersForSidebar(req, res, next) {
@@ -58,7 +58,7 @@ export default class MessageController {
     try {
       const { message, image } = req.body;
       const { id: receiverId } = req.params;
-      console.log(receiverId);
+  
 
       const senderId = req.user._id;
       const senderModel = req.user.role;
@@ -67,10 +67,19 @@ export default class MessageController {
 
       let imageUrl;
 
-      if (image) {
-        const uploadResponse = await cloudinary.uploader.upload(image);
-        imageUrl = uploadResponse.secure_url;
-      }
+      // if (image) {
+      //   const uploadResponse = await cloudinary.uploader.upload(image);
+      //   imageUrl = uploadResponse.secure_url;
+      // }
+
+      try {
+  if (image) {
+    const uploadResponse = await cloudinary.uploader.upload(image);
+    imageUrl = uploadResponse.secure_url;
+  }
+} catch (uploadErr) {
+  return res.status(500).json({ message: "Image upload failed", error: uploadErr.message });
+}
 
       
 
@@ -85,7 +94,15 @@ export default class MessageController {
 
       await newMessage.save();
 
-      io.to(receiverId.toString()).emit("newMessage", newMessage);
+      try {
+        const receiverSocketId = getReceiverSocketId(receiverId);
+      if (receiverSocketId) {
+        io.to(receiverSocketId).emit("newMessage",newMessage);
+        console.log("Message sent to receiver:", receiverSocketId);
+      }
+      } catch (error) {
+        console.error("Error sending message to receiver:", error);
+      }
 
       res.status(201).json(newMessage);
     } catch (err) {
