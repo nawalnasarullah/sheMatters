@@ -161,7 +161,7 @@ const ChatContainer = ({ user }) => {
         messagesContainerRef.current.scrollHeight - scrollPosition;
       setScrollPosition(null);
     } else if (messageEndRef.current) {
-
+     
       messageEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages, scrollPosition]);

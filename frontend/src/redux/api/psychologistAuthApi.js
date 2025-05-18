@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import {setPsychologistInfo, clearPsychologistInfo} from "../features/psychologistAuthSlice";
-import { connectSocket, disconnectSocket } from "../../utils/socket";
+import { connectSocket, disconnectSocket, getSocket } from "../../utils/socket";
 
 export const psychologistAuthApi = createApi({
   reducerPath: "psychologistAuthApi",
@@ -50,7 +50,9 @@ export const psychologistAuthApi = createApi({
           if(data.success)
           {
             dispatch(setPsychologistInfo(data));
-            connectSocket(data.psychologist._id);
+            const socket = getSocket();
+            if(!socket)
+              connectSocket(data.psychologist._id);
             console.log("haha i am dispatching the thing", data.psychologist._id);
           }
           else
