@@ -15,7 +15,11 @@ import { useGetUsersQuery } from "../redux/api/chatApi";
 import { useDispatch, useSelector } from "react-redux";
 import { setSelectedUser } from "../redux/features/chatSlice";
 import { useLazyLogoutQuery } from "../redux/api/authApi";
-import { connectSocket, disconnectSocket } from "../utils/socket";
+import {
+  onOnlineUsersUpdate,
+  connectSocket,
+  disconnectSocket,
+} from "../utils/socket";
 import theme from "./Theme";
 
 function ChatSidebar({ user }) {
@@ -23,15 +27,16 @@ function ChatSidebar({ user }) {
   const navigate = useNavigate();
 
   const currentUserId = user._id;
-  console.log("currentUserId", currentUserId);
+
 
   const [onlineUsers, setOnlineUsers] = useState([]);
   useEffect(() => {
-    const socket = connectSocket(currentUserId, (users) => {
-      setOnlineUsers(users);
-      console.log("Online users:", users);
-    });
+    connectSocket(user._id);
 
+    onOnlineUsersUpdate((users) => {
+      console.log("Online users:", users);
+      setOnlineUsers(users);
+    });
     return () => {
       disconnectSocket();
     };

@@ -152,6 +152,8 @@ function SideBar() {
                 Dashboard
               </Button>
               <Button
+              component={Link}
+              to="/clinician/dashboard/consultations"
                 sx={{
                   display: "flex",
                   alignItems: "center",
@@ -292,6 +294,8 @@ function SideBar() {
               Dashboard
             </Button>
             <Button
+            component={Link}
+            to="/clinician/dashboard/consultations"
               sx={{
                 display: "flex",
                 alignItems: "center",

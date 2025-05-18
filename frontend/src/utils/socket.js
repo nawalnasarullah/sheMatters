@@ -2,32 +2,50 @@ import { io } from "socket.io-client";
 
 let socket;
 
-export const connectSocket = (userId, onOnlineUsersUpdate) => {
-  if (!socket) {
-    socket = io("http://localhost:8000", {
-      query: { userId },
-      withCredentials: true,
-    });
+export const connectSocket = (userId) => {
+  if (socket) return socket;
 
-    socket.on("connect", () => {
-      console.log("Socket connected:", socket.id);
-    });
+  socket = io("http://localhost:8000", {
+    query: { userId },
+    withCredentials: true,
+  });
 
-    socket.on("disconnect", () => {
-      console.log("Socket disconnected");
-    });
+  socket.on("connect", () => {
+    console.log("Socket connected:", socket.id);
+  });
 
-    // Listen for online users update if callback provided
-    if (typeof onOnlineUsersUpdate === "function") {
-      socket.on("get-online-users", onOnlineUsersUpdate);
-    }
-  }
+  socket.on("disconnect", () => {
+    console.log("Socket disconnected");
+  });
+
   return socket;
+};
+
+export const onOnlineUsersUpdate = (callback) => {
+  if (socket && typeof callback === "function") {
+    socket.on("get-online-users", callback);
+  }
+};
+
+export const onNewMessage = (callback) => {
+  if (socket && typeof callback === "function") {
+    socket.on("newMessage", callback);
+    console.log("New message listener added");
+  }
+};
+
+
+
+export const offNewMessage = (callback) => {
+  if (socket && typeof callback === "function") {
+    socket.off("newMessage", callback);
+  }
 };
 
 export const disconnectSocket = () => {
   if (socket) {
     socket.disconnect();
+    socket.off("get-online-users");
     socket = null;
     console.log("Socket forcefully disconnected.");
   }

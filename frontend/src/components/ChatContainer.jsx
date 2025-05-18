@@ -12,6 +12,7 @@ import {
   IconButton,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import { onNewMessage, offNewMessage, connectSocket } from "../utils/socket";
 
 const ChatContainer = ({ user }) => {
   const selectedUser = useSelector((state) => state.chat.selectedUser);
@@ -25,6 +26,26 @@ const ChatContainer = ({ user }) => {
   } = useGetMessagesQuery(selectedUser?._id, {
     skip: !selectedUser,
   });
+  
+  useEffect(() => {
+    if(user._id) 
+    connectSocket(user._id);
+  })
+  useEffect(() => {
+  const handleNewMessage = (message) => {
+    console.log("New message received:", message);
+    
+    if (message.senderId === selectedUser?._id || message.receiverId === selectedUser?._id) {
+      refetch();
+    }
+  };
+
+  onNewMessage(handleNewMessage);
+
+  return () => {
+    offNewMessage(handleNewMessage);
+  };
+}, [user, selectedUser, refetch]);
 
   const formatTime = (timestamp) => {
     return new Date(timestamp).toLocaleTimeString([], {
@@ -54,7 +75,7 @@ const ChatContainer = ({ user }) => {
   return (
     <Box sx={{ height: "100vh", display: "flex", flexDirection: "column" }}>
       <Box sx={{ position: "sticky", top: "15px", zIndex: 10 }}>
-        <ChatHeader currentUser={user}/>
+        <ChatHeader currentUser={user} />
       </Box>
 
       <Box
@@ -134,9 +155,7 @@ const ChatContainer = ({ user }) => {
                   mt: 1,
                   display: "flex",
                   justifyContent:
-                    message.senderId === user._id
-                      ? "flex-end"
-                      : "flex-start",
+                  message.senderId === user._id ? "flex-end" : "flex-start",
                 }}
               >
                 {formatTime(message.createdAt)}
@@ -152,7 +171,11 @@ const ChatContainer = ({ user }) => {
       </Box>
 
       {/* Image Preview */}
-      <Dialog open={!!previewImage} onClose={() => setPreviewImage(null)} maxWidth="md">
+      <Dialog
+        open={!!previewImage}
+        onClose={() => setPreviewImage(null)}
+        maxWidth="md"
+      >
         <DialogContent sx={{ position: "relative", p: 0 }}>
           <IconButton
             onClick={() => setPreviewImage(null)}
