@@ -54,7 +54,7 @@ const ChatContainer = ({ user }) => {
       hour: "2-digit",
       minute: "2-digit",
     });
-  }, []);
+  };
 
   return (
     <Box sx={{ height: "100vh", display: "flex", flexDirection: "column" }}>
