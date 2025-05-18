@@ -16,7 +16,6 @@ import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import LibraryBooksRoundedIcon from "@mui/icons-material/LibraryBooksRounded";
 import { Link, useNavigate } from "react-router-dom";
 import { useGetMeQuery, useLazyLogoutQuery } from "../redux/api/authApi";
-import { disconnectSocket } from "../utils/socket";
 import { useSelector } from "react-redux";
 import theme from "./Theme";
 
@@ -42,7 +41,6 @@ function SideBar({menuItemsSidebar}) {
 
   const handleLogout = async () => {
     await logout().unwrap();
-    disconnectSocket();
     navigate(0);
   };
 

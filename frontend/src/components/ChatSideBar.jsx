@@ -15,7 +15,7 @@ import { useGetUsersQuery } from "../redux/api/chatApi";
 import { useDispatch, useSelector } from "react-redux";
 import { setSelectedUser } from "../redux/features/chatSlice";
 import { useLazyLogoutQuery } from "../redux/api/authApi";
-import { connectSocket, disconnectSocket } from "../utils/socket";
+
 import theme from "./Theme";
 
 function ChatSidebar({ user }) {
@@ -26,16 +26,7 @@ function ChatSidebar({ user }) {
   console.log("currentUserId", currentUserId);
 
   const [onlineUsers, setOnlineUsers] = useState([]);
-  useEffect(() => {
-    const socket = connectSocket(currentUserId, (users) => {
-      setOnlineUsers(users);
-      console.log("Online users:", users);
-    });
 
-    return () => {
-      disconnectSocket();
-    };
-  }, [currentUserId]);
 
   const dispatch = useDispatch();
   const selectedUser = useSelector((state) => state.chat.selectedUser);
@@ -46,7 +37,6 @@ function ChatSidebar({ user }) {
 
   const handleLogout = async () => {
     await logout().unwrap();
-    disconnectSocket();
     navigate(0);
   };
 
@@ -93,9 +83,9 @@ function ChatSidebar({ user }) {
                   width: 12,
                   height: 12,
                   borderRadius: "50%",
-                  backgroundColor: onlineUsers.includes(user._id)
-                    ? "primary.main"
-                    : theme.palette.grey[400],
+                  // backgroundColor: onlineUsers.includes(user._id)
+                  //   ? "primary.main"
+                  //   : theme.palette.grey[400],
                   border: "2px solid white",
                 }}
               />
@@ -108,12 +98,12 @@ function ChatSidebar({ user }) {
               secondary={
                 <Typography
                   sx={{
-                    color: onlineUsers.includes(user._id)
-                      ? "primary.main"
-                      : theme.palette.grey[500],
+                    // color: onlineUsers.includes(user._id)
+                    //   ? "primary.main"
+                    //   : theme.palette.grey[500],
                   }}
                 >
-                  {onlineUsers.includes(user._id) ? "Online" : "Offline"}
+                  {/* {onlineUsers.includes(user._id) ? "Online" : "Offline"} */}
                 </Typography>
               }
             />

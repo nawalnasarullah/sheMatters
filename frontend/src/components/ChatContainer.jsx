@@ -14,7 +14,7 @@ import {
   Skeleton,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { connectSocket, getSocket,  disconnectSocket } from "../utils/socket";
+
 
 const MessageBubble = React.memo(({ message, user, selectedUser, setPreviewImage }) => {
   const formatTime = useCallback((timestamp) => {
@@ -113,7 +113,7 @@ const ChatContainer = ({ user }) => {
     skip: !selectedUser,
   });
 
-  // Memoized socket connection
+
   useEffect(() => {
   if (!selectedUser) return;
 
@@ -136,19 +136,7 @@ const ChatContainer = ({ user }) => {
   };
 
 
-  let socket = getSocket();
-
-  if (!socket) {
-    socket = connectSocket(user._id); // still no callbacks
-  }
-
-
-  socket.off("newMessage");
-  socket.on("newMessage", handleNewMessage);
-
-  return () => {
-    socket.off("newMessage", handleNewMessage);
-  };
+ 
 }, [selectedUser?._id, user._id, refetch]);
 
  
@@ -168,23 +156,20 @@ const ChatContainer = ({ user }) => {
 
   if (isMessagesLoading || !selectedUser) {
     return (
-      <Box sx={{ 
-        display: "flex", 
-        flexDirection: "column", 
-        alignItems: "center", 
-        justifyContent: "center", 
-        height: "100vh"
-      }}>
-        <Box sx={{ width: "80%", maxWidth: 400 }}>
-          <Skeleton variant="rectangular" width="100%" height={60} sx={{ mb: 2 }} />
-          {[...Array(5)].map((_, i) => (
-            <Box key={i} sx={{ display: "flex", mb: 2 }}>
-              <Skeleton variant="circular" width={40} height={40} sx={{ mr: 2 }} />
-              <Skeleton variant="rectangular" width="70%" height={80} />
-            </Box>
-          ))}
-        </Box>
-      </Box>
+      <>
+      <div className="flex-1 flex items-center justify-center mt-24 animate-bounce">
+        <img
+          src="/images/undraw_chat.svg"
+          alt="loading"
+          className="max-w-[400px] w-full"
+        />
+      </div>
+      <Typography variant="h5" sx={{ mt: 2 , textAlign: "center", color: "primary.main"}}>
+          {isMessagesLoading
+            ? "Loading messages..."
+            : "Select a user to start chatting!"}
+        </Typography>
+        </>
     );
   }
 

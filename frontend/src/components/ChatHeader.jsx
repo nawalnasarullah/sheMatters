@@ -11,23 +11,14 @@ import CloseIcon from "@mui/icons-material/Close";
 import CallIcon from "@mui/icons-material/Call";
 import VideocamIcon from "@mui/icons-material/Videocam";
 import { setSelectedUser } from "../redux/features/chatSlice/";
-import { connectSocket, disconnectSocket } from "../utils/socket";
+
 import theme from "./Theme";
 
 function ChatHeader({ currentUser }) {
   const [onlineUsers, setOnlineUsers] = useState([]);
   const currentUserId = currentUser._id;
 
-  useEffect(() => {
-    const socket = connectSocket(currentUserId, (users) => {
-      setOnlineUsers(users);
-      console.log("Online users:", users);
-    });
 
-    return () => {
-      disconnectSocket();
-    };
-  }, [currentUserId]);
   const dispatch = useDispatch();
   const selectedUser = useSelector((state) => state.chat.selectedUser);
 
@@ -64,12 +55,12 @@ function ChatHeader({ currentUser }) {
             <Typography
               sx={{
                 fontSize: 14,
-                color: onlineUsers.includes(selectedUser._id)
-                  ? "primary.main"
-                  : "theme.palette.grey[500]",
+                // color: onlineUsers.includes(selectedUser._id)
+                //   ? "primary.main"
+                //   : "theme.palette.grey[500]",
               }}
             >
-              {onlineUsers.includes(selectedUser._id) ? "Online" : "Offline"}
+             online
             </Typography>
           </Box>
         </Box>
