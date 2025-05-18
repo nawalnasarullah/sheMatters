@@ -1,4 +1,5 @@
-import { useRef, useEffect, useState } from "react";
+import React from "react";
+import { useRef, useEffect, useState, useMemo, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { useGetMessagesQuery } from "../redux/api/chatApi";
 import ChatHeader from "./ChatHeader";
@@ -10,6 +11,7 @@ import {
   Dialog,
   DialogContent,
   IconButton,
+  Skeleton,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { onNewMessage, offNewMessage, connectSocket } from "../utils/socket";
@@ -52,25 +54,7 @@ const ChatContainer = ({ user }) => {
       hour: "2-digit",
       minute: "2-digit",
     });
-  };
-
-  useEffect(() => {
-    if (messageEndRef.current && messages.length > 0) {
-      messageEndRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [messages]);
-
-  if (isMessagesLoading || !selectedUser) {
-    return (
-      <div className="flex-1 flex items-center justify-center mt-24 animate-pulse">
-        <img
-          src="/images/undraw_chat.svg"
-          alt="loading"
-          className="max-w-[400px] w-full"
-        />
-      </div>
-    );
-  }
+  }, []);
 
   return (
     <Box sx={{ height: "100vh", display: "flex", flexDirection: "column" }}>
@@ -166,7 +150,15 @@ const ChatContainer = ({ user }) => {
         <div ref={messageEndRef} />
       </Box>
 
-      <Box sx={{ position: "sticky", bottom: "20px", zIndex: 10 }}>
+      <Box sx={{ 
+        position: "sticky", 
+        bottom: 0, 
+        zIndex: 10,
+        bgcolor: "background.paper",
+        p: 2,
+        borderTop: "1px solid",
+        borderColor: "divider"
+      }}>
         <MessageInput refetchMessages={refetch} />
       </Box>
 
@@ -179,7 +171,16 @@ const ChatContainer = ({ user }) => {
         <DialogContent sx={{ position: "relative", p: 0 }}>
           <IconButton
             onClick={() => setPreviewImage(null)}
-            sx={{ position: "absolute", top: 8, right: 8, zIndex: 10 }}
+            sx={{ 
+              position: "absolute", 
+              top: 8, 
+              right: 8, 
+              zIndex: 10,
+              bgcolor: 'background.paper',
+              '&:hover': {
+                bgcolor: 'action.hover'
+              }
+            }}
           >
             <CloseIcon />
           </IconButton>
@@ -187,7 +188,13 @@ const ChatContainer = ({ user }) => {
             component="img"
             src={previewImage}
             alt="Preview"
-            sx={{ width: "100%", maxHeight: "90vh", objectFit: "contain" }}
+            sx={{ 
+              width: "100%", 
+              maxHeight: "90vh", 
+              objectFit: "contain",
+              display: 'block'
+            }}
+            loading="lazy"
           />
         </DialogContent>
       </Dialog>
@@ -195,4 +202,4 @@ const ChatContainer = ({ user }) => {
   );
 };
 
-export default ChatContainer;
+export default React.memo(ChatContainer);

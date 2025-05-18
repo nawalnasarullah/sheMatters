@@ -6,7 +6,6 @@ import { useDispatch } from "react-redux";
 import { useLoginUserMutation } from "../redux/api/authApi";
 import { useRegisterUserMutation } from "../redux/api/authApi";
 import { setUserInfo } from "../redux/features/authSlice";
-import {connectSocket} from "../utils/socket";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 function LoginSignup() {
@@ -137,8 +136,6 @@ function LoginSignup() {
 
       if (res && res.success) {
         dispatch(setUserInfo(res));
-
-        connectSocket(res.user._id);
         console.log('login-response', res);
 
         toast.success(res.message, {
