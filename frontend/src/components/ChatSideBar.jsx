@@ -97,9 +97,9 @@ function ChatSidebar({ user }) {
                   width: 12,
                   height: 12,
                   borderRadius: "50%",
-                  // backgroundColor: onlineUsers.includes(user._id)
-                  //   ? "primary.main"
-                  //   : theme.palette.grey[400],
+                  backgroundColor: onlineUsers.includes(user._id)
+                    ? "primary.main"
+                    : theme.palette.grey[400],
                   border: "2px solid white",
                 }}
               />
@@ -112,12 +112,12 @@ function ChatSidebar({ user }) {
               secondary={
                 <Typography
                   sx={{
-                    // color: onlineUsers.includes(user._id)
-                    //   ? "primary.main"
-                    //   : theme.palette.grey[500],
+                    color: onlineUsers.includes(user._id)
+                      ? "primary.main"
+                      : theme.palette.grey[500],
                   }}
                 >
-                  {/* {onlineUsers.includes(user._id) ? "Online" : "Offline"} */}
+                  {onlineUsers.includes(user._id) ? "Online" : "Offline"}
                 </Typography>
               }
             />

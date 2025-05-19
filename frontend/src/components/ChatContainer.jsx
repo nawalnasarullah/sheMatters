@@ -16,7 +16,7 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { onNewMessage, offNewMessage, connectSocket } from "../utils/socket";
 
-const ChatContainer = ({ user }) => {
+ function ChatContainer ({ user }) {
   const selectedUser = useSelector((state) => state.chat.selectedUser);
   const messageEndRef = useRef(null);
   const [previewImage, setPreviewImage] = useState(null);
@@ -28,6 +28,12 @@ const ChatContainer = ({ user }) => {
   } = useGetMessagesQuery(selectedUser?._id, {
     skip: !selectedUser,
   });
+
+  useEffect(() => {
+  if (messageEndRef.current) {
+    messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+  }
+}, [messages]);
   
   useEffect(() => {
     if(user._id) 
@@ -49,12 +55,38 @@ const ChatContainer = ({ user }) => {
   };
 }, [user, selectedUser, refetch]);
 
+
+
   const formatTime = (timestamp) => {
     return new Date(timestamp).toLocaleTimeString([], {
       hour: "2-digit",
       minute: "2-digit",
     });
   };
+
+  if (isMessagesLoading || !selectedUser) {
+    return (
+     <>
+      <div className="flex-1 flex items-center justify-center mt-28 animate-bounce">
+        <img
+          src="/images/undraw_chat.svg"
+          alt="loading"
+          className="max-w-[400px] w-full"
+        />
+      </div>
+      <Typography
+        variant="h5"
+        sx={{
+          color: "primary.main",
+          fontSize: 18,
+          textAlign: "center",
+        }}
+      >
+        Select a user to start a conversation
+      </Typography>
+     </>
+    );
+  }
 
   return (
     <Box sx={{ height: "100vh", display: "flex", flexDirection: "column" }}>
@@ -93,7 +125,7 @@ const ChatContainer = ({ user }) => {
               alt="profile pic"
               sx={{ width: 50, height: 50 }}
             />
-
+            
             <Box sx={{ maxWidth: "70%" }}>
               <Box
                 sx={{
@@ -202,4 +234,4 @@ const ChatContainer = ({ user }) => {
   );
 };
 
-export default React.memo(ChatContainer);
+export default ChatContainer;

@@ -164,7 +164,7 @@ function SideBar() {
                 />
                 Consultation
               </Button>
-              <Button
+              {/* <Button
                 sx={{
                   display: "flex",
                   alignItems: "center",
@@ -176,7 +176,7 @@ function SideBar() {
                   sx={{ marginRight: "10px", marginBottom: "3px" }}
                 />
                 Group Therapy
-              </Button>
+              </Button> */}
               
               <Button
                 onClick={handleDropdownOpen}
@@ -306,7 +306,7 @@ function SideBar() {
               />
               Consultation
             </Button>
-            <Button
+            {/* <Button
               sx={{
                 display: "flex",
                 alignItems: "center",
@@ -318,7 +318,7 @@ function SideBar() {
                 sx={{ marginRight: "10px", marginBottom: "3px" }}
               />
               Group Therapy
-            </Button>
+            </Button> */}
             
             <Button
               sx={{

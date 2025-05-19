@@ -212,7 +212,7 @@ function NavBar() {
                         >
                           Therapy for mothers
                         </MenuItem>
-                        <MenuItem
+                        {/* <MenuItem
                           sx={{
                             "&:hover": {
                               backgroundColor: "primary.light",
@@ -221,7 +221,7 @@ function NavBar() {
                           }}
                         >
                           Group therapy
-                        </MenuItem>
+                        </MenuItem> */}
                         <MenuItem
                           sx={{
                             "&:hover": {

@@ -333,9 +333,9 @@ export const menuItemsSidebar = [
     icon: <EventNoteRoundedIcon sx={{ marginRight: "10px", marginBottom: "3px" }} />,
     to: "/dashboard/user/consultations",
   },
-  {
-    label: "Group Therapy",
-    icon: <GroupRoundedIcon sx={{ marginRight: "10px", marginBottom: "3px" }} />,
-  },
+  // {
+  //   label: "Group Therapy",
+  //   icon: <GroupRoundedIcon sx={{ marginRight: "10px", marginBottom: "3px" }} />,
+  // },
   
 ];
