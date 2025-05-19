@@ -1,7 +1,6 @@
 import { Server } from "socket.io"
 import http from "http"
 import express from "express"
-// import { Peer } from "peerjs";
 
 const app = express()
 const server = http.createServer(app)
@@ -20,7 +19,58 @@ export function getReceiverSocketId(userId) {
   return userSocketMap[userId]
 }
 
+const onWebrtcSignal = async (data) => {
+  if (data.isCaller) {
+    if (data.ongoingCall.participants.receiver.socketId) {
+      io.to(data.ongoingCall.participants.receiver.socketId).emit(
+        "webrtcSignal",
+        {
+          sdp: data.sdp,
+          ongoingCall: data.ongoingCall,
+          isCaller: true,
+        }
+      );
+    }
+  } else {
+    if (data.ongoingCall.participants.caller.socketId) {
+      if (data.ongoingCall.participants.caller.socketId) {
+        io.to(data.ongoingCall.participants.caller.socketId).emit(
+          "webrtcSignal",
+          {
+            sdp: data.sdp,
+            ongoingCall: data.ongoingCall,
+            isCaller: false,
+          }
+        );
+      }
+    }
+  }
+};
+
+const onCall = async (participants) => {
+  if (participants.receiver.socketId) {
+    io.to(participants.receiver.socketId).emit("incomingCall", participants);
+  }
+};
+
+const onHangup = async (hangupData) => {
+  let socketIdToEmitTo;
+  if (
+    hangupData.ongoingCall.participants.caller.userId ===
+    hangupData.userHangingupId
+  ) {
+    socketIdToEmitTo = hangupData.ongoingCall.participants.receiver.socketId;
+  } else {
+    socketIdToEmitTo = hangupData.ongoingCall.participants.caller.socketId;
+  }
+
+  if (socketIdToEmitTo) {
+    io.to(socketIdToEmitTo).emit("hangup");
+  }
+};
+
 const initSocket = () => {
+
   let onlineUsers = []
 
   io.on("connection", (socket) => {
@@ -50,20 +100,16 @@ const initSocket = () => {
     socket.on('send-message' , (message) => {
 
       let reciever = onlineUsers.find( (user) => user.userId === message.reciever )
-      console.log("sending message to :" ,reciever['userId'] , " : " , message)
+      console.log("sending message to :" ,reciever['userId'] , " :  message : " , message['message'])
       socket.to(reciever['socketId']).emit("recieve-message" , message)      
     })
 
-    // other events
-    // socket.on("call", onCall)
-    // socket.on("webrtcSignal", onWebrtcSignal)
-    // socket.on("hangup", onHangup)
+    socket.on("call", onCall);
+    socket.on("webrtcSignal", onWebrtcSignal);
+    socket.on("hangup", onHangup);
   })
 
-  // const peer = new Peer(undefined , {
-  //   host : '/',
-  //   port : '8001'
-  // })
+
 }
 
 export { app, server, io, initSocket }

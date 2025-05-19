@@ -67,10 +67,10 @@ export const SocketContextProvider = (props) => {
             try {
                 // Get all media devices
                 const devices = await navigator.mediaDevices.enumerateDevices();
-
+                console.log("devices  :" , devices)
                 // Filter out only the video input devices
+                //const videoDevices = devices.filter((device) => device.kind === 'videoinput');
                 const videoDevices = devices.filter((device) => device.kind === 'videoinput');
-
                 const stream = await navigator.mediaDevices.getUserMedia({
                     video: {
                         width: { min: 640, ideal: 1280, max: 1920 },
@@ -122,7 +122,7 @@ export const SocketContextProvider = (props) => {
 
         const participants = { caller: currentSocketUser, receiver: userToCall };
         setOngoingCall({ participants, isRinging: false });
-
+        console.log('Sending call to : ' , userToCall)
         const call = peerRef.current.call(userToCall, stream, {
             metadata: { caller: currentSocketUser }
         });

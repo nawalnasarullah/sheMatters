@@ -15,7 +15,7 @@ import { useSocket } from "../context/SocketContext";
 
 function ChatHeader({ currentUser }) {
   
-  const { onlineUsers } = useSocket()
+  const { onlineUsers , handleCall } = useSocket()
   const dispatch = useDispatch();
   const selectedUser = useSelector((state) => state.chat.selectedUser);
 
@@ -65,10 +65,10 @@ function ChatHeader({ currentUser }) {
         </Box>
 
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          <IconButton sx={{ "&:hover": { backgroundColor: "primary.light" } }}>
+          <IconButton sx={{ "&:hover": { backgroundColor: "primary.light" } }} onClick={handleCall}>
             <CallIcon sx={{ color: "primary.main", fontSize: "1.7rem" }} />
           </IconButton>
-          <IconButton sx={{ "&:hover": { backgroundColor: "primary.light" } }}>
+          <IconButton sx={{ "&:hover": { backgroundColor: "primary.light" } }} onClick={handleCall}>
             <VideocamIcon sx={{ color: "primary.main", fontSize: "1.7rem" }} />
           </IconButton>
           <IconButton
