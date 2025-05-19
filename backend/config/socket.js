@@ -40,6 +40,7 @@ const initSocket = () => {
     })
 
     socket.on("disconnect", () => {
+      console.log("disconnecting user ...")
       onlineUsers = onlineUsers.filter((user) => user.socketId !== socket.id)
 
       // send active users

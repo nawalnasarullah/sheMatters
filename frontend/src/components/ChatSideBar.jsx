@@ -21,12 +21,8 @@ import { useSocket } from "../context/SocketContext";
 function ChatSidebar({ user }) {
   const [logout] = useLazyLogoutQuery();
   const navigate = useNavigate();
-  const { socket , onlineUsers} = useSocket()
+  const {onlineUsers} = useSocket()
   const currentUserId = user._id;
-
-  useEffect(() => {
-      console.log("SOCKET IN SIDE BAR : " , socket , " online users : " , onlineUsers)
-  },[socket])
 
   const dispatch = useDispatch();
   const selectedUser = useSelector((state) => state.chat.selectedUser);
@@ -83,7 +79,7 @@ function ChatSidebar({ user }) {
                   width: 12,
                   height: 12,
                   borderRadius: "50%",
-                  backgroundColor: onlineUsers.includes(user._id)
+                  backgroundColor: onlineUsers.some((onlineUser) => onlineUser.userId == user._id)
                     ? "primary.main"
                     : theme.palette.grey[400],
                   border: "2px solid white",
