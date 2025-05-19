@@ -13,6 +13,8 @@ import theme from "../components/Theme";
 function AllJournals() {
   const { data } = useGetJournalsQuery();
 
+  console.log("Journals data:", data);
+
   return (
     <ThemeProvider theme={theme}>
       <Typography

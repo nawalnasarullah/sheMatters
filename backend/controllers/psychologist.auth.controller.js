@@ -27,10 +27,10 @@ export default class Auth {
   
   async getMe(req, res, next) {
     const id = req.psychologist.id;
-    console.log("getting psychologist :" , id);
+ 
     try{
       const psychologist = await Psychologist.findById(id);
-      console.log("getting psychologist :" , psychologist);
+   
       res.json({
         psychologist,
         success: true
@@ -63,7 +63,7 @@ export default class Auth {
         id: psychologist._id,
         username: psychologist.username,
         email: psychologist.email,
-        role: psychologist.roles,
+        role: psychologist.role,
       },
       process.env.JWT_SECRET,
       { expiresIn: "24hr" }

@@ -150,19 +150,8 @@ function SideBar() {
                 Dashboard
               </Button>
               <Button
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "flex-start",
-                  width: "100%",
-                }}
-              >
-                <GroupRoundedIcon
-                  sx={{ marginRight: "10px", marginBottom: "3px" }}
-                />
-                Group Therapy
-              </Button>
-              <Button
+              component={Link}
+              to="/clinician/dashboard/consultations"
                 sx={{
                   display: "flex",
                   alignItems: "center",
@@ -175,6 +164,20 @@ function SideBar() {
                 />
                 Consultation
               </Button>
+              {/* <Button
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "flex-start",
+                  width: "100%",
+                }}
+              >
+                <GroupRoundedIcon
+                  sx={{ marginRight: "10px", marginBottom: "3px" }}
+                />
+                Group Therapy
+              </Button> */}
+              
               <Button
                 onClick={handleDropdownOpen}
                 sx={{
@@ -289,19 +292,8 @@ function SideBar() {
               Dashboard
             </Button>
             <Button
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "flex-start",
-                width: "100%",
-              }}
-            >
-              <GroupRoundedIcon
-                sx={{ marginRight: "10px", marginBottom: "3px" }}
-              />
-              Group Therapy
-            </Button>
-            <Button
+            component={Link}
+            to="/clinician/dashboard/consultations"
               sx={{
                 display: "flex",
                 alignItems: "center",
@@ -314,6 +306,20 @@ function SideBar() {
               />
               Consultation
             </Button>
+            {/* <Button
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-start",
+                width: "100%",
+              }}
+            >
+              <GroupRoundedIcon
+                sx={{ marginRight: "10px", marginBottom: "3px" }}
+              />
+              Group Therapy
+            </Button> */}
+            
             <Button
               sx={{
                 display: "flex",

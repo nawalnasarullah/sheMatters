@@ -17,8 +17,22 @@ export const appointmentApi = createApi({
     }),
 
     getAppointmentById: builder.query({
-      query: (id) => `appointment/${id}`,
+      query: (userId) => `appointment/${userId}/`,
     }),
+
+    deleteAppointmentById: builder.mutation({
+      query: (appointmentId) => ({
+        url: `/appointment/cancel/${appointmentId}`,
+        method: "DELETE",
+      }),
+    }),
+
+    markAppointmentCompleted: builder.mutation({
+      query: (appointmentId) => ({
+        url: `/appointment/complete/${appointmentId}`,
+        method: "PATCH",
+      }),
+    })
   }),
 });
 
@@ -26,4 +40,6 @@ export const {
   useBookAppointmentMutation,
   useGetAllAppointmentsQuery,
   useGetAppointmentByIdQuery,
+  useDeleteAppointmentByIdMutation,
+  useMarkAppointmentCompletedMutation
 } = appointmentApi;

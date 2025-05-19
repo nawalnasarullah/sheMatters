@@ -1,5 +1,5 @@
-import React, { useState } from "react"
-import { useSelector } from "react-redux"
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import {
   TextField,
   Box,
@@ -10,58 +10,58 @@ import {
   Grid,
   ThemeProvider,
   Container,
-} from "@mui/material"
-import EditRoundedIcon from "@mui/icons-material/EditRounded"
-import { useFormik } from "formik"
-import * as Yup from "yup"
-import VerifiedUserRoundedIcon from "@mui/icons-material/VerifiedUserRounded"
-import theme from "../components/Theme"
-import { useUpdateUserMutation } from "../redux/api/authApi"
-import { useDispatch } from "react-redux"
-import { updateUserProfile } from "../redux/features/authSlice"
-import { toast , ToastContainer } from "react-toastify"
+} from "@mui/material";
+import EditRoundedIcon from "@mui/icons-material/EditRounded";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import VerifiedUserRoundedIcon from "@mui/icons-material/VerifiedUserRounded";
+import theme from "../components/Theme";
+import { useUpdateUserMutation } from "../redux/api/authApi";
+import { useDispatch } from "react-redux";
+import { updateUserProfile } from "../redux/features/authSlice";
+import { toast, ToastContainer } from "react-toastify";
 function AccountInformation() {
-  const dispatch = useDispatch()
-  const [updateUser, { isLoading, isSuccess, isError, error }] = useUpdateUserMutation()
-  const { user } = useSelector((state) => state.auth)
-  const [isDisabled, setIsDisabled] = useState(true)
+  const dispatch = useDispatch();
+  const [updateUser, { isLoading, isSuccess, isError, error }] =
+    useUpdateUserMutation();
+  const { user } = useSelector((state) => state.auth);
+  const [isDisabled, setIsDisabled] = useState(true);
 
   const toggleEdit = () => {
-    setIsDisabled((state) => !state)
-  }
+    setIsDisabled((state) => !state);
+  };
 
   const parseDate = (dateString) => {
     const date = new Date(dateString);
-  
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
+
+    console.log(date);
+
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
     const year = date.getFullYear();
-  
+
     // Return the formatted date
     return `${day}/${month}/${year}`;
-  }
+  };
 
-  let handleImageUpload = (image)=>{
-    console.log(image.target.files[0])
+  let handleImageUpload = (image) => {
+    console.log(image.target.files[0]);
 
-    if(image.target.files[0].size > 5097152 ) //for 5MB 
-    {
-      console.log("Image size too large")
-      formik.setFieldError("avatar" , "image size should not exceed 4MB")
-      toast.error("Image size should not exceed 4MB")
-      return
+    if (image.target.files[0].size > 5097152) {
+      //for 5MB
+      console.log("Image size too large");
+      formik.setFieldError("avatar", "image size should not exceed 5MB");
+      toast.error("Image size should not exceed 5MB");
+      return;
     }
 
-    let reader = new FileReader()
-    reader.readAsDataURL(image.target.files[0])
+    let reader = new FileReader();
+    reader.readAsDataURL(image.target.files[0]);
 
     reader.onload = () => {
-      if(reader.readyState === 2)
-      setFieldValue("avatar", reader.result)
-    }
-    
-  }
-
+      if (reader.readyState === 2) setFieldValue("avatar", reader.result);
+    };
+  };
 
   const {
     handleChange,
@@ -71,7 +71,7 @@ function AccountInformation() {
     errors,
     touched,
     values,
-    setFieldValue
+    setFieldValue,
   } = useFormik({
     initialValues: {
       firstName: user?.user?.firstName || "",
@@ -79,11 +79,14 @@ function AccountInformation() {
       username: user?.user?.username || "",
       email: user?.user?.email || "",
       phoneNumber: user?.user?.phoneNumber || "",
-      dateOfBirth: user?.user?.dateOfBirth ? parseDate(user.user.dateOfBirth) : "" ,
-      city: user?.user?.city || "" ,
-      about: user?.user?.about || "" ,
-      avatar : user?.user?.avatar || ""
+      dateOfBirth: user?.user?.dateOfBirth
+        ? parseDate(user.user.dateOfBirth)
+        : "",
+      city: user?.user?.city || "",
+      about: user?.user?.about || "",
+      avatar: user?.user?.avatar || "",
     },
+    enableReinitialize: true,
     validationSchema: Yup.object({
       firstName: Yup.string()
         .matches(/^[A-Za-z ]*$/, "Please enter valid first name")
@@ -107,18 +110,23 @@ function AccountInformation() {
       city: Yup.string(),
       about: Yup.string(),
     }),
+
     onSubmit: async (values, errors) => {
+      console.log("submitted values : ", values);
       try {
-        console.log("submission errors : " ,errors)
-        const res = await updateUser({ ...values, _id: user.user._id }).unwrap()
-        dispatch(updateUserProfile({ user: res.user }))
-        setIsDisabled(true)
-        console.log("updated user info : ", res)
+        console.log("submission errors : ", errors);
+        const res = await updateUser({
+          ...values,
+          _id: user.user._id,
+        }).unwrap();
+        dispatch(updateUserProfile({ user: res.user }));
+        setIsDisabled(true);
+        console.log("updated user info : ", res);
       } catch (err) {
-        console.log("error : ", err)
+        console.log("error : ", err);
       }
     },
-  })
+  });
 
   return (
     <ThemeProvider theme={theme}>
@@ -139,7 +147,12 @@ function AccountInformation() {
                 <Avatar
                   src={values.avatar}
                   alt="Profile Picture"
-                  sx={{ width: 100, height: 100, marginStart: "auto" ,border: "2px solid #004654", }}
+                  sx={{
+                    width: 100,
+                    height: 100,
+                    marginStart: "auto",
+                    border: "2px solid #004654",
+                  }}
                 />
                 <IconButton
                   onClick={toggleEdit}
@@ -155,9 +168,16 @@ function AccountInformation() {
                   />
                 </IconButton>
               </div>
-              {
-                isDisabled ? <></> : <input type="file" onChange={handleImageUpload} placeholder="Avatar" style={{fontSize : '10px'}} />
-              }
+              {isDisabled ? (
+                <></>
+              ) : (
+                <input
+                  type="file"
+                  onChange={handleImageUpload}
+                  placeholder="Avatar"
+                  style={{ fontSize: "10px" }}
+                />
+              )}
             </div>
 
             {/* Input Fields Section */}
@@ -178,12 +198,12 @@ function AccountInformation() {
                     InputProps={{
                       endAdornment: (
                         <IconButton
+                          onClick={toggleEdit}
                           sx={{
                             "&:hover": { backgroundColor: "primary.light" },
                           }}
                         >
                           <EditRoundedIcon
-                            onClick={toggleEdit}
                             sx={{
                               fontSize: "20px",
                               "&:hover": {
@@ -238,12 +258,12 @@ function AccountInformation() {
                     InputProps={{
                       endAdornment: (
                         <IconButton
+                          onClick={toggleEdit}
                           sx={{
                             "&:hover": { backgroundColor: "primary.light" },
                           }}
                         >
                           <EditRoundedIcon
-                          onClick={toggleEdit}
                             sx={{
                               fontSize: "20px",
                               "&:hover": {
@@ -298,12 +318,12 @@ function AccountInformation() {
                     InputProps={{
                       endAdornment: (
                         <IconButton
+                          onClick={toggleEdit}
                           sx={{
                             "&:hover": { backgroundColor: "primary.light" },
                           }}
                         >
                           <EditRoundedIcon
-                          onClick={toggleEdit}
                             sx={{
                               fontSize: "20px",
                               "&:hover": {
@@ -476,12 +496,12 @@ function AccountInformation() {
                     InputProps={{
                       endAdornment: (
                         <IconButton
+                          onClick={toggleEdit}
                           sx={{
                             "&:hover": { backgroundColor: "primary.light" },
                           }}
                         >
                           <EditRoundedIcon
-                          onClick={toggleEdit}
                             sx={{
                               fontSize: "20px",
                               "&:hover": {
@@ -536,12 +556,12 @@ function AccountInformation() {
                     InputProps={{
                       endAdornment: (
                         <IconButton
+                          onClick={toggleEdit}
                           sx={{
                             "&:hover": { backgroundColor: "primary.light" },
                           }}
                         >
                           <EditRoundedIcon
-                          onClick={toggleEdit}
                             sx={{
                               fontSize: "20px",
                               "&:hover": {
@@ -597,7 +617,7 @@ function AccountInformation() {
                     InputProps={{
                       endAdornment: (
                         <IconButton
-                        onClick={toggleEdit}
+                          onClick={toggleEdit}
                           sx={{
                             "&:hover": { backgroundColor: "primary.light" },
                           }}
@@ -644,15 +664,21 @@ function AccountInformation() {
                 </Grid>
               </Grid>
             </Box>
-            <Button type="submit" disabled={isLoading} variant="contained" sx={{ mt: 2 }}>
+            <Button
+              onClick={() => console.log("Button clicked")}
+              type="submit"
+              disabled={isLoading}
+              variant="contained"
+              sx={{ mt: 2 }}
+            >
               Save Changes
             </Button>
           </form>
         </div>
-        <ToastContainer/>
+        <ToastContainer />
       </Box>
     </ThemeProvider>
-  )
+  );
 }
 
-export default AccountInformation
+export default AccountInformation;

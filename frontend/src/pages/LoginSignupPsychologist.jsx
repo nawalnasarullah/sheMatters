@@ -149,7 +149,7 @@ function LoginSignupPsychologist() {
   
         if (res && res.success) {
           dispatch(setPsychologistInfo(res));
-          console.log("dispatch psychologist");
+          console.log("dispatch psychologist", res);
   
           toast.success(res.message, {
             progressClassName: "toast-progress-success",

@@ -12,60 +12,121 @@ import {
 } from "@mui/material";
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
-import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
-import GroupRoundedIcon from "@mui/icons-material/GroupRounded";
-import EventNoteRoundedIcon from "@mui/icons-material/EventNoteRounded";
+
 import LibraryBooksRoundedIcon from "@mui/icons-material/LibraryBooksRounded";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useGetMeQuery, useLazyLogoutQuery } from "../redux/api/authApi";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import theme from "./Theme";
 
-function SideBar() {
+
+
+function SideBar({menuItemsSidebar}) {
   const { data } = useGetMeQuery();
   const { user, isAuthenticated } = useSelector((state) => state.auth);
   const [logout] = useLazyLogoutQuery();
   const navigate = useNavigate();
 
   const [drawerOpen, setDrawerOpen] = useState(false);
-
-  // State for Journaling Dropdown
   const [anchorEl, setAnchorEl] = useState(null);
   const isDropdownOpen = Boolean(anchorEl);
-
-  // Detect screen size
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
 
   const toggleDrawer = (open) => (event) => {
-    if (
-      event.type === "keydown" &&
-      (event.key === "Tab" || event.key === "Shift")
-    ) {
+    if (event?.type === "keydown" && (event.key === "Tab" || event.key === "Shift")) {
       return;
     }
     setDrawerOpen(open);
   };
 
   const handleLogout = async () => {
-    const res = await logout().unwrap();
-    console.log("logout", res);
+    await logout().unwrap();
     navigate(0);
   };
 
-  const handleDropdownOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
+  const handleDropdownOpen = (event) => setAnchorEl(event.currentTarget);
+  const handleDropdownClose = () => setAnchorEl(null);
 
-  const handleDropdownClose = () => {
-    setAnchorEl(null);
-  };
+  const renderMenuButtons = () =>
+    menuItemsSidebar.map((item, index) => (
+      <Button
+        key={index}
+        component={item.to ? Link : "button"}
+        to={item.to}
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "flex-start",
+          width: "100%",
+        }}
+      >
+        {item.icon}
+        {item.label}
+      </Button>
+    ));
+
+  const journalingDropdown = (
+    <>
+      <Button
+        onClick={handleDropdownOpen}
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "flex-start",
+          width: "100%",
+        }}
+      >
+        <LibraryBooksRoundedIcon sx={{ marginRight: "10px", marginBottom: "3px" }} />
+        Journaling
+      </Button>
+      <Menu anchorEl={anchorEl} open={isDropdownOpen} onClose={handleDropdownClose}>
+        <MenuItem component={Link} to="/dashboard/journal">
+          <Typography variant="body2" fontWeight={600}>
+            Create Journal
+          </Typography>
+        </MenuItem>
+        <MenuItem component={Link} to="/dashboard/journal/all">
+          <Typography variant="body2" fontWeight={600}>
+            All Journals
+          </Typography>
+        </MenuItem>
+      </Menu>
+    </>
+  );
+
+  const accountAndLogoutButtons = (
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 2,
+        alignItems: "center",
+        justifyContent: "center",
+        marginTop: "150px",
+      }}
+    >
+      <Button
+        component={Link}
+        to="/dashboard/accountInfo"
+        variant="contained"
+        sx={{
+          backgroundColor: "primary.main",
+          color: "white.main",
+          "&:hover": { backgroundColor: "primary.hover" },
+        }}
+      >
+        Account
+      </Button>
+      <Button onClick={handleLogout} component={Link} to="/">
+        Log Out
+      </Button>
+    </Box>
+  );
 
   return (
     <ThemeProvider theme={theme}>
       {isSmallScreen ? (
         <>
-          {/* Top Bar with "SheMatters" on the left and Hamburger on the right */}
           <Box
             sx={{
               display: "flex",
@@ -78,189 +139,36 @@ function SideBar() {
               zIndex: 1200,
             }}
           >
-            <Typography
-              variant="h5"
-              color="primary.main"
-              sx={{
-                fontWeight: 600,
-                marginLeft: "10px",
-              }}
-            >
+            <Typography variant="h5" color="primary.main" fontWeight={600}>
               SheMatters
             </Typography>
-
-            <IconButton
-              onClick={toggleDrawer(true)}
-              sx={{
-                color: "primary.main",
-                marginRight: "10px",
-              }}
-            >
+            <IconButton onClick={toggleDrawer(true)} color="primary">
               <MenuRoundedIcon />
             </IconButton>
           </Box>
 
-          {/* Temporary Drawer for Small Screens */}
           <Drawer
             anchor="left"
             open={drawerOpen}
             onClose={toggleDrawer(false)}
-            PaperProps={{
-              sx: {
-                width: 220,
-                backgroundColor: "white.main",
-              },
-            }}
+            PaperProps={{ sx: { width: 220, backgroundColor: "white.main" } }}
           >
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-start",
-                gap: 2,
-                position: "relative",
-                padding: "20px",
-              }}
-            >
-              <IconButton
-                sx={{ position: "absolute", top: 15, right: 8 }}
-                onClick={toggleDrawer(false)}
-              >
+            <Box sx={{ padding: "20px", position: "relative" }}>
+              <IconButton onClick={toggleDrawer(false)} sx={{ position: "absolute", top: 15, right: 8 }}>
                 <CloseRoundedIcon />
               </IconButton>
-              <Typography
-                variant="h5"
-                color="primary.main"
-                sx={{ fontWeight: 600 }}
-              >
+              <Typography variant="h5" color="primary.main" fontWeight={600}>
                 SheMatters
               </Typography>
-              <Button
-                component={Link}
-                to="/dashboard"
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "flex-start",
-                  width: "100%",
-                }}
-              >
-                <HomeRoundedIcon
-                  sx={{ marginRight: "10px", marginBottom: "3px" }}
-                />
-                Dashboard
-              </Button>
-              <Button
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "flex-start",
-                  width: "100%",
-                }}
-              >
-                <GroupRoundedIcon
-                  sx={{ marginRight: "10px", marginBottom: "3px" }}
-                />
-                Group Therapy
-              </Button>
-              <Button
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "flex-start",
-                  width: "100%",
-                }}
-              >
-                <EventNoteRoundedIcon
-                  sx={{ marginRight: "10px", marginBottom: "3px" }}
-                />
-                Consultation
-              </Button>
-              <Button
-                onClick={handleDropdownOpen}
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "flex-start",
-                  width: "100%",
-                }}
-              >
-                <LibraryBooksRoundedIcon
-                  sx={{ marginRight: "10px", marginBottom: "3px" }}
-                />
-                Journaling
-              </Button>
-              <Menu
-                anchorEl={anchorEl}
-                open={isDropdownOpen}
-                onClose={handleDropdownClose}
-                sx={{
-                  marginLeft: "10px",
-                }}
-              >
-                <MenuItem
-                  sx={{
-                    "&:hover": {
-                      backgroundColor: "primary.light",
-                      borderRadius: "6px",
-                    },
-                  }}
-                  component={Link}
-                  to="/dashboard/journal"
-                >
-                  <Typography variant="h5" color="primary.main" sx={{ fontSize: "0.8rem", fontWeight: "600", textTransform: "Uppercase" }}>
-                    Create Journal
-                  </Typography>
-                </MenuItem>
-                <MenuItem
-                  sx={{
-                    "&:hover": {
-                      backgroundColor: "primary.light",
-                      borderRadius: "6px",
-                    },
-                  }}
-                  component={Link}
-                  to="/dashboard/journal/all"
-                >
-                  <Typography variant="h5" color="primary.main" sx={{ fontSize: "0.8rem", fontWeight: "600", textTransform: "Uppercase" }}>
-                    All Journals
-                  </Typography>
-                </MenuItem>
-              </Menu>
-            </Box>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                gap: 2,
-                alignItems: "center",
-                justifyContent: "center",
-                marginTop: "150px",
-              }}
-            >
-              <Button onClick={handleLogout} component={Link} to="/">
-                Log Out
-              </Button>
-
-              <Button
-                component={Link}
-                to="/dashboard/accountInfo"
-                variant="contained"
-                sx={{
-                  backgroundColor: "primary.main",
-                  "&:hover": {
-                    backgroundColor: "primary.hover",
-                  },
-                  color: "white.main",
-                }}
-              >
-                Account
-              </Button>
+              <Box sx={{ display: "flex", flexDirection: "column", gap: 2, marginTop: 2 }}>
+                {renderMenuButtons()}
+                {journalingDropdown}
+              </Box>
+              {accountAndLogoutButtons}
             </Box>
           </Drawer>
         </>
       ) : (
-        // Persistent Drawer for Larger Screens
         <Drawer
           variant="permanent"
           PaperProps={{
@@ -272,142 +180,14 @@ function SideBar() {
             },
           }}
         >
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              gap: 2,
-              alignItems: "flex-start",
-            }}
-          >
-            <Typography
-              variant="h5"
-              color="primary.main"
-              sx={{ fontWeight: 600 }}
-            >
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+            <Typography variant="h5" color="primary.main" fontWeight={600}>
               SheMatters
             </Typography>
-            <Button
-              component={Link}
-              to="/dashboard"
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "flex-start",
-                width: "100%",
-              }}
-            >
-              <HomeRoundedIcon
-                sx={{ marginRight: "10px", marginBottom: "3px" }}
-              />
-              Dashboard
-            </Button>
-            <Button
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "flex-start",
-                width: "100%",
-              }}
-            >
-              <GroupRoundedIcon
-                sx={{ marginRight: "10px", marginBottom: "3px" }}
-              />
-              Group Therapy
-            </Button>
-            <Button
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "flex-start",
-                width: "100%",
-              }}
-            >
-              <EventNoteRoundedIcon
-                sx={{ marginRight: "10px", marginBottom: "3px" }}
-              />
-              Consultation
-            </Button>
-            <Button
-              onClick={handleDropdownOpen}
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "flex-start",
-                width: "100%",
-              }}
-            >
-              <LibraryBooksRoundedIcon
-                sx={{ marginRight: "10px", marginBottom: "3px" }}
-              />
-              Journaling
-            </Button>
-            <Menu
-              anchorEl={anchorEl}
-              open={isDropdownOpen}
-              onClose={handleDropdownClose}
-              sx={{
-                marginLeft: "10px",
-              }}
-            >
-              <MenuItem
-                sx={{
-                  "&:hover": {
-                    backgroundColor: "primary.light",
-                    borderRadius: "6px",
-                  },
-                }}
-                component={Link}
-                to="/dashboard/journal"
-              >
-                <Typography variant="h5" color="primary.main" sx={{ fontSize: "0.8rem", fontWeight: "600", textTransform: "Uppercase" }}>
-                  Create Journal
-                </Typography>
-              </MenuItem>
-              <MenuItem
-                sx={{
-                  "&:hover": {
-                    backgroundColor: "primary.light",
-                    borderRadius: "6px",
-                  },
-                }}
-                component={Link}
-                to="/dashboard/journal/all"
-              >
-                <Typography variant="h5" color="primary.main" sx={{ fontSize: "0.8rem", fontWeight: "600", textTransform: "Uppercase"}}>
-                  All Journals
-                </Typography>
-              </MenuItem>
-            </Menu>
+            {renderMenuButtons()}
+            {journalingDropdown}
           </Box>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              gap: 2,
-              alignItems: "center",
-              justifyContent: "center",
-              marginTop: "150px",
-            }}
-          >
-            <Button
-              component={Link}
-              to="/dashboard/accountInfo"
-              variant="contained"
-              sx={{
-                backgroundColor: "primary.main",
-                "&:hover": {
-                  backgroundColor: "primary.hover",
-                },
-                color: "white.main",
-              }}
-            >
-              Account
-            </Button>
-            <Button onClick={handleLogout} component={Link} to="/">
-              Log Out
-            </Button>
-          </Box>
+          {accountAndLogoutButtons}
         </Drawer>
       )}
     </ThemeProvider>

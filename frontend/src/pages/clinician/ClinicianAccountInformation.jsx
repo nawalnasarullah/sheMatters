@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import {
   TextField,
@@ -51,6 +51,12 @@ function AccountInformation() {
   const [selectedOptions, setSelectedOptions] = useState(
     psychologist?.labels || []
   );
+
+  useEffect(() => {
+  if (psychologist?.labels) {
+    setSelectedOptions(psychologist.labels);
+  }
+}, [psychologist]);
 
   const toggleEdit = () => {
     setIsDisabled((state) => !state);
@@ -122,6 +128,7 @@ function AccountInformation() {
       experience: psychologist?.experience || "",
       fee: psychologist?.fee || "",
     },
+    enableReinitialize: true,
     validationSchema: Yup.object({
       firstName: Yup.string()
         .matches(/^[A-Za-z ]*$/, "Please enter valid first name")

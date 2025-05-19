@@ -32,6 +32,8 @@ export default class psychologistController {
   }
 
   async getRecommendedPsychologist(req, res, next) {
+    console.log("getting recommendations");
+    
     try {
       const { id: userId } = req.query
       if(!userId || !mongoose.Types.ObjectId.isValid(userId)) 
@@ -51,7 +53,7 @@ export default class psychologistController {
       const pipeline = [
         {
           $match: {
-            roles: "psychologist",
+            role: "psychologist",
           },
         },
         {
@@ -120,10 +122,10 @@ export default class psychologistController {
 
   async getMe(req, res, next) {
     const id = req.user.id
-    console.log("getting psychologist :", id)
+
     try {
       const psychologist = await Psychologist.findById(id)
-      console.log("getting psychologist :", psychologist)
+ 
       res.json({
         psychologist,
         success: true,

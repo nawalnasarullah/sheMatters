@@ -51,7 +51,7 @@ function NavBar() {
   };
 
   const handleLogout = async () => {
-    const res = await logout().unwrap()
+    const res = await logout().unwrap();
     console.log("logout", res);
     navigate(0);
   }
@@ -212,7 +212,7 @@ function NavBar() {
                         >
                           Therapy for mothers
                         </MenuItem>
-                        <MenuItem
+                        {/* <MenuItem
                           sx={{
                             "&:hover": {
                               backgroundColor: "primary.light",
@@ -221,7 +221,7 @@ function NavBar() {
                           }}
                         >
                           Group therapy
-                        </MenuItem>
+                        </MenuItem> */}
                         <MenuItem
                           sx={{
                             "&:hover": {

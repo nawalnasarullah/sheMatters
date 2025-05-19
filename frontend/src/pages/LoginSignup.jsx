@@ -136,7 +136,7 @@ function LoginSignup() {
 
       if (res && res.success) {
         dispatch(setUserInfo(res));
-        console.log(res);
+        console.log('login-response', res);
 
         toast.success(res.message, {
           progressClassName: "toast-progress-success",

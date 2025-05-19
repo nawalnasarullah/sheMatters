@@ -49,10 +49,11 @@ export const psychologistAuthApi = createApi({
           if(data.success)
           {
             dispatch(setPsychologistInfo(data));
-            console.log("haha i am dispatching the thing")
+            console.log("haha i am dispatching the thing", data.psychologist._id);
           }
           else
             dispatch(clearPsychologistInfo());
+ 
           
         }catch(err){
           console.log('error', err);

@@ -42,7 +42,7 @@ function LoginSignupAdmin() {
       password: "",
       cPassword: "",
       phoneNumber: "",
-      roles: "",
+      role: "",
     },
     validationSchema: Yup.object({
       firstName: Yup.string()
@@ -86,7 +86,7 @@ function LoginSignupAdmin() {
     }),
     onSubmit: async (values) => {
       delete values.cPassword;
-      values.roles = "admin";
+      values.role = "admin";
 
       const user = await registerUser(values).unwrap();
       console.log("ggggggg", user);
@@ -138,7 +138,7 @@ function LoginSignupAdmin() {
       const res = await loginUser(values).unwrap();
       console.log("res", res);
 
-      if (res && res.success && res.user.roles=='admin') {
+      if (res && res.success && res.user.role=='admin') {
         dispatch(setUserInfo(res));
         console.log(res);
 

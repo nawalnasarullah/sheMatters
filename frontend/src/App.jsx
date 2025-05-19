@@ -1,6 +1,9 @@
 import React from "react";
 import { createRoutesFromElements, Route, RouterProvider } from "react-router";
 import { createBrowserRouter } from "react-router-dom";
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
+import store, { persistor } from './redux/store';
 import "./App.css";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
@@ -25,6 +28,8 @@ import ClinicianDashboardLayout from "./pages/clinician/ClinicianDashboardLayout
 import ClinicianAccountInformation from "./pages/clinician/ClinicianAccountInformation"
 import ClinicianDashboardMain from "./pages/clinician/ClinicianDashboardMain";
 import ClinicianProfile from "./pages/clinician/ClinicianProfile";
+import UserConsultingPage from "./pages/user/UserConsultingPage";
+import ClinicianConsultingPage from "./pages/clinician/ClinicianConsultingPage";
 
 
 function App() {
@@ -52,19 +57,24 @@ function App() {
           <Route path="journal" element={<Journal />} />
           <Route path="journal/all" element={<AllJournals />} />
           <Route path="journal/:id" element={<JournalDetails />} />
+          <Route path="user/consultations" element={<UserConsultingPage />} />
         </Route>
         <Route path="/clinician/dashboard" element={<ClinicianDashboardLayout />}>
           <Route index element={<ClinicianDashboardMain/>} />
           <Route path="accountInfo" element={<ClinicianAccountInformation />} />
+          <Route path="consultations" element={<ClinicianConsultingPage />} />
         </Route>
+        
       </Route>
     )
   );
 
   return (
-    <>
-      <RouterProvider router={router} />
-    </>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <RouterProvider router={router} />
+      </PersistGate>
+    </Provider>
   );
 }
 
