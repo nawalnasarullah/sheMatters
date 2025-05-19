@@ -7,6 +7,7 @@ import psychologistRoutes from "./routes/psychologist.routes.js";
 import appointmentRoutes from "./routes/appointment.routes.js";
 import journalRoutes from "./routes/journal.routes.js";
 import messageRoutes from "./routes/message.routes.js";
+import twilioCallRoute from "./routes/twilio.token.routes.js";
 import cookieParser from "cookie-parser";
 import "./services/reminderNotificationService.js";
 import { connectDB } from "./config/db.js";
@@ -44,6 +45,7 @@ app.use('/', psychologistRoutes);
 app.use('/', journalRoutes);
 app.use('/', appointmentRoutes);
 app.use('/messages', messageRoutes);
+app.use('/api/twilio', twilioCallRoute);
 
 // app.use('*', (req, res, next)=>{
 //     res.json({

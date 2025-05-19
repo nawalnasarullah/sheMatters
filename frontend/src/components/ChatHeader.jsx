@@ -11,6 +11,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import CallIcon from "@mui/icons-material/Call";
 import VideocamIcon from "@mui/icons-material/Videocam";
 import { setSelectedUser } from "../redux/features/chatSlice/";
+import { useMakeCallMutation } from "../redux/api/twilioApi";
+import { formatToE164 } from "../utils/formatToE164";
 import {
   connectSocket,
   disconnectSocket,
@@ -19,9 +21,9 @@ import {
 import theme from "./Theme";
 
 function ChatHeader({ currentUser }) {
+  const [makeCall, { isLoading: isCalling }] = useMakeCallMutation();
   const [onlineUsers, setOnlineUsers] = useState([]);
   const currentUserId = currentUser._id;
-
 
   useEffect(() => {
     const socket = connectSocket(currentUserId);
@@ -39,6 +41,25 @@ function ChatHeader({ currentUser }) {
   const selectedUser = useSelector((state) => state.chat.selectedUser);
 
   if (!selectedUser) return null;
+
+  const handleVoiceCall = async () => {
+    if (!selectedUser?.phoneNumber) {
+      alert("User has no phone number.");
+      return;
+    }
+
+    const formattedNumber = formatToE164(selectedUser.phoneNumber);
+    console.log("Formatted number:", formattedNumber);
+    
+
+    try {
+      await makeCall(formattedNumber).unwrap();
+      console.log("Call initiated to", formattedNumber);
+    } catch (error) {
+      console.error("Call failed:", error);
+      alert("Failed to initiate call.");
+    }
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -82,10 +103,15 @@ function ChatHeader({ currentUser }) {
         </Box>
 
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          <IconButton sx={{ "&:hover": { backgroundColor: "primary.light" } }}>
+          <IconButton sx={{ "&:hover": { backgroundColor: "primary.light" } }}
+           onClick={handleVoiceCall}
+            disabled={isCalling}>
             <CallIcon sx={{ color: "primary.main", fontSize: "1.7rem" }} />
           </IconButton>
-          <IconButton sx={{ "&:hover": { backgroundColor: "primary.light" } }}>
+          <IconButton
+           
+            sx={{ "&:hover": { backgroundColor: "primary.light" } }}
+          >
             <VideocamIcon sx={{ color: "primary.main", fontSize: "1.7rem" }} />
           </IconButton>
           <IconButton

@@ -10,6 +10,7 @@ import psychologistReducer from "./features/psychologistAuthSlice"
 import { psychologistApi } from "./api/psychologistApi";
 import { appointmentApi } from "./api/appointmentApi";
 import { chatApi } from "./api/chatApi";
+import { twilioApi } from "./api/twilioApi";
 import chatReducer from "./features/chatSlice";
 
 const rootReducer = combineReducers({
@@ -21,7 +22,8 @@ const rootReducer = combineReducers({
   [journalApi.reducerPath]: journalApi.reducer,
   [psychologistApi.reducerPath]: psychologistApi.reducer,
   [appointmentApi.reducerPath]: appointmentApi.reducer,
-  [chatApi.reducerPath]: chatApi.reducer
+  [chatApi.reducerPath]: chatApi.reducer,
+  [twilioApi.reducerPath]: twilioApi.reducer
 });
 
 const persistConfig = {
@@ -53,7 +55,8 @@ const store = configureStore({
       journalApi.middleware, 
       psychologistApi.middleware, 
       appointmentApi.middleware, 
-      chatApi.middleware
+      chatApi.middleware,
+      twilioApi.middleware,
     ]),
 });
 
