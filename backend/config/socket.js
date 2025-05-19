@@ -49,8 +49,8 @@ const initSocket = () => {
 
     socket.on('send-message' , (message) => {
 
-      let reciever = onlineUsers.find( (user) => user.userId === message.to )
-      console.log("sending message to :" ,reciever)
+      let reciever = onlineUsers.find( (user) => user.userId === message.reciever )
+      console.log("sending message to :" ,reciever['userId'] , " : " , message)
       socket.to(reciever['socketId']).emit("recieve-message" , message)      
     })
 

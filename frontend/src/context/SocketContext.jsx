@@ -14,7 +14,6 @@ export const SocketContextProvider = (props) => {
     useSelector((state) => state.auth.user?.user) : 
     useSelector(state => state.psychologistAuth?.psychologist)
 
-    console.log("user in CONTEXT : " , user)
     const [socket, setSocket] = useState(null);
     const [isConnected, setIsConnected] = useState(false);
     const [onlineUsers, setOnlineUsers] = useState(null);

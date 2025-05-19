@@ -71,7 +71,6 @@ function MessageInput() {
   const handleSendMessage = async (e) => {
     e.preventDefault();
     if (!text.trim() && !imagePreview) return;
-    socket.emit("send-message" , { message : text.trim() ,  to : selectedUser._id , from : user._id })
     try {
       await sendMessage({
         userId: selectedUser._id,
@@ -82,6 +81,7 @@ function MessageInput() {
       }).unwrap();
 
       setText("");
+      socket.emit("send-message" , { message : text.trim() ,  reciever : selectedUser._id , sender : user._id })
       setImagePreview(null);
       if (fileInputRef.current) fileInputRef.current.value = "";
     } catch (error) {

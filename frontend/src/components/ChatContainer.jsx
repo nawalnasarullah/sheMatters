@@ -28,7 +28,7 @@ import { useSocket } from "../context/SocketContext";
   } = useGetMessagesQuery(selectedUser?._id, {
     skip: !selectedUser,
   });
-  
+
   useEffect(() => {
     if (messageEndRef.current) {
       messageEndRef.current.scrollIntoView({ behavior: "smooth" });
@@ -43,17 +43,17 @@ import { useSocket } from "../context/SocketContext";
     const handleNewMessage = (message) => {
       console.log("New message received:", message);
       
-      if (message.from === selectedUser?._id || message.to === selectedUser?._id) {
+      if (message.sender === selectedUser?._id || message.reciever === user._id) {
         refetch();
       }
   };
 
     socket.on('recieve-message' , (msg) => handleNewMessage(msg))
-
+    console.log("attached recieve event on socket :" , socket)
   return () => {
     socket.off('recieve-message')
   };
-}, [user, selectedUser, refetch]);
+}, [user, socket , selectedUser]);
 
 
 
