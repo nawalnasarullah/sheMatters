@@ -8,9 +8,13 @@ import Peer from "peerjs";
 export const SocketContext = createContext(null);
 
 export const SocketContextProvider = (props) => {
-    //const {psychologist} = useSelector(state => state.psychologistAuth);
-    const user = useSelector((state) => state.auth.user)
+    //very bad
+    const user = 
+    useSelector((state) => state.auth.user?.user) ? 
+    useSelector((state) => state.auth.user?.user) : 
+    useSelector(state => state.psychologistAuth?.psychologist)
 
+    console.log("user in CONTEXT : " , user)
     const [socket, setSocket] = useState(null);
     const [isConnected, setIsConnected] = useState(false);
     const [onlineUsers, setOnlineUsers] = useState(null);
@@ -165,6 +169,8 @@ export const SocketContextProvider = (props) => {
 
     // initialize socket
     useEffect(() => {
+        if(!user?._id) return
+
         const newSocket = io("http://localhost:8000");
         console.log('set new socket : ' , newSocket)
         setSocket(newSocket);
@@ -204,7 +210,7 @@ export const SocketContextProvider = (props) => {
     useEffect(() => {
         if (!socket || !isConnected) return;
         console.log("emitting new user : " , user)
-        socket.emit("addNewUser", user._id);
+        socket.emit("addNewUser", user?._id);
         socket.on("getUsers", (res) => {
             console.log("Got new list of online users : " , res)
             setOnlineUsers(res);

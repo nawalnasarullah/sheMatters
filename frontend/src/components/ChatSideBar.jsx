@@ -24,22 +24,8 @@ function ChatSidebar({ user }) {
   const { socket , onlineUsers} = useSocket()
   const currentUserId = user._id;
 
-
-  const [currentUsers, setCurrentUsers] = useState(onlineUsers ? onlineUsers : []);
-  // useEffect(() => {
-  //   connectSocket(user._id);
-
-  //   oncurrentUsersUpdate((users) => {
-  //     console.log("Online users:", users);
-  //     setCurrentUsers(users);
-  //   });
-  //   return () => {
-  //     disconnectSocket();
-  //   };
-  // }, [currentUserId]);
-
   useEffect(() => {
-      console.log("SOCKET IN SIDE BAR : " , socket)
+      console.log("SOCKET IN SIDE BAR : " , socket , " online users : " , onlineUsers)
   },[socket])
 
   const dispatch = useDispatch();
@@ -97,7 +83,7 @@ function ChatSidebar({ user }) {
                   width: 12,
                   height: 12,
                   borderRadius: "50%",
-                  backgroundColor: currentUsers.includes(user._id)
+                  backgroundColor: onlineUsers.includes(user._id)
                     ? "primary.main"
                     : theme.palette.grey[400],
                   border: "2px solid white",
@@ -112,12 +98,12 @@ function ChatSidebar({ user }) {
               secondary={
                 <Typography
                   sx={{
-                    color: currentUsers.includes(user._id)
+                    color: onlineUsers.some((onlineUser) => onlineUser.userId == user._id)
                       ? "primary.main"
                       : theme.palette.grey[500],
                   }}
                 >
-                  {currentUsers.includes(user._id) ? "Online" : "Offline"}
+                  {onlineUsers.some( onlineUser => onlineUser.userId == user._id ) ? "Online" : "Offline"}
                 </Typography>
               }
             />
