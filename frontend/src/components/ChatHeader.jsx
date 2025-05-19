@@ -20,7 +20,9 @@ function ChatHeader({ currentUser }) {
   const selectedUser = useSelector((state) => state.chat.selectedUser);
 
   if (!selectedUser) return null;
-
+  if(!onlineUsers)
+    return <>Loading...</>
+    
   return (
     <ThemeProvider theme={theme}>
       <Box
@@ -52,12 +54,12 @@ function ChatHeader({ currentUser }) {
             <Typography
               sx={{
                 fontSize: 14,
-                color: onlineUsers.some((onlineUser) => onlineUser.userId == selectedUser._id) 
+                color: onlineUsers?.some((onlineUser) => onlineUser.userId == selectedUser._id) 
                   ? "primary.main"
                   : "theme.palette.grey[500]",
               }}
             >
-              {onlineUsers.some((onlineUser) => onlineUser.userId == selectedUser._id)  ? "Online" : "Offline"}
+              {onlineUsers?.some((onlineUser) => onlineUser.userId == selectedUser._id)  ? "Online" : "Offline"}
             </Typography>
           </Box>
         </Box>

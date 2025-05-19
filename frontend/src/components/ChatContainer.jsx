@@ -11,12 +11,12 @@ import {
   Dialog,
   DialogContent,
   IconButton,
-  Skeleton,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { onNewMessage, offNewMessage, connectSocket } from "../utils/socket";
+import { useSocket } from "../context/SocketContext";
 
  function ChatContainer ({ user }) {
+  const { socket } = useSocket()
   const selectedUser = useSelector((state) => state.chat.selectedUser);
   const messageEndRef = useRef(null);
   const [previewImage, setPreviewImage] = useState(null);
@@ -28,30 +28,30 @@ import { onNewMessage, offNewMessage, connectSocket } from "../utils/socket";
   } = useGetMessagesQuery(selectedUser?._id, {
     skip: !selectedUser,
   });
-
-  useEffect(() => {
-  if (messageEndRef.current) {
-    messageEndRef.current.scrollIntoView({ behavior: "smooth" });
-  }
-}, [messages]);
   
-  // useEffect(() => {
-  //   if(user._id) 
-  //   connectSocket(user._id);
-  // })
   useEffect(() => {
-  const handleNewMessage = (message) => {
-    console.log("New message received:", message);
-    
-    if (message.senderId === selectedUser?._id || message.receiverId === selectedUser?._id) {
-      refetch();
+    if (messageEndRef.current) {
+      messageEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
+  }, [messages]);
+  
+  //send handling new message event listener here
+  useEffect(() => {
+
+    if(!socket) return 
+
+    const handleNewMessage = (message) => {
+      console.log("New message received:", message);
+      
+      if (message.from === selectedUser?._id || message.to === selectedUser?._id) {
+        refetch();
+      }
   };
 
-  onNewMessage(handleNewMessage);
+    socket.on('recieve-message' , (msg) => handleNewMessage(msg))
 
   return () => {
-    offNewMessage(handleNewMessage);
+    socket.off('recieve-message')
   };
 }, [user, selectedUser, refetch]);
 

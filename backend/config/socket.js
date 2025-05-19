@@ -47,6 +47,13 @@ const initSocket = () => {
       io.emit("getUsers", onlineUsers)
     })
 
+    socket.on('send-message' , (message) => {
+
+      let reciever = onlineUsers.find( (user) => user.userId === message.to )
+      console.log("sending message to :" ,reciever)
+      socket.to(reciever['socketId']).emit("recieve-message" , message)      
+    })
+
     // other events
     // socket.on("call", onCall)
     // socket.on("webrtcSignal", onWebrtcSignal)

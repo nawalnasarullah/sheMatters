@@ -17,8 +17,12 @@ import theme from "./Theme";
 import { useSelector } from "react-redux";
 import Picker from "@emoji-mart/react";
 import data from "@emoji-mart/data";
+import { useSocket } from "../context/SocketContext";
+
 
 function MessageInput() {
+  const { socket } = useSocket()
+  const user = useSelector((state) => state.auth?.user?.user || state.psychologistAuth?.psychologist )
   const selectedUser = useSelector((state) => state.chat.selectedUser);
   const [text, setText] = useState("");
   const [imagePreview, setImagePreview] = useState(null);
@@ -67,7 +71,7 @@ function MessageInput() {
   const handleSendMessage = async (e) => {
     e.preventDefault();
     if (!text.trim() && !imagePreview) return;
-
+    socket.emit("send-message" , { message : text.trim() ,  to : selectedUser._id , from : user._id })
     try {
       await sendMessage({
         userId: selectedUser._id,
