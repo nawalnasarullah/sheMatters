@@ -48,6 +48,7 @@ const onWebrtcSignal = async (data) => {
 };
 
 const onCall = async (participants) => {
+  console.log("recieving call : " , participants)
   if (participants.receiver.socketId) {
     io.to(participants.receiver.socketId).emit("incomingCall", participants);
   }

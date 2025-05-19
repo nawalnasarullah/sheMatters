@@ -65,10 +65,10 @@ function ChatHeader({ currentUser }) {
         </Box>
 
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          <IconButton sx={{ "&:hover": { backgroundColor: "primary.light" } }} onClick={handleCall}>
+          <IconButton sx={{ "&:hover": { backgroundColor: "primary.light" } }} onClick={() => handleCall(selectedUser._id)}>
             <CallIcon sx={{ color: "primary.main", fontSize: "1.7rem" }} />
           </IconButton>
-          <IconButton sx={{ "&:hover": { backgroundColor: "primary.light" } }} onClick={handleCall}>
+          <IconButton sx={{ "&:hover": { backgroundColor: "primary.light" } }} onClick={() => handleCall(selectedUser._id)}>
             <VideocamIcon sx={{ color: "primary.main", fontSize: "1.7rem" }} />
           </IconButton>
           <IconButton
