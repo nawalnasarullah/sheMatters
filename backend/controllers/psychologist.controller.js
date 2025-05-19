@@ -1,6 +1,7 @@
 import { Psychologist } from "../models/psychologist.model.js"
 import { v2 as cloudinary } from "cloudinary"
 import { User } from "../models/user.model.js"
+import { Journal } from "../models/journal.model.js"
 import mongoose from "mongoose"
 
 export default class psychologistController {
@@ -217,4 +218,37 @@ export default class psychologistController {
       next(error)
     }
   }
+
+  async getPatientsWithJournals (req, res, next) {
+   try {
+    const { psychologistId } = req.params;
+
+    const psychologist = await Psychologist.findById(psychologistId);
+    if (!psychologist) {
+      return res.status(404).json({ message: "Psychologist not found", success: false });
+    }
+
+    const patientIds = psychologist.assignedPatients;
+
+    const patients = await Promise.all(
+      patientIds.map(async (userId) => {
+        const user = await User.findById(userId).select("-password");
+        const journals = await Journal.find({ user: userId }).sort({ createdAt: -1 });
+
+        return {
+          ...user.toObject(),
+          journals,
+        };
+      })
+    );
+
+    return res.json({
+      patients,
+      message: "Patients with journals fetched successfully",
+      success: true,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
 }

@@ -1,20 +1,40 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   useGetAppointmentByIdQuery,
   useDeleteAppointmentByIdMutation,
   useMarkAppointmentCompletedMutation,
 } from "../redux/api/appointmentApi";
-import { Typography, ThemeProvider, Card, Button } from "@mui/material";
+import {
+  Typography,
+  ThemeProvider,
+  Card,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+} from "@mui/material";
 import theme from "./Theme";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function AppointmentReminder({ userId }) {
-  const { data, error, isLoading, refetch } =
-    useGetAppointmentByIdQuery(userId);
+  const { data, error, isLoading, refetch } = useGetAppointmentByIdQuery(userId);
   const [deleteAppointmentById] = useDeleteAppointmentByIdMutation();
   const [markAppointmentCompleted] = useMarkAppointmentCompletedMutation();
 
-  const notifiedAppointments = useRef(new Set()); // Track notified appointments
+  const notifiedAppointments = useRef(new Set());
 
+  const [openDialog, setOpenDialog] = useState(false);
+  const [dialogAction, setDialogAction] = useState(null); // 'cancel' or 'complete'
+  const [selectedAppointmentId, setSelectedAppointmentId] = useState(null);
+
+  useEffect(() => {
+  if ("Notification" in window && Notification.permission === "default") {
+    Notification.requestPermission();
+  }
+}, []);
   useEffect(() => {
     if (!data?.appointment) return;
 
@@ -38,16 +58,16 @@ function AppointmentReminder({ userId }) {
 
           if (timeDiff > 0 && timeDiff <= 10 * 60 * 1000) {
             sendBrowserNotification(appointment);
-            notifiedAppointments.current.add(appointment._id); // Avoid re-notifying
+            notifiedAppointments.current.add(appointment._id);
           }
         }
       });
     };
 
     const interval = setInterval(checkNotifications, 60 * 1000);
-    checkNotifications(); // Run once immediately
+    checkNotifications();
     return () => clearInterval(interval);
-  }, [data?.appointment, userId]); // Depend only on what's needed
+  }, [data?.appointment, userId]);
 
   const sendBrowserNotification = (appointment) => {
     if (Notification.permission === "granted") {
@@ -65,29 +85,36 @@ function AppointmentReminder({ userId }) {
     }
   };
 
-  const handleCancelAppointment = async (appointmentId) => {
-    if (!window.confirm("Are you sure you want to cancel this appointment?"))
-      return;
-    try {
-      await deleteAppointmentById(appointmentId).unwrap();
-      alert("Appointment cancelled successfully!");
-      refetch();
-    } catch (error) {
-      console.error("Error cancelling appointment:", error);
-      alert("An error occurred while cancelling the appointment.");
-    }
+  const handleOpenDialog = (action, appointmentId) => {
+    setDialogAction(action);
+    setSelectedAppointmentId(appointmentId);
+    setOpenDialog(true);
   };
 
-  const handleCompleteAppointment = async (appointmentId) => {
-    if (!window.confirm("Are you sure you want to complete this appointment?"))
-      return;
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+    setDialogAction(null);
+    setSelectedAppointmentId(null);
+  };
+
+  const handleConfirmAction = async () => {
     try {
-      await markAppointmentCompleted(appointmentId).unwrap();
-      alert("Appointment completed successfully!");
+      if (dialogAction === "cancel") {
+        await deleteAppointmentById(selectedAppointmentId).unwrap();
+        toast.success("Appointment cancelled successfully!", {
+          progressClassName: "toast-progress-success"
+        });
+      } else if (dialogAction === "complete") {
+        await markAppointmentCompleted(selectedAppointmentId).unwrap();
+        toast.success("Appointment completed successfully!", {
+          progressClassName: "toast-progress-success"
+        });
+      }
       refetch();
     } catch (error) {
-      console.error("Error completing appointment:", error);
-      alert("An error occurred while completing the appointment.");
+      toast.error("An error occurred while updating the appointment.");
+    } finally {
+      handleCloseDialog();
     }
   };
 
@@ -95,7 +122,6 @@ function AppointmentReminder({ userId }) {
   if (error) {
     const errorMessage =
       error?.data?.message || error?.message || "Something went wrong";
-
     return <p>Error: {errorMessage}</p>;
   }
 
@@ -119,32 +145,19 @@ function AppointmentReminder({ userId }) {
               >
                 <div>
                   <p className="text-gray-600 flex items-baseline">
-                    <Typography
-                      variant="h6"
-                      sx={{ fontSize: "1rem", fontWeight: "bold" }}
-                    >
+                    <Typography variant="h6" sx={{ fontSize: "1rem", fontWeight: "bold" }}>
                       Date:
                     </Typography>
-                    <Typography sx={{ paddingLeft: "5px" }}>
-                      {appointment.slotDate}
-                    </Typography>
+                    <Typography sx={{ paddingLeft: "5px" }}>{appointment.slotDate}</Typography>
                   </p>
                   <p className="text-gray-600 flex items-baseline">
-                    <Typography
-                      variant="h6"
-                      sx={{ fontSize: "1rem", fontWeight: "bold" }}
-                    >
+                    <Typography variant="h6" sx={{ fontSize: "1rem", fontWeight: "bold" }}>
                       Time:
                     </Typography>
-                    <Typography sx={{ paddingLeft: "5px" }}>
-                      {appointment.slotTime}
-                    </Typography>
+                    <Typography sx={{ paddingLeft: "5px" }}>{appointment.slotTime}</Typography>
                   </p>
                   <p className="text-gray-600 flex items-baseline">
-                    <Typography
-                      variant="h6"
-                      sx={{ fontSize: "1rem", fontWeight: "bold" }}
-                    >
+                    <Typography variant="h6" sx={{ fontSize: "1rem", fontWeight: "bold" }}>
                       With:
                     </Typography>
                     <Typography sx={{ paddingLeft: "5px" }}>
@@ -157,7 +170,7 @@ function AppointmentReminder({ userId }) {
                     <Button
                       variant="contained"
                       size="small"
-                      onClick={() => handleCompleteAppointment(appointment._id)}
+                      onClick={() => handleOpenDialog("complete", appointment._id)}
                       sx={{
                         backgroundColor: "primary.main",
                         "&:hover": { backgroundColor: "primary.hover" },
@@ -172,7 +185,7 @@ function AppointmentReminder({ userId }) {
                         backgroundColor: "secondary.dark",
                         "&:hover": { backgroundColor: "secondary.dark" },
                       }}
-                      onClick={() => handleCancelAppointment(appointment._id)}
+                      onClick={() => handleOpenDialog("cancel", appointment._id)}
                     >
                       Cancelled
                     </Button>
@@ -193,7 +206,42 @@ function AppointmentReminder({ userId }) {
             No appointments available.
           </p>
         )}
+         <ToastContainer
+                position="top-center"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"/>
       </div>
+
+      {/* Confirmation Dialog */}
+      <Dialog open={openDialog} onClose={handleCloseDialog}>
+        <DialogTitle sx={{ fontWeight: "bold", color: "primary.main" }}>
+          {dialogAction === "cancel"
+            ? "Cancel Appointment"
+            : "Mark Appointment as Completed"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText sx={{ fontSize: "1rem" }}>
+            Are you sure you want to{" "}
+            {dialogAction === "cancel" ? "cancel" : "complete"} this appointment?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog} color="secondary" variant="contained">
+            No
+          </Button>
+          <Button onClick={handleConfirmAction} color="primary" variant="contained">
+            Yes
+          </Button>
+        </DialogActions>
+
+      </Dialog>
     </ThemeProvider>
   );
 }

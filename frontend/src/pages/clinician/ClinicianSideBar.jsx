@@ -24,6 +24,9 @@ import theme from "../../components/Theme.jsx";
 
 function SideBar() {
   const { data } = useGetMeQuery();
+  const psychologistId = useSelector(
+    (state) => state.psychologistAuth.psychologist._id
+  );
   const [logout] = useLazyLogoutQuery();
   const navigate = useNavigate();
 
@@ -208,7 +211,7 @@ function SideBar() {
                     },
                   }}
                   component={Link}
-                  to="/dashboard/journal"
+                  to={`/clinician/dashboard/patients-with-journals/${psychologistId}`}
                 >
                   <Typography variant="h5" color="primary.main" sx={{ fontSize: "0.8rem", fontWeight: "600", textTransform: "Uppercase" }}>
                     View Patients
@@ -321,6 +324,8 @@ function SideBar() {
             </Button> */}
             
             <Button
+            component={Link}
+            to={`/clinician/dashboard/patients-with-journals/${psychologistId}`}
               sx={{
                 display: "flex",
                 alignItems: "center",

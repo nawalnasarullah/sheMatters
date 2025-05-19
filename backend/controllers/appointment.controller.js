@@ -18,25 +18,21 @@ export default class AppointmentController {
       }
 
       if (!psychologistData.available) {
-        return res
-          .status(403)
-          .json({
-            message: "Psychologist is not available at this time",
-            success: false,
-          });
+        return res.status(403).json({
+          message: "Psychologist is not available at this time",
+          success: false,
+        });
       }
 
       let slots_booked = psychologistData.slots_booked || {};
 
       // Checking slot availability
       if (slots_booked[slotDate]?.includes(slotTime)) {
-        return res
-          .status(403)
-          .json({
-            message: "Slot already booked",
-            success: false,
-            status: "booked",
-          });
+        return res.status(403).json({
+          message: "Slot already booked",
+          success: false,
+          status: "booked",
+        });
       }
 
       // Booking the slot
@@ -68,6 +64,9 @@ export default class AppointmentController {
 
       // Saving new slot data
       await Psychologist.findByIdAndUpdate(psychologistId, { slots_booked });
+      await Psychologist.findByIdAndUpdate(psychologistId, {
+        $addToSet: { assignedPatients: userId },
+      });
       console.log("slots_booked", slots_booked);
 
       res.json({
@@ -83,7 +82,7 @@ export default class AppointmentController {
 
   async getAllAppointments(req, res, next) {
     try {
-      const appointments = await Appointment.find()
+      const appointments = await Appointment.find();
       res.json({
         appointments,
         message: "All appointments retrieved successfully",
@@ -96,15 +95,16 @@ export default class AppointmentController {
 
   async getAppointmentById(req, res, next) {
     console.log("getAppointmentById");
-    
+
     try {
-      
       const { userId } = req.params;
 
-      const appointment = await Appointment.find({ $or: [
-    { userId: userId, isCompleted: false },
-    { psychologistId: userId, isCompleted: false }
-  ] });
+      const appointment = await Appointment.find({
+        $or: [
+          { userId: userId, isCompleted: false },
+          { psychologistId: userId, isCompleted: false },
+        ],
+      });
 
       if (!appointment) {
         return res
@@ -112,7 +112,6 @@ export default class AppointmentController {
           .json({ message: "Appointment not found", success: false });
       }
 
-    
       res.json({
         appointment,
         message: "Appointment retrieved successfully",
@@ -126,7 +125,7 @@ export default class AppointmentController {
   async cancelAppointment(req, res, next) {
     try {
       const { appointmentId } = req.params;
- 
+
       const appointment = await Appointment.findById(appointmentId);
       if (!appointment) {
         return res
@@ -134,31 +133,34 @@ export default class AppointmentController {
           .json({ message: "Appointment not found", success: false });
       }
 
-      const psychologist = await Psychologist.findById(appointment.psychologistId);
+      const psychologist = await Psychologist.findById(
+        appointment.psychologistId
+      );
       if (!psychologist) {
         return res
           .status(404)
           .json({ message: "Psychologist not found", success: false });
       }
-  
+
       // Free up the slot
       if (psychologist.slots_booked[appointment.slotDate]) {
-        psychologist.slots_booked[appointment.slotDate] = psychologist.slots_booked[
-          appointment.slotDate
-        ].filter((slot) => slot !== appointment.slotTime);
-  
+        psychologist.slots_booked[appointment.slotDate] =
+          psychologist.slots_booked[appointment.slotDate].filter(
+            (slot) => slot !== appointment.slotTime
+          );
+
         // If no slots are left for that date, delete the key
         if (psychologist.slots_booked[appointment.slotDate].length === 0) {
           delete psychologist.slots_booked[appointment.slotDate];
         }
       }
-  
+
       // Save the updated psychologist data
       await psychologist.save();
-  
+
       // Remove appointment from database
       await Appointment.findByIdAndDelete(appointmentId);
-  
+
       res.json({
         message: "Appointment cancelled successfully",
         success: true,
@@ -168,24 +170,30 @@ export default class AppointmentController {
       next(err);
     }
   }
-  
-  async markAppointmentCompleted(req, res, next) {
 
+  async markAppointmentCompleted(req, res, next) {
     try {
       const { appointmentId } = req.params;
-  
+
       const appointment = await Appointment.findById(appointmentId);
       if (!appointment) {
-        return res.status(404).json({ message: "Appointment not found", success: false });
+        return res
+          .status(404)
+          .json({ message: "Appointment not found", success: false });
       }
-  
+
       if (appointment.status === "completed") {
-        return res.status(400).json({ message: "Appointment is already completed", success: false });
+        return res
+          .status(400)
+          .json({
+            message: "Appointment is already completed",
+            success: false,
+          });
       }
-  
+
       appointment.isCompleted = true;
       await appointment.save();
-  
+
       res.json({
         message: "Appointment marked as completed successfully",
         success: true,
@@ -195,5 +203,4 @@ export default class AppointmentController {
       next(err);
     }
   }
-  
 }

@@ -106,7 +106,8 @@ function AccountInformation() {
         .max(25, "Maximum 25 letters")
         .required("Username is required")
         .trim(),
-      dateOfBirth: Yup.date(),
+      dateOfBirth: Yup.string().matches(/^\d{4}-\d{2}-\d{2}$/,'Date of birth must be in the format YYYY-MM-DD'
+    ),
       city: Yup.string(),
       about: Yup.string(),
     }),

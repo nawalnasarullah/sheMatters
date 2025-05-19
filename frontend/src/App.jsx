@@ -30,6 +30,8 @@ import ClinicianDashboardMain from "./pages/clinician/ClinicianDashboardMain";
 import ClinicianProfile from "./pages/clinician/ClinicianProfile";
 import UserConsultingPage from "./pages/user/UserConsultingPage";
 import ClinicianConsultingPage from "./pages/clinician/ClinicianConsultingPage";
+import ClinicianPatients from "./pages/clinician/ClinicianPatients";
+import PatientJournals from "./pages/clinician/PatientsJournal";
 
 
 function App() {
@@ -63,6 +65,8 @@ function App() {
           <Route index element={<ClinicianDashboardMain/>} />
           <Route path="accountInfo" element={<ClinicianAccountInformation />} />
           <Route path="consultations" element={<ClinicianConsultingPage />} />
+          <Route path="patients-with-journals/:psychologistId" element={<ClinicianPatients />} />
+          <Route path="patient/:patientId/journals" element={<PatientJournals />} />
         </Route>
         
       </Route>
