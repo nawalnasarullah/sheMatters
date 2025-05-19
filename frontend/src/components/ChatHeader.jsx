@@ -23,18 +23,18 @@ function ChatHeader({ currentUser }) {
   const currentUserId = currentUser._id;
 
 
-  useEffect(() => {
-    const socket = connectSocket(currentUserId);
+  // useEffect(() => {
+  //   const socket = connectSocket(currentUserId);
 
-    onOnlineUsersUpdate((users) => {
-      console.log("Online users:", users);
-      setOnlineUsers(users);
-    });
+  //   onOnlineUsersUpdate((users) => {
+  //     console.log("Online users:", users);
+  //     setOnlineUsers(users);
+  //   });
 
-    return () => {
-      disconnectSocket();
-    };
-  }, [currentUserId]);
+  //   return () => {
+  //     disconnectSocket();
+  //   };
+  // }, [currentUserId]);
   const dispatch = useDispatch();
   const selectedUser = useSelector((state) => state.chat.selectedUser);
 

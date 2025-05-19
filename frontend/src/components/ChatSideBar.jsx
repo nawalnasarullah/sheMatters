@@ -15,32 +15,32 @@ import { useGetUsersQuery } from "../redux/api/chatApi";
 import { useDispatch, useSelector } from "react-redux";
 import { setSelectedUser } from "../redux/features/chatSlice";
 import { useLazyLogoutQuery } from "../redux/api/authApi";
-import {
-  onOnlineUsersUpdate,
-  connectSocket,
-  disconnectSocket,
-} from "../utils/socket";
 import theme from "./Theme";
+import { useSocket } from "../context/SocketContext";
 
 function ChatSidebar({ user }) {
   const [logout] = useLazyLogoutQuery();
   const navigate = useNavigate();
-
+  const { socket , onlineUsers} = useSocket()
   const currentUserId = user._id;
 
 
-  const [onlineUsers, setOnlineUsers] = useState([]);
-  useEffect(() => {
-    connectSocket(user._id);
+  const [currentUsers, setCurrentUsers] = useState(onlineUsers ? onlineUsers : []);
+  // useEffect(() => {
+  //   connectSocket(user._id);
 
-    onOnlineUsersUpdate((users) => {
-      console.log("Online users:", users);
-      setOnlineUsers(users);
-    });
-    return () => {
-      disconnectSocket();
-    };
-  }, [currentUserId]);
+  //   oncurrentUsersUpdate((users) => {
+  //     console.log("Online users:", users);
+  //     setCurrentUsers(users);
+  //   });
+  //   return () => {
+  //     disconnectSocket();
+  //   };
+  // }, [currentUserId]);
+
+  useEffect(() => {
+      console.log("SOCKET IN SIDE BAR : " , socket)
+  },[socket])
 
   const dispatch = useDispatch();
   const selectedUser = useSelector((state) => state.chat.selectedUser);
@@ -97,7 +97,7 @@ function ChatSidebar({ user }) {
                   width: 12,
                   height: 12,
                   borderRadius: "50%",
-                  backgroundColor: onlineUsers.includes(user._id)
+                  backgroundColor: currentUsers.includes(user._id)
                     ? "primary.main"
                     : theme.palette.grey[400],
                   border: "2px solid white",
@@ -112,12 +112,12 @@ function ChatSidebar({ user }) {
               secondary={
                 <Typography
                   sx={{
-                    color: onlineUsers.includes(user._id)
+                    color: currentUsers.includes(user._id)
                       ? "primary.main"
                       : theme.palette.grey[500],
                   }}
                 >
-                  {onlineUsers.includes(user._id) ? "Online" : "Offline"}
+                  {currentUsers.includes(user._id) ? "Online" : "Offline"}
                 </Typography>
               }
             />

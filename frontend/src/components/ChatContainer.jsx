@@ -35,10 +35,10 @@ import { onNewMessage, offNewMessage, connectSocket } from "../utils/socket";
   }
 }, [messages]);
   
-  useEffect(() => {
-    if(user._id) 
-    connectSocket(user._id);
-  })
+  // useEffect(() => {
+  //   if(user._id) 
+  //   connectSocket(user._id);
+  // })
   useEffect(() => {
   const handleNewMessage = (message) => {
     console.log("New message received:", message);

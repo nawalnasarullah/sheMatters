@@ -30,7 +30,7 @@ import ClinicianDashboardMain from "./pages/clinician/ClinicianDashboardMain";
 import ClinicianProfile from "./pages/clinician/ClinicianProfile";
 import UserConsultingPage from "./pages/user/UserConsultingPage";
 import ClinicianConsultingPage from "./pages/clinician/ClinicianConsultingPage";
-
+import SocketProvider from "./provider/SocketProvider";
 
 function App() {
   const router = createBrowserRouter(
@@ -50,19 +50,19 @@ function App() {
         <Route path="/forgotPassword" element={<ForgotPassword />} />
         <Route path="/resetPassword" element={<ResetPassword />} />
         <Route path="/dashboard" element={<DashboardLayout />}>
-          <Route index element={<UserDashboardMain/>} />
-          <Route path="psychologist/profile/:id" element={<ClinicianProfile/>} />
-          <Route path="user/questionnaire" element={<UserQuestionnaireForm />} />
-          <Route path="accountInfo" element={<AccountInformation />} />
-          <Route path="journal" element={<Journal />} />
-          <Route path="journal/all" element={<AllJournals />} />
-          <Route path="journal/:id" element={<JournalDetails />} />
-          <Route path="user/consultations" element={<UserConsultingPage />} />
+            <Route index element={<UserDashboardMain/>} />
+            <Route path="psychologist/profile/:id" element={<ClinicianProfile/>} />
+            <Route path="user/questionnaire" element={<UserQuestionnaireForm />} />
+            <Route path="accountInfo" element={<AccountInformation />} />
+            <Route path="journal" element={<Journal />} />
+            <Route path="journal/all" element={<AllJournals />} />
+            <Route path="journal/:id" element={<JournalDetails />} />
+            <Route path="user/consultations" element={<UserConsultingPage />} />
         </Route>
         <Route path="/clinician/dashboard" element={<ClinicianDashboardLayout />}>
-          <Route index element={<ClinicianDashboardMain/>} />
-          <Route path="accountInfo" element={<ClinicianAccountInformation />} />
-          <Route path="consultations" element={<ClinicianConsultingPage />} />
+            <Route index element={<ClinicianDashboardMain/>} />
+            <Route path="accountInfo" element={<ClinicianAccountInformation />} />
+            <Route path="consultations" element={<ClinicianConsultingPage />} />
         </Route>
         
       </Route>
@@ -71,9 +71,11 @@ function App() {
 
   return (
     <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <RouterProvider router={router} />
-      </PersistGate>
+      <SocketProvider>
+        <PersistGate loading={null} persistor={persistor}>
+          <RouterProvider router={router} />
+        </PersistGate>
+      </SocketProvider>
     </Provider>
   );
 }

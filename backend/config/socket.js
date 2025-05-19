@@ -1,54 +1,61 @@
-import { Server } from "socket.io";
-import http from "http";
-import express from "express";
+import { Server } from "socket.io"
+import http from "http"
+import express from "express"
+// import { Peer } from "peerjs";
 
-const app = express();
-const server = http.createServer(app);
+const app = express()
+const server = http.createServer(app)
 
 const io = new Server(server, {
   cors: {
     origin: ["http://localhost:5173"],
     credentials: true,
   },
-});
-
+})
 
 // Track online users
-const userSocketMap = {}; // { userId: socket.id }
+const userSocketMap = {} // { userId: socket.id }
 
 export function getReceiverSocketId(userId) {
-  return userSocketMap[userId];
+  return userSocketMap[userId]
 }
 
 const initSocket = () => {
+  let onlineUsers = []
+
   io.on("connection", (socket) => {
-    const userId = socket.handshake.query.userId;
+    // add user
+    socket.on("addNewUser", (userId) => {
 
-    if (userId) {
-      userSocketMap[userId] = socket.id;
-      socket.join(userId); 
-
-      console.log(`User ${userId} connected with socket ${socket.id}`);
+      console.log("adding new user :" , userId)
+      userId && !onlineUsers.some((user) => user?.userId === userId) &&
+        onlineUsers.push({
+          userId: userId,
+          socketId: socket.id
+        })
       
-      // Emit to all clients the updated list of online users
-      io.emit("get-online-users", Object.keys(userSocketMap));
-    }
+      console.log("Updated users : " , onlineUsers)
+      // send active users
+      io.emit("getUsers", onlineUsers)
+    })
 
     socket.on("disconnect", () => {
-      console.log("User disconnected:", socket.id);
+      onlineUsers = onlineUsers.filter((user) => user.socketId !== socket.id)
 
-      // Remove user from map
-      for (const [uid, sid] of Object.entries(userSocketMap)) {
-        if (sid === socket.id) {
-          delete userSocketMap[uid];
-          break;
-        }
-      }
+      // send active users
+      io.emit("getUsers", onlineUsers)
+    })
 
-      // Emit updated online users list and phir yahan se frontend wali socket file mein recieve karna hai
-      io.emit("get-online-users", Object.keys(userSocketMap));
-    });
-  });
-};
+    // other events
+    // socket.on("call", onCall)
+    // socket.on("webrtcSignal", onWebrtcSignal)
+    // socket.on("hangup", onHangup)
+  })
 
-export { app, server, io, initSocket };
+  // const peer = new Peer(undefined , {
+  //   host : '/',
+  //   port : '8001'
+  // })
+}
+
+export { app, server, io, initSocket }
