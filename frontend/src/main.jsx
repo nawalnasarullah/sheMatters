@@ -4,7 +4,12 @@ import App from "./App.jsx";
 import "./index.css";
 import { Provider } from "react-redux";
 import store from "./redux/store.js";
+import util from 'util';
 
+
+
+window.util = util;  // optional, sometimes helps with references
+window.global = window; 
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>

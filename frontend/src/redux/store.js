@@ -11,11 +11,13 @@ import { psychologistApi } from "./api/psychologistApi";
 import { appointmentApi } from "./api/appointmentApi";
 import { chatApi } from "./api/chatApi";
 import chatReducer from "./features/chatSlice";
+import videoCallReducer from "./features/videoCallSlice";
 
 const rootReducer = combineReducers({
   auth: authReducer,
   psychologistAuth: psychologistReducer,
   chat: chatReducer,
+  videoCall: videoCallReducer,
   [authApi.reducerPath]: authApi.reducer,
   [psychologistAuthApi.reducerPath]: psychologistAuthApi.reducer,
   [journalApi.reducerPath]: journalApi.reducer,

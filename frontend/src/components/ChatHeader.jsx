@@ -11,6 +11,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import CallIcon from "@mui/icons-material/Call";
 import VideocamIcon from "@mui/icons-material/Videocam";
 import { setSelectedUser } from "../redux/features/chatSlice/";
+import { startCall } from "../redux/features/videoCallSlice";
 import {
   connectSocket,
   disconnectSocket,
@@ -85,7 +86,7 @@ function ChatHeader({ currentUser }) {
           <IconButton sx={{ "&:hover": { backgroundColor: "primary.light" } }}>
             <CallIcon sx={{ color: "primary.main", fontSize: "1.7rem" }} />
           </IconButton>
-          <IconButton sx={{ "&:hover": { backgroundColor: "primary.light" } }}>
+          <IconButton onClick={() => dispatch(startCall())} sx={{ "&:hover": { backgroundColor: "primary.light" } }}>
             <VideocamIcon sx={{ color: "primary.main", fontSize: "1.7rem" }} />
           </IconButton>
           <IconButton

@@ -12,9 +12,7 @@ const io = new Server(server, {
   },
 });
 
-
-// Track online users
-const userSocketMap = {}; // { userId: socket.id }
+const userSocketMap = {}; // { userId: socketId }
 
 export function getReceiverSocketId(userId) {
   return userSocketMap[userId];
@@ -26,28 +24,42 @@ const initSocket = () => {
 
     if (userId) {
       userSocketMap[userId] = socket.id;
-      socket.join(userId); 
+      socket.join(userId);
 
       console.log(`User ${userId} connected with socket ${socket.id}`);
-      
-      // Emit to all clients the updated list of online users
+
       io.emit("get-online-users", Object.keys(userSocketMap));
-    }
 
-    socket.on("disconnect", () => {
-      console.log("User disconnected:", socket.id);
-
-      // Remove user from map
-      for (const [uid, sid] of Object.entries(userSocketMap)) {
-        if (sid === socket.id) {
-          delete userSocketMap[uid];
-          break;
+      socket.on("call-user", ({ targetId, signalData, caller }) => {
+        const targetSocket = userSocketMap[targetId];
+        if (targetSocket) {
+          io.to(targetSocket).emit("incoming-call", {
+            signal: signalData,
+            caller,
+          });
         }
-      }
+      });
 
-      // Emit updated online users list and phir yahan se frontend wali socket file mein recieve karna hai
-      io.emit("get-online-users", Object.keys(userSocketMap));
-    });
+      socket.on("answer-call", ({ signal, to }) => {
+        const callerSocket = userSocketMap[to];
+        if (callerSocket) {
+          io.to(callerSocket).emit("call-accepted", signal);
+        }
+      });
+
+      socket.on("disconnect", () => {
+        console.log("User disconnected:", socket.id);
+
+        for (const [uid, sid] of Object.entries(userSocketMap)) {
+          if (sid === socket.id) {
+            delete userSocketMap[uid];
+            break;
+          }
+        }
+
+        io.emit("get-online-users", Object.keys(userSocketMap));
+      });
+    }
   });
 };
 

@@ -42,10 +42,29 @@ export const offNewMessage = (callback) => {
   }
 };
 
+export const callUser = ({ targetId, signalData, caller }) => {
+  socket.emit('call-user', { targetId, signalData, caller });
+};
+
+export const answerCall = ({ signal, to }) => {
+  socket.emit('answer-call', { signal, to });
+};
+
+export const onIncomingCall = (cb) => {
+  socket.on('incoming-call', cb);
+};
+
+export const onCallAccepted = (cb) => {
+  socket.on('call-accepted', cb);
+};
+
 export const disconnectSocket = () => {
   if (socket) {
     socket.disconnect();
     socket.off("get-online-users");
+    socket.off("newMessage");
+    socket.off("incoming-call");
+    socket.off("call-accepted");
     socket = null;
     console.log("Socket forcefully disconnected.");
   }
