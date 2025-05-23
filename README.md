@@ -7,7 +7,6 @@
 ## 🚀 Features
 
 - 👩‍⚕️ **One-on-One Therapy Sessions**
-- 👭 **Group Therapy for Peer Support**
 - 📔 **Journaling Tool** to track mood and emotional well-being
 - 📅 **Appointment Scheduling System**
 - 🔐 **Secure Login/Signup with Role-Based Authentication**
