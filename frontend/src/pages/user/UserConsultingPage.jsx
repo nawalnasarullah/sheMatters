@@ -5,6 +5,7 @@ import theme from '../../components/Theme';
 import ChatContainer from '../../components/ChatContainer';
 import { Box, useMediaQuery } from '@mui/material';
 import { useSelector } from 'react-redux';
+import CallNotification from '../../components/CallNotification';
 
 function UserConsultingPage() {
   const { user: data } = useSelector((state) => state.auth);
@@ -15,7 +16,7 @@ function UserConsultingPage() {
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ display: 'flex', height: '100vh' }}>
-    
+        <CallNotification/>
         {(!selectedUser || !isSmallOrMediumScreen) && (
           <Box
             sx={{

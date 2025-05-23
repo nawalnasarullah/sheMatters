@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   IconButton,
@@ -11,35 +10,19 @@ import CloseIcon from "@mui/icons-material/Close";
 import CallIcon from "@mui/icons-material/Call";
 import VideocamIcon from "@mui/icons-material/Videocam";
 import { setSelectedUser } from "../redux/features/chatSlice/";
-import {
-  connectSocket,
-  disconnectSocket,
-  onOnlineUsersUpdate,
-} from "../utils/socket";
 import theme from "./Theme";
+import { useSocket } from "../context/SocketContext";
 
 function ChatHeader({ currentUser }) {
-  const [onlineUsers, setOnlineUsers] = useState([]);
-  const currentUserId = currentUser._id;
-
-
-  useEffect(() => {
-    const socket = connectSocket(currentUserId);
-
-    onOnlineUsersUpdate((users) => {
-      console.log("Online users:", users);
-      setOnlineUsers(users);
-    });
-
-    return () => {
-      disconnectSocket();
-    };
-  }, [currentUserId]);
+  
+  const { onlineUsers , handleCall } = useSocket()
   const dispatch = useDispatch();
   const selectedUser = useSelector((state) => state.chat.selectedUser);
 
   if (!selectedUser) return null;
-
+  if(!onlineUsers)
+    return <>Loading...</>
+    
   return (
     <ThemeProvider theme={theme}>
       <Box
@@ -71,21 +54,21 @@ function ChatHeader({ currentUser }) {
             <Typography
               sx={{
                 fontSize: 14,
-                color: onlineUsers.includes(selectedUser._id)
+                color: onlineUsers?.some((onlineUser) => onlineUser.userId == selectedUser._id) 
                   ? "primary.main"
                   : "theme.palette.grey[500]",
               }}
             >
-              {onlineUsers.includes(selectedUser._id) ? "Online" : "Offline"}
+              {onlineUsers?.some((onlineUser) => onlineUser.userId == selectedUser._id)  ? "Online" : "Offline"}
             </Typography>
           </Box>
         </Box>
 
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          <IconButton sx={{ "&:hover": { backgroundColor: "primary.light" } }}>
+          <IconButton sx={{ "&:hover": { backgroundColor: "primary.light" } }} onClick={() => handleCall(selectedUser._id)}>
             <CallIcon sx={{ color: "primary.main", fontSize: "1.7rem" }} />
           </IconButton>
-          <IconButton sx={{ "&:hover": { backgroundColor: "primary.light" } }}>
+          <IconButton sx={{ "&:hover": { backgroundColor: "primary.light" } }} onClick={() => handleCall(selectedUser._id)}>
             <VideocamIcon sx={{ color: "primary.main", fontSize: "1.7rem" }} />
           </IconButton>
           <IconButton
