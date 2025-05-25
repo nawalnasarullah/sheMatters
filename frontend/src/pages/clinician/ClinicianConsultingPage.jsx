@@ -5,6 +5,7 @@ import theme from '../../components/Theme';
 import ChatContainer from '../../components/ChatContainer';
 import { Box, useMediaQuery } from '@mui/material';
 import { useSelector } from 'react-redux';
+import VideoCallModal from '../../components/VideoCallModal';
 
 function ClinicianConsultingPage() {
   const { psychologist } = useSelector((state) => state.psychologistAuth);
@@ -29,6 +30,7 @@ function ClinicianConsultingPage() {
           </Box>
         )}
 
+        <VideoCallModal user={user}/>
     
         <Box
           sx={{
