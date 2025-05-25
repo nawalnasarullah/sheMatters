@@ -1,5 +1,6 @@
 import { Admin } from "../models/admin.model.js";
 import { Psychologist } from "../models/psychologist.model.js";
+import { User } from "../models/user.model.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import sendEmail from "../services/emailService.js";
@@ -27,7 +28,7 @@ export default class Auth {
   }
   
   async getMe(req, res, next) {
-    const id = req.admin.id;
+    const id = req.user.id
  
     try{
       const admin = await Admin.findById(id);
@@ -44,7 +45,6 @@ export default class Auth {
 
   async login(req, res, next) {
     const body = req.body;
-    console.log("loggin in as pyschologist")
     if (!body.email) return next(new Error("Provide the email"));
     if (!body.password) return next(new Error("Provide the password"));
 
@@ -158,17 +158,35 @@ export default class Auth {
   }
   }
 
-  async getAllPsychologists(req, res, next) {
-      try {
-        const psychologists = await Psychologist.find()
-        res.json({
-          success: true,
-          message: "List of all Psychologists",
-          psychologists,
-        })
-      } catch (error) {
-        next(error)
-      }
+  async updatePsychologistStatus (req, res, next) {
+  const { id } = req.params;
+  const { psychologistStatus } = req.body;
+
+  try {
+    if (!['approved', 'not approved'].includes(psychologistStatus)) {
+    return res.status(400).json({ message: 'Invalid status value' });
   }
+
+  const updatedPsychologist = await Psychologist.findByIdAndUpdate(
+    id,
+    { psychologistStatus },
+    { new: true }
+  );
+
+  if (!updatedPsychologist) {
+    return res.status(404).json({ message: 'Psychologist not found' });
+  }
+
+  res.status(200).json({
+    message: 'Status updated successfully',
+    psychologist: updatedPsychologist,
+  });
+  }catch (error) {
+    next(error);
+  }
+
   
+};
+
+
 }

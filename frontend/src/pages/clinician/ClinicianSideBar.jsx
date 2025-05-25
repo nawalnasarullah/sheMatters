@@ -18,11 +18,15 @@ import EventNoteRoundedIcon from "@mui/icons-material/EventNoteRounded";
 import LibraryBooksRoundedIcon from "@mui/icons-material/LibraryBooksRounded";
 import { Link } from "react-router-dom";
 import { useGetMeQuery, useLazyLogoutQuery } from "../../redux/api/psychologistAuthApi";
+import { clearPsychologistInfo } from "../../redux/features/psychologistAuthSlice.js";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import theme from "../../components/Theme.jsx";
 
 function SideBar() {
+
+  const dispatch = useDispatch();
   const { data } = useGetMeQuery();
   const psychologistId = useSelector(
     (state) => state.psychologistAuth.psychologist._id
@@ -51,6 +55,7 @@ function SideBar() {
 
   const handleLogout = async () => {
     const res = await logout().unwrap();
+    dispatch(clearPsychologistInfo());
     console.log("logout", res);
     navigate(0);
   };

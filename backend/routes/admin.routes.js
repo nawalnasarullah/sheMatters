@@ -12,5 +12,6 @@ router.route('/admin/logout').get(adminController.logout);
 router.route('/admin/forgotPassword').post(adminController.forgotPassword);
 router.route('/admin/resetPassword').post(checkToken, adminController.resetPassword);
 router.route('/admin/me').get(isUserAuthenticated, adminController.getMe)
+router.route('/:id/psychologistStatus').put(adminController.updatePsychologistStatus);
 
 export default router;

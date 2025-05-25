@@ -144,7 +144,7 @@ function LoginSignupAdmin() {
         toast.success(res.message, {
           progressClassName: "toast-progress-success",
         });
-        navigate("/");
+        navigate("/admin/dashboard");
       } else {
         toast.error(res.message || "You do not have admin access.");
       }

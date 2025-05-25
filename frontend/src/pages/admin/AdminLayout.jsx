@@ -5,13 +5,23 @@ import ProfileNav from "../../components/ProfileNav";
 import { Box, ThemeProvider } from "@mui/material";
 import theme from "../../components/Theme";
 import { adminMenuItemsSidebar } from "../../components/Data";
+import { useSelector } from "react-redux";
+import { useGetMeQuery } from "../../redux/api/adminApi";
 
 
 function AdminLayout() {
+
+    const { data } = useGetMeQuery();
+    const { admin, isAuthenticated } = useSelector((state) => state.admin);
+    console.log("admin", admin, isAuthenticated);
+
+    const adminId = admin?._id
+    
+
   return (
     <>
       <ThemeProvider theme={theme}>
-        <SideBar menuItemsSidebar={adminMenuItemsSidebar} />
+        <SideBar menuItemsSidebar={adminMenuItemsSidebar} adminId={adminId} />
         <ProfileNav />
         <Box
           className={

@@ -1,5 +1,5 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
-import { setAdminInfo, clearAdminInfo } from "../features/adminSlice"
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { setAdminInfo, clearAdminInfo } from "../features/adminSlice";
 
 export const adminApi = createApi({
   reducerPath: "adminApi",
@@ -7,8 +7,8 @@ export const adminApi = createApi({
     baseUrl: "http://localhost:8000/",
     credentials: "include",
   }),
+  tagTypes: ["Admin", "Psychologists", "Users"],
   endpoints: (builder) => ({
-  
     loginAdmin: builder.mutation({
       query: (data) => ({
         url: "admin/login",
@@ -42,29 +42,37 @@ export const adminApi = createApi({
     getMe: builder.query({
       query: () => "admin/me",
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-        console.log("starting")
+        console.log("starting admin");
         try {
-          const { data } = await queryFulfilled
-          console.log("success", data)
+          const { data } = await queryFulfilled;
+          console.log("successAdmin", data);
           if (!data.success) {
-            dispatch(clearAdminInfo())
- 
+            dispatch(clearAdminInfo());
           } else {
-            dispatch(setAdminInfo(data))
-            console.log("admin", data.user)
-          
-          } 
+            dispatch(setAdminInfo(data));
+            console.log("admin", data.user);
+          }
         } catch (err) {
-          console.log("error", err)
-          dispatch(clearAdminInfo())
+          console.log("error", err);
+          dispatch(clearAdminInfo());
         }
       },
     }),
     logout: builder.query({
       query: () => "admin/logout",
     }),
+
+  
+    updatePsychologistStatus: builder.mutation({
+      query: ({ id, psychologistStatus }) => ({
+        url: `${id}/psychologistStatus`,
+        method: "PUT",
+        body: { psychologistStatus },
+      }),
+      invalidatesTags: ["Psychologist"],
+    }),
   }),
-})
+});
 
 export const {
   useLoginAdminMutation,
@@ -73,4 +81,5 @@ export const {
   useResetPasswordMutation,
   useGetMeQuery,
   useLazyLogoutQuery,
-} = adminApi
+  useUpdatePsychologistStatusMutation,
+} = adminApi;

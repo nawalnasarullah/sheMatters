@@ -20,7 +20,16 @@ function HeroSection() {
   const psychologist = psychologistAuth.psychologist;
   const admin = adminAuth.admin;
 
-  const currentUser = user || psychologist || admin;
+  let currentUser = null;
+if (isUserAuthenticated) {
+  currentUser = user;
+} else if (isPsychologistAuthenticated) {
+  currentUser = psychologist;
+} else if (isAdminAuthenticated) {
+  currentUser = admin;
+}
+
+
   const firstName = currentUser?.firstName || "";
   const lastName = currentUser?.lastName || "";
   const role = currentUser?.role || "";

@@ -344,12 +344,12 @@ export const adminMenuItemsSidebar = [
   {
     label: "Dashboard",
     icon: <HomeRoundedIcon sx={{ marginRight: "10px", marginBottom: "3px" }} />,
-    to: "/dashboard",
+    to: "/admin/dashboard",
   },
   {
     label: "Psychologists",
     icon: <EventNoteRoundedIcon sx={{ marginRight: "10px", marginBottom: "3px" }} />,
-    to: "/dashboard/admin/psychologists",
+    to: "/admin/dashboard/psychologists",
   },
   {
     label: "Users",

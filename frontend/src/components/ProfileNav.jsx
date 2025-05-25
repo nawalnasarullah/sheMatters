@@ -8,15 +8,26 @@ import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 
 function ProfileNav() {
 
-    
+
   const {isAuthenticated, user} = useSelector(state => state.auth);
+  const { isAuthenticated : isAdmin, admin } = useSelector(state => state.admin);
+ 
+
+  const User = user?.user;
+  const Admin = admin?.admin;
+ 
+  const isLoggedIn = !!User || !!Admin;
+const currentUser = User || Admin;
+
+  console.log("currentUser", currentUser);
+  
   return (
     <ThemeProvider theme={theme}>
       <div className="flex justify-between items-center px-5 py-5 shadow-md ms-0 lg:ms-[231px]">
         {/* Left Section */}
         <div>
           <Typography variant="h5" color="primary.main" sx={{ fontWeight: 600,  lineHeight: 1.2,  letterSpacing: "0.5px", fontSize: "1.2rem", }}>
-            Welcome {user?.user?.firstName} {user?.user?.lastName}
+            Welcome {currentUser?.firstName} {currentUser?.lastName}
           </Typography>
           <Typography variant="h5" color="grey.main" sx={{fontWeight: 400,  lineHeight: 1.2,  letterSpacing: "0.5px", fontSize: "0.9rem", }}>
             Manage your well-being with ease
@@ -31,12 +42,12 @@ function ProfileNav() {
             <NotificationsNoneIcon color="grey.main" />
           </IconButton>
           <Avatar
-            src= {user?.user?.avatar || "https://i.pravatar.cc/150?img=3"}
+            src= {currentUser?.avatar || "https://i.pravatar.cc/150?img=3"}
             alt="username"
             className="shadow-md"
           />
           <Typography variant="h5" color="primary.main" sx={{ fontWeight: 400,  lineHeight: 1.2,  letterSpacing: "0.5px", fontSize: "1rem", }}>
-          {user?.user?.firstName} {user?.user?.lastName}
+          {currentUser?.firstName} {currentUser?.lastName}
           </Typography>
         </div>
       </div>
