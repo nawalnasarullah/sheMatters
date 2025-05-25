@@ -23,8 +23,6 @@ function LoginSignupPsychologist() {
 
   const [loginPsychologist] = useLoginPsychologistMutation();
 
-
-
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -96,8 +94,8 @@ function LoginSignupPsychologist() {
       console.log("ggggggg", psychologist);
 
       if (psychologist && psychologist.success) {
-        console.log('success', psychologist.success);
-        
+        console.log("success", psychologist.success);
+
         toast.success(psychologist.message, {
           progressClassName: "toast-progress-success",
         });
@@ -141,16 +139,15 @@ function LoginSignupPsychologist() {
       cnic: Yup.string().required("CNIC is required").trim(),
     }),
     onSubmit: async (values) => {
-      try{
-
+      try {
         const res = await loginPsychologist(values).unwrap();
-  
+
         console.log("login psychologist :", res);
-  
+
         if (res && res.success) {
           dispatch(setPsychologistInfo(res));
           console.log("dispatch psychologist", res);
-  
+
           toast.success(res.message, {
             progressClassName: "toast-progress-success",
           });
@@ -158,12 +155,10 @@ function LoginSignupPsychologist() {
         } else {
           toast.error(res.message);
         }
-  
+
         onSignInReset();
-      }
-      catch(err)
-      {
-        console.error("error signing in : " , err)
+      } catch (err) {
+        console.error("error signing in : ", err);
       }
     },
   });
@@ -352,7 +347,7 @@ function LoginSignupPsychologist() {
                 </strong>
               </div>
             </div>
-             
+
             <div className="input-field mr-1">
               <i className="fas fa-envelope" />
               <input
@@ -370,8 +365,7 @@ function LoginSignupPsychologist() {
                   : null}
               </strong>
             </div>
-            
-        
+
             <div style={{ display: "flex" }}>
               <div className="input-field" style={{ marginRight: 2 }}>
                 <i className="fas fa-lock" />
@@ -420,7 +414,13 @@ function LoginSignupPsychologist() {
         <div className="panel left-panel">
           <div className="content">
             <h3>New here?</h3>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+            <p>
+              <span className="text-lg">Welcome to SheMatters,</span>{" "}
+              <span className="text-lg font-medium italic">
+                Rant kro, Relax kro
+              </span>
+            </p>
+
             <button
               className="btn transparent"
               id="sign-up-btn"
@@ -434,7 +434,12 @@ function LoginSignupPsychologist() {
         <div className="panel right-panel">
           <div className="content">
             <h3>One of us?</h3>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+            <p>
+              <span className="text-lg">Welcome to SheMatters,</span>{" "}
+              <span className="text-lg font-medium italic">
+                Rant kro, Relax kro
+              </span>
+            </p>
             <button
               className="btn transparent"
               id="sign-in-btn"

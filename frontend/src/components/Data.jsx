@@ -339,3 +339,21 @@ export const menuItemsSidebar = [
   // },
   
 ];
+
+export const adminMenuItemsSidebar = [
+  {
+    label: "Dashboard",
+    icon: <HomeRoundedIcon sx={{ marginRight: "10px", marginBottom: "3px" }} />,
+    to: "/dashboard",
+  },
+  {
+    label: "Psychologists",
+    icon: <EventNoteRoundedIcon sx={{ marginRight: "10px", marginBottom: "3px" }} />,
+    to: "/dashboard/admin/psychologists",
+  },
+  {
+    label: "Users",
+    icon: <GroupRoundedIcon sx={{ marginRight: "10px", marginBottom: "3px" }} />,
+    to: "/dashboard/admin/users",
+  },
+];

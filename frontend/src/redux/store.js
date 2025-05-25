@@ -11,17 +11,21 @@ import { psychologistApi } from "./api/psychologistApi";
 import { appointmentApi } from "./api/appointmentApi";
 import { chatApi } from "./api/chatApi";
 import chatReducer from "./features/chatSlice";
+import { adminApi } from "./api/adminApi";
+import adminReducer from "./features/adminSlice";
 
 const rootReducer = combineReducers({
   auth: authReducer,
   psychologistAuth: psychologistReducer,
   chat: chatReducer,
+  admin: adminReducer,
   [authApi.reducerPath]: authApi.reducer,
   [psychologistAuthApi.reducerPath]: psychologistAuthApi.reducer,
   [journalApi.reducerPath]: journalApi.reducer,
   [psychologistApi.reducerPath]: psychologistApi.reducer,
   [appointmentApi.reducerPath]: appointmentApi.reducer,
-  [chatApi.reducerPath]: chatApi.reducer
+  [chatApi.reducerPath]: chatApi.reducer,
+  [adminApi.reducerPath]: adminApi.reducer
 });
 
 const persistConfig = {
@@ -34,7 +38,8 @@ const persistConfig = {
     journalApi.reducerPath,
     psychologistApi.reducerPath,
     appointmentApi.reducerPath,
-    chatApi.reducerPath
+    chatApi.reducerPath,
+    adminApi.reducerPath
   ] // Don't persist API caches
 };
 
@@ -53,7 +58,8 @@ const store = configureStore({
       journalApi.middleware, 
       psychologistApi.middleware, 
       appointmentApi.middleware, 
-      chatApi.middleware
+      chatApi.middleware,
+      adminApi.middleware
     ]),
 });
 

@@ -32,7 +32,8 @@ import UserConsultingPage from "./pages/user/UserConsultingPage";
 import ClinicianConsultingPage from "./pages/clinician/ClinicianConsultingPage";
 import ClinicianPatients from "./pages/clinician/ClinicianPatients";
 import PatientJournals from "./pages/clinician/PatientsJournal";
-
+import AdminLayout from "./pages/admin/AdminLayout";
+import SocketProvider from "./provider/SocketProvider";
 
 function App() {
   const router = createBrowserRouter(
@@ -68,6 +69,9 @@ function App() {
           <Route path="patients-with-journals/:psychologistId" element={<ClinicianPatients />} />
           <Route path="patient/:patientId/journals" element={<PatientJournals />} />
         </Route>
+        <Route path="/admin/dashboard" element={<AdminLayout />}>
+        </Route>
+        
         
       </Route>
     )

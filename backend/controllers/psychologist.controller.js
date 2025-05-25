@@ -67,7 +67,7 @@ export default class psychologistController {
         {
           $addFields: {
             matchCount: {
-              $size: "$commonLabels",
+              $size: { $ifNull: ["$commonLabels", []] },
             },
           },
         },
