@@ -19,8 +19,8 @@ export const SocketContextProvider = (props) => {
   const [peer, setPeer] = useState(null)
   const [peerId, setPeerId] = useState(null)
   const peerRef = useRef(null)
-  const localVideo = useRef();
-  const remoteVideo = useRef();
+  const localVideo = useRef(null);
+  const remoteVideo = useRef(null);
   const [isCallEnded, setIsCallEnded] = useState(false)
 
   const currentSocketUser = onlineUsers?.find(
@@ -37,21 +37,23 @@ export const SocketContextProvider = (props) => {
 
         getUserMedia({ video: true, audio: true }, (mediaStream) => {
           console.log("calling with media stream : ", mediaStream)
-          localVideo.current.srcObject = mediaStream
+          localVideo.current  = mediaStream
           // currentUserVideoRef.current.play();
-
+          
           const call = peerRef.current.call(remotePeerId, mediaStream)
+          setOngoingCall({ isRinging : true , call : call , caller : true , reciever : false })
 
           call.on("stream", (remoteStream) => {
             console.log("recieveing a remote stream : ", remoteStream)
-            remoteVideo.current.srcObject = remoteStream
-            // remoteVideo.current.play();
+            remoteVideo.current  = remoteStream
+            setOngoingCall((ongoing)=>{
+              return { ...ongoing , isRinging : false , accepted : true}
+            })
           })
         })
       },
       [peerRef]
   )
-  const onIncomingCall = () => {}
 
   const handleJoinCall = useCallback( () => {
 
@@ -61,7 +63,7 @@ export const SocketContextProvider = (props) => {
 
     console.log("Accepting call : " , call)
     setOngoingCall((ongoing) => { 
-      return { ...ongoing , isRinging : false }
+      return { ...ongoing , isRinging : false , reciever : true , caller : false }
     })
     
 
@@ -69,11 +71,14 @@ export const SocketContextProvider = (props) => {
 
     getUserMedia({ video: true, audio: true }, (mediaStream) => {
       // currentUserVideoRef.current.play();
-      localVideo.current.srcObject = mediaStream
+      localVideo.current  = mediaStream
       call.answer(mediaStream)
       call.on("stream", function (remoteStream) {
         console.log("Recieving remote stream : ", remoteStream)
-        remoteVideo.current.srcObject = remoteStream
+        setOngoingCall((ongoing)=>{
+          return { ...ongoing , isRinging : false , accepted : true}
+        })
+        remoteVideo.current  = remoteStream
         // remoteVideoRef.current.play();
       })
     })
@@ -120,6 +125,7 @@ export const SocketContextProvider = (props) => {
       setOngoingCall({
         isRinging : true,
         callerPeerId : call.peer,
+        reciever : true ,
         call : call
       })
     })
@@ -169,18 +175,7 @@ export const SocketContextProvider = (props) => {
     }
   }, [socket, isConnected, user , peerId])
 
-  // handling call events
-  useEffect(() => {
-    if (!socket || !isConnected) return
 
-    socket.on("incomingCall", onIncomingCall)
-    socket.on("hangup", () => handleHangup({ callEnded: true }))
-
-    return () => {
-      socket.off("incomingCall", onIncomingCall)
-      socket.off("hangup")
-    }
-  }, [socket, isConnected, user, onIncomingCall, handleHangup])
 
   useEffect(() => {
     let timeout
