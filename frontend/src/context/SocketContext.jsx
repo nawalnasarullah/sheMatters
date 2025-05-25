@@ -19,8 +19,8 @@ export const SocketContextProvider = (props) => {
   const [peer, setPeer] = useState(null)
   const [peerId, setPeerId] = useState(null)
   const peerRef = useRef(null)
-  const localVideo = useRef(null);
-  const remoteVideo = useRef(null);
+  const [localVideo , setLocalVideo] = useState(null);
+  const [remoteVideo , setRemoteVideo] = useState(null);
   const [isCallEnded, setIsCallEnded] = useState(false)
 
   const currentSocketUser = onlineUsers?.find(
@@ -37,15 +37,14 @@ export const SocketContextProvider = (props) => {
 
         getUserMedia({ video: true, audio: true }, (mediaStream) => {
           console.log("calling with media stream : ", mediaStream)
-          localVideo.current  = mediaStream
-          // currentUserVideoRef.current.play();
+          setLocalVideo(mediaStream)
           
           const call = peerRef.current.call(remotePeerId, mediaStream)
           setOngoingCall({ isRinging : true , call : call , caller : true , reciever : false })
 
           call.on("stream", (remoteStream) => {
             console.log("recieveing a remote stream : ", remoteStream)
-            remoteVideo.current  = remoteStream
+            setRemoteVideo(remoteStream)
             setOngoingCall((ongoing)=>{
               return { ...ongoing , isRinging : false , accepted : true}
             })
@@ -71,15 +70,15 @@ export const SocketContextProvider = (props) => {
 
     getUserMedia({ video: true, audio: true }, (mediaStream) => {
       // currentUserVideoRef.current.play();
-      localVideo.current  = mediaStream
+      //localVideo.current  = mediaStream
+      setLocalVideo(mediaStream)
       call.answer(mediaStream)
       call.on("stream", function (remoteStream) {
         console.log("Recieving remote stream : ", remoteStream)
         setOngoingCall((ongoing)=>{
           return { ...ongoing , isRinging : false , accepted : true}
         })
-        remoteVideo.current  = remoteStream
-        // remoteVideoRef.current.play();
+        setRemoteVideo(remoteStream)
       })
     })
 

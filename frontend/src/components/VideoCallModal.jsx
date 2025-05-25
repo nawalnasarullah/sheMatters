@@ -1,4 +1,4 @@
-import React, { useEffect , useState } from "react";
+import React, { useEffect , useRef, useState } from "react";
 import { Box, Dialog, IconButton, Button , Typography } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import CallEndIcon from "@mui/icons-material/CallEnd";
@@ -10,6 +10,8 @@ import { useSocket } from "../context/SocketContext";
 
 function VideoCallModal({ user }) {
 
+  const localRef = useRef(null)
+  const remoteRef = useRef(null)
   const { handleJoinCall , handleHangup , ongoingCall , localVideo , remoteVideo} = useSocket()
   const [micEnabled, setMicEnabled] = useState(true);
   const [camEnabled, setCamEnabled] = useState(true);
@@ -31,7 +33,36 @@ function VideoCallModal({ user }) {
       setCamEnabled(videoTrack.enabled);
     }
   };
-  
+
+
+    useEffect(() => {
+        if (localVideo) {
+            const timer = setTimeout(() => {
+            if (localRef.current) {
+                localRef.current.srcObject = localVideo;
+                console.log("set local ref (delayed):", localRef, localVideo);
+            } else {
+                console.log("Still null:", localRef);
+            }
+            }, 100); // delay enough for ref to attach
+            return () => clearTimeout(timer);
+        }
+    }, [localVideo]);
+
+    useEffect(() => {
+        if (remoteVideo) {
+            const timer = setTimeout(() => {
+            if (remoteRef.current) {
+                remoteRef.current.srcObject = remoteVideo;
+                console.log("set remote ref (delayed):", remoteRef, remoteVideo);
+            } else {
+                console.log("Still null:", remoteRef);
+            }
+            }, 100); // delay enough for ref to attach
+            return () => clearTimeout(timer);
+        }
+    }, [remoteVideo]);
+    
 
   return (
     <Dialog open={Boolean(ongoingCall)} fullScreen>
@@ -49,7 +80,7 @@ function VideoCallModal({ user }) {
           <CloseIcon />
         </IconButton>
 
-        {
+        { // if you are calling 
             ongoingCall?.isRinging && ongoingCall?.caller && (
                 <Typography
                 sx={{
@@ -63,7 +94,7 @@ function VideoCallModal({ user }) {
             )
         }  
 
-        {
+        { // if you are getting a call
             ongoingCall?.isRinging && ongoingCall?.reciever &&  (
                 <>
                     <Typography
@@ -99,11 +130,11 @@ function VideoCallModal({ user }) {
             )
         }  
 
-        {
+        { // if call got accepted
             ongoingCall?.accepted && (
                 <video
-                  ref={remoteVideo}
-                   onError={(e) => console.log("Local video error:", e)}
+                  ref={remoteRef}
+                   onError={(e) => console.log("remote video error:", e)}
                   autoPlay
                   playsInline
                   style={{
@@ -121,8 +152,8 @@ function VideoCallModal({ user }) {
 
    
         <video
-          ref={localVideo}
-            onError={(e) => console.log("Remote video error:", e)}
+          ref={localRef}
+          onError={(e) => console.log("Local video error:", e)}
           autoPlay
           muted
           playsInline
