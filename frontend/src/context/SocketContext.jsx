@@ -19,7 +19,6 @@ export const SocketContextProvider = (props) => {
   const [peer, setPeer] = useState(null)
   const [peerId, setPeerId] = useState(null)
   const peerRef = useRef(null)
-  const [callType , setCallType] = useState('video')
   const [localVideo , setLocalVideo] = useState(null);
   const [remoteVideo , setRemoteVideo] = useState(null);
   const [isCallEnded, setIsCallEnded] = useState(false)
@@ -30,17 +29,17 @@ export const SocketContextProvider = (props) => {
 
 
   const handleCall = useCallback(
-      (remotePeerId) => {
+      (remotePeerId , callType) => {
         var getUserMedia =
           navigator.getUserMedia ||
           navigator.webkitGetUserMedia ||
           navigator.mozGetUserMedia
 
-        getUserMedia({ video: true, audio: true }, (mediaStream) => {
+        getUserMedia({ video: callType === "video" , audio: true }, (mediaStream) => {
           console.log("calling with media stream : ", mediaStream)
           setLocalVideo(mediaStream)
           
-          const call = peerRef.current.call(remotePeerId, mediaStream)
+          const call = peerRef.current.call(remotePeerId, mediaStream , { metadata : { caller : user?.firstName , callType } })
           setOngoingCall({ isRinging : true , call : call , caller : true , reciever : false })
 
           call.on("stream", (remoteStream) => {
@@ -52,26 +51,27 @@ export const SocketContextProvider = (props) => {
           })
         })
       },
-      [peerRef]
+      [peerRef ]
   )
 
   const handleJoinCall = useCallback( () => {
 
     const call = ongoingCall["call"]
     if(!call)
+    {
       console.error("Could not join call")
+      return
+    }
 
     console.log("Accepting call : " , call)
     setOngoingCall((ongoing) => { 
-      return { ...ongoing , isRinging : false , reciever : true , caller : false }
+      return { ...ongoing , isRinging : false , reciever : true , caller : false , accepted : true }
     })
     
 
     var getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia
 
-    getUserMedia({ video: true, audio: true }, (mediaStream) => {
-      // currentUserVideoRef.current.play();
-      //localVideo.current  = mediaStream
+    getUserMedia({ video: call.metadata.callType === "video", audio: true }, (mediaStream) => {
       setLocalVideo(mediaStream)
       call.answer(mediaStream)
       call.on("stream", function (remoteStream) {
@@ -201,8 +201,6 @@ export const SocketContextProvider = (props) => {
         handleCall,
         handleJoinCall,
         handleHangup,
-        callType,
-        setCallType
       }}
       {...props}
     />
