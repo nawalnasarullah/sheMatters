@@ -52,10 +52,11 @@ export const psychologistApi = createApi({
 
     deletePsychologist: builder.mutation({
       query: (id) => ({
-        url: `/psychologist?id=${id}`,
+        url: "/psychologist/delete",
         method: "DELETE",
+        body: { id },
       }),
-      invalidatesTags: (result, error, id) => [{ type: "Psychologist", id }],
+      
     }),
 
     getPatientsWithJournals: builder.query({

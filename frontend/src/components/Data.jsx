@@ -354,6 +354,6 @@ export const adminMenuItemsSidebar = [
   {
     label: "Users",
     icon: <GroupRoundedIcon sx={{ marginRight: "10px", marginBottom: "3px" }} />,
-    to: "/dashboard/admin/users",
+    to: "/admin/dashboard/users",
   },
 ];

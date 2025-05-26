@@ -4,6 +4,7 @@ import { persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import authReducer from "./features/authSlice";
 import { authApi } from "./api/authApi";
+import { userApi } from "./api/userApi";
 import { psychologistAuthApi } from "./api/psychologistAuthApi";
 import { journalApi } from "./api/journalApi";
 import psychologistReducer from "./features/psychologistAuthSlice"
@@ -22,6 +23,7 @@ const rootReducer = combineReducers({
   [authApi.reducerPath]: authApi.reducer,
   [psychologistAuthApi.reducerPath]: psychologistAuthApi.reducer,
   [journalApi.reducerPath]: journalApi.reducer,
+  [userApi.reducerPath]: userApi.reducer,
   [psychologistApi.reducerPath]: psychologistApi.reducer,
   [appointmentApi.reducerPath]: appointmentApi.reducer,
   [chatApi.reducerPath]: chatApi.reducer,
@@ -39,7 +41,8 @@ const persistConfig = {
     psychologistApi.reducerPath,
     appointmentApi.reducerPath,
     chatApi.reducerPath,
-    adminApi.reducerPath
+    adminApi.reducerPath,
+    userApi.reducerPath
   ] // Don't persist API caches
 };
 
@@ -59,7 +62,8 @@ const store = configureStore({
       psychologistApi.middleware, 
       appointmentApi.middleware, 
       chatApi.middleware,
-      adminApi.middleware
+      adminApi.middleware,
+      userApi.middleware
     ]),
 });
 

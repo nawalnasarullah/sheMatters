@@ -37,6 +37,8 @@ import SocketProvider from "./provider/SocketProvider";
 import PsychologistOption from "./pages/admin/PsychologistOption";
 import PsychologistDetail from "./pages/admin/PsychologistDetail";
 import AdminDashboardMain from "./pages/admin/AdminDashboardMain";
+import UserOption from "./pages/admin/UserOption";
+import UserDetail from "./pages/admin/UserDetail";
 
 function App() {
   const router = createBrowserRouter(
@@ -76,6 +78,8 @@ function App() {
           <Route index element={<AdminDashboardMain/>} />
           <Route path="psychologists" element={<PsychologistOption/>} />
           <Route path="psychologists/:id" element={<PsychologistDetail />} />
+          <Route path="users" element={<UserOption/>} />
+          <Route path="users/:id" element={<UserDetail />} />
         </Route>
       </Route>
     )

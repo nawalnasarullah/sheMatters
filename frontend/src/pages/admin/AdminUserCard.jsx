@@ -8,21 +8,22 @@ import {
   Avatar,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { useDeletePsychologistMutation } from "../../redux/api/psychologistApi";
+import { useDeleteUserMutation } from "../../redux/api/userApi";
 import { toast, ToastContainer } from "react-toastify";
 
-function AdminPsychologistCard({ psychologist }) {
+function AdminUserCard({ user }) {
   const navigate = useNavigate();
-  const [deletePsychologist] = useDeletePsychologistMutation();
+  const [deleteUser] = useDeleteUserMutation();
   const handleDelete = async () => {
     try {
-      const res = await deletePsychologist(psychologist._id).unwrap();
-      toast.success("Psychologist deleted successfully!");
+      const res = await deleteUser(user._id).unwrap();
+      toast.success("User deleted successfully!");
+      navigate(0);
     } catch (error) {
       const errorMsg =
         error?.data?.message ||
         error?.message ||
-        "Failed to delete psychologist.";
+        "Failed to delete user.";
       toast.error(errorMsg);
     }
   };
@@ -33,27 +34,27 @@ function AdminPsychologistCard({ psychologist }) {
         <Box display="flex" alignItems="center" gap={3}>
           <Avatar
             alt="Profile Picture"
-            src={psychologist.avatar}
+            src={user.avatar}
             sx={{ width: 100, height: 100 }}
           />
 
           <Box>
             <Typography variant="h5">
-              {psychologist.firstName} {psychologist.lastName}
+              {user.firstName} {user.lastName}
             </Typography>
 
             <Typography
               sx={{ my: 1, fontSize: "16px", fontWeight: "600", color: "gray" }}
               variant="body2"
             >
-              Email: {psychologist.email}
+              Email: {user.email}
             </Typography>
 
             <Typography
               sx={{ my: 1, fontSize: "16px", fontWeight: "600", color: "gray" }}
               variant="body2"
             >
-              Phone: {psychologist.phoneNumber}
+              Phone: {user.phoneNumber}
             </Typography>
 
             <Typography variant="body2">
@@ -61,7 +62,7 @@ function AdminPsychologistCard({ psychologist }) {
                 component="span"
                 sx={{ fontWeight: 600, fontSize: "16px", color: "gray" }}
               >
-                Status:{" "}
+                Username:{" "}
               </Box>
               <Box
                 component="span"
@@ -72,7 +73,7 @@ function AdminPsychologistCard({ psychologist }) {
                   color: "primary.main",
                 }}
               >
-                {psychologist.psychologistStatus}
+                {user.username}
               </Box>
             </Typography>
           </Box>
@@ -83,7 +84,7 @@ function AdminPsychologistCard({ psychologist }) {
           color="primary"
           variant="contained"
           onClick={() =>
-            navigate(`/admin/dashboard/psychologists/${psychologist._id}`)
+            navigate(`/admin/dashboard/users/${user._id}`)
           }
         >
           View
@@ -108,4 +109,4 @@ function AdminPsychologistCard({ psychologist }) {
   );
 }
 
-export default AdminPsychologistCard;
+export default AdminUserCard;

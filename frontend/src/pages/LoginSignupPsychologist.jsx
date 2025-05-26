@@ -88,21 +88,27 @@ function LoginSignupPsychologist() {
     }),
     onSubmit: async (values) => {
       delete values.cPassword;
-      console.log("values", values);
 
-      const psychologist = await registerPsychologist(values).unwrap();
-      console.log("ggggggg", psychologist);
+  try {
+    const psychologist = await registerPsychologist(values).unwrap();
 
-      if (psychologist && psychologist.success) {
-        console.log("success", psychologist.success);
+    if (psychologist && psychologist.success) {
+      toast.success(psychologist.message || "Registration successful", {
+        progressClassName: "toast-progress-success",
+      });
+    } else {
+      toast.error(psychologist.message?.[0] || "Something went wrong");
+    }
 
-        toast.success(psychologist.message, {
-          progressClassName: "toast-progress-success",
-        });
-      } else {
-        toast.error(psychologist.message);
-      }
-      onSignUpReset();
+    onSignUpReset();
+  } catch (error) {
+    toast.error(
+      error?.data?.message?.[0] ||
+      error?.data?.error?.message?.[0] ||
+      error?.message ||
+      "Registration failed"
+    );
+  }
     },
   });
 
@@ -192,7 +198,7 @@ function LoginSignupPsychologist() {
               <input
                 className="mb-3 mt-3"
                 type="email"
-                placeholder="Email"
+                placeholder="Email *"
                 name="email" // Make sure this name matches initialValues.email
                 value={signInValues.email}
                 onChange={onSignInChange}
@@ -211,7 +217,7 @@ function LoginSignupPsychologist() {
               <input
                 className="mb-3 mt-3"
                 type="text"
-                placeholder="CNIC"
+                placeholder="CNIC *"
                 name="cnic" // Make sure this name matches initialValues.email
                 value={signInValues.cnic}
                 onChange={onSignInChange}
@@ -230,7 +236,7 @@ function LoginSignupPsychologist() {
               <input
                 className="mb-3 mt-3"
                 type="password"
-                placeholder="Password"
+                placeholder="Password *"
                 name="password" // Make sure this name matches initialValues.password
                 value={signInValues.password}
                 onChange={onSignInChange}
@@ -263,7 +269,7 @@ function LoginSignupPsychologist() {
                 <input
                   className="mb-3 mt-3"
                   type="text"
-                  placeholder="First Name"
+                  placeholder="First Name *"
                   name="firstName"
                   value={signUpValues.firstName}
                   onChange={onSignUpChange}
@@ -281,7 +287,7 @@ function LoginSignupPsychologist() {
                 <input
                   className="mb-3 mt-3"
                   type="text"
-                  placeholder="Last Name"
+                  placeholder="Last Name *"
                   name="lastName"
                   value={signUpValues.lastName}
                   onChange={onSignUpChange}
@@ -299,7 +305,7 @@ function LoginSignupPsychologist() {
               <input
                 className="mb-3 mt-3"
                 type="text"
-                placeholder="CNIC"
+                placeholder="CNIC *"
                 name="cnic" // Make sure this name matches initialValues.email
                 value={signUpValues.cnic}
                 onChange={onSignUpChange}
@@ -317,7 +323,7 @@ function LoginSignupPsychologist() {
                 <input
                   className="mb-3 mt-3"
                   type="text"
-                  placeholder="Username"
+                  placeholder="Username *"
                   name="username"
                   value={signUpValues.username}
                   onChange={onSignUpChange}
@@ -334,7 +340,7 @@ function LoginSignupPsychologist() {
                 <input
                   className="mb-3 mt-3"
                   type="text"
-                  placeholder="Phone Number"
+                  placeholder="Phone Number *"
                   name="phoneNumber"
                   value={signUpValues.phoneNumber}
                   onChange={onSignUpChange}
@@ -353,7 +359,7 @@ function LoginSignupPsychologist() {
               <input
                 className="mb-3 mt-3"
                 type="email"
-                placeholder="Email"
+                placeholder="Email *"
                 name="email"
                 value={signUpValues.email}
                 onChange={onSignUpChange}
@@ -372,7 +378,7 @@ function LoginSignupPsychologist() {
                 <input
                   className="mb-3 mt-3"
                   type="password"
-                  placeholder="Password"
+                  placeholder="Password *"
                   name="password"
                   value={signUpValues.password}
                   onChange={onSignUpChange}
@@ -389,7 +395,7 @@ function LoginSignupPsychologist() {
                 <input
                   className="mb-3 mt-3"
                   type="password"
-                  placeholder="Confirm Password"
+                  placeholder="Confirm Password *"
                   name="cPassword"
                   value={signUpValues.cPassword}
                   onChange={onSignUpChange}
