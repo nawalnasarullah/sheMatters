@@ -12,7 +12,7 @@ function VideoCallModal({ user }) {
 
   const localRef = useRef(null)
   const remoteRef = useRef(null)
-  const { handleJoinCall , handleHangup , ongoingCall , localVideo , remoteVideo} = useSocket()
+  const { handleJoinCall , handleHangup , ongoingCall , localVideo , remoteVideo , callType} = useSocket()
   const [micEnabled, setMicEnabled] = useState(true);
   const [camEnabled, setCamEnabled] = useState(true);
 
@@ -34,6 +34,19 @@ function VideoCallModal({ user }) {
     }
   };
 
+    useEffect(() => {
+      if(callType === 'audio' && localVideo)
+      {
+
+        const videoTrack = localVideo.getVideoTracks()[0];
+        if (videoTrack) 
+        {
+          videoTrack.enabled = !videoTrack.enabled;
+          setCamEnabled(videoTrack.enabled);
+        }
+
+      }
+    }, [callType])
 
     useEffect(() => {
         if (localVideo) {

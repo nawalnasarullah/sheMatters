@@ -16,7 +16,7 @@ import { getPeerId } from "../utils/utils";
 
 function ChatHeader({ currentUser }) {
   
-  const { onlineUsers , handleCall } = useSocket()
+  const { onlineUsers , handleCall , setCallType } = useSocket()
   const dispatch = useDispatch();
   const selectedUser = useSelector((state) => state.chat.selectedUser);
 
@@ -66,7 +66,7 @@ function ChatHeader({ currentUser }) {
         </Box>
 
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          <IconButton sx={{ "&:hover": { backgroundColor: "primary.light" } }} onClick={() => handleCall(getPeerId(onlineUsers , selectedUser))}>
+          <IconButton sx={{ "&:hover": { backgroundColor: "primary.light" } }} onClick={() => {handleCall(getPeerId(onlineUsers , selectedUser)) ; console.log("calling") ; setCallType('audio') }}>
             <CallIcon sx={{ color: "primary.main", fontSize: "1.7rem" }} />
           </IconButton>
           <IconButton sx={{ "&:hover": { backgroundColor: "primary.light" } }} onClick={() => handleCall(getPeerId(onlineUsers , selectedUser))}>

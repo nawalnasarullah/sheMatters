@@ -19,6 +19,7 @@ export const SocketContextProvider = (props) => {
   const [peer, setPeer] = useState(null)
   const [peerId, setPeerId] = useState(null)
   const peerRef = useRef(null)
+  const [callType , setCallType] = useState('video')
   const [localVideo , setLocalVideo] = useState(null);
   const [remoteVideo , setRemoteVideo] = useState(null);
   const [isCallEnded, setIsCallEnded] = useState(false)
@@ -200,6 +201,8 @@ export const SocketContextProvider = (props) => {
         handleCall,
         handleJoinCall,
         handleHangup,
+        callType,
+        setCallType
       }}
       {...props}
     />
