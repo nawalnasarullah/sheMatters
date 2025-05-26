@@ -20,4 +20,14 @@ const isProfileComplete = (user) => {
     return true
 }
 
-export { isProfileComplete , isQuestionnaireComplete}
+const getPeerId = (onlineUsers , selectedUser) => {
+    for(let user of onlineUsers)
+    {
+        if(user.userId === selectedUser._id)
+            return user['peerId']
+    }
+    console.error("Could not find Peer ID")
+    return null
+}
+
+export { isProfileComplete , isQuestionnaireComplete , getPeerId}

@@ -1,9 +1,18 @@
 import { Server } from "socket.io"
 import http from "http"
 import express from "express"
+import { ExpressPeerServer } from "peer"
 
 const app = express()
 const server = http.createServer(app)
+
+//this creates a peer server which is responsible for handling peer to peer connections
+//gg ez hqhqhqhqhq
+const peerServer = ExpressPeerServer( server , {
+  debug : true
+})
+
+app.use('/peerjs' , peerServer)
 
 const io = new Server(server, {
   cors: {
@@ -76,12 +85,13 @@ const initSocket = () => {
 
   io.on("connection", (socket) => {
     // add user
-    socket.on("addNewUser", (userId) => {
+    socket.on("addNewUser", (user) => {
 
-      console.log("adding new user :" , userId)
-      userId && !onlineUsers.some((user) => user?.userId === userId) &&
+      console.log("adding new user :" , user.userId)
+      user && !onlineUsers.some((existing) => existing?.userId === user.userId) &&
         onlineUsers.push({
-          userId: userId,
+          userId: user.userId,
+          peerId : user.peerId,
           socketId: socket.id
         })
       
@@ -103,6 +113,19 @@ const initSocket = () => {
       let reciever = onlineUsers.find( (user) => user.userId === message.reciever )
       console.log("sending message to :" ,reciever['userId'] , " :  message : " , message['message'])
       socket.to(reciever['socketId']).emit("recieve-message" , message)      
+    })
+
+    socket.on('store-peer-id' , (user) => {
+      for ( let onlineUser of onlineUsers )
+      {
+        if(onlineUser.userId === user.userId)
+        {
+          console.log("Attached peer id to user : " , user.userId)
+          onlineUser['peerId'] = user.peerId
+          break
+        }
+      }
+      socket.emit("getUsers" , onlineUsers)
     })
 
     socket.on("call", onCall);

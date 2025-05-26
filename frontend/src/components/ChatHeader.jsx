@@ -12,10 +12,11 @@ import VideocamIcon from "@mui/icons-material/Videocam";
 import { setSelectedUser } from "../redux/features/chatSlice/";
 import theme from "./Theme";
 import { useSocket } from "../context/SocketContext";
+import { getPeerId } from "../utils/utils";
 
 function ChatHeader({ currentUser }) {
   
-  const { onlineUsers , handleCall } = useSocket()
+  const { onlineUsers , handleCall , setCallType } = useSocket()
   const dispatch = useDispatch();
   const selectedUser = useSelector((state) => state.chat.selectedUser);
 
@@ -65,10 +66,14 @@ function ChatHeader({ currentUser }) {
         </Box>
 
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          <IconButton sx={{ "&:hover": { backgroundColor: "primary.light" } }} onClick={() => handleCall(selectedUser._id)}>
+          <IconButton sx={{ "&:hover": { backgroundColor: "primary.light" } }} onClick={() => { 
+            handleCall(getPeerId(onlineUsers , selectedUser) , "audio") ;
+            }}>
             <CallIcon sx={{ color: "primary.main", fontSize: "1.7rem" }} />
           </IconButton>
-          <IconButton sx={{ "&:hover": { backgroundColor: "primary.light" } }} onClick={() => handleCall(selectedUser._id)}>
+          <IconButton sx={{ "&:hover": { backgroundColor: "primary.light" } }} onClick={() => { 
+            handleCall(getPeerId(onlineUsers , selectedUser) , "video") ;
+            }}>
             <VideocamIcon sx={{ color: "primary.main", fontSize: "1.7rem" }} />
           </IconButton>
           <IconButton
