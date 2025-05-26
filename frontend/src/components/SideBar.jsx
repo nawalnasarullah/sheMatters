@@ -95,16 +95,17 @@ function SideBar({ menuItemsSidebar, adminId }) {
   );
 
   const accountAndLogoutButtons = (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        gap: 2,
-        alignItems: "center",
-        justifyContent: "center",
-        marginTop: "150px",
-      }}
-    >
+  <Box
+    sx={{
+      display: "flex",
+      flexDirection: "column",
+      gap: 2,
+      alignItems: "center",
+      justifyContent: "center",
+      marginTop: "150px",
+    }}
+  >
+    {!adminId && (
       <Button
         component={Link}
         to="/dashboard/accountInfo"
@@ -117,11 +118,28 @@ function SideBar({ menuItemsSidebar, adminId }) {
       >
         Account
       </Button>
-      <Button onClick={handleLogout} component={Link} to="/">
-        Log Out
-      </Button>
-    </Box>
-  );
+    )}
+
+    <Button
+      onClick={handleLogout}
+      component={Link}
+      to="/"
+      variant={adminId ? "contained" : "text"}
+      sx={
+        adminId
+          ? {
+              backgroundColor: "primary.main",
+              color: "white.main",
+              "&:hover": { backgroundColor: "primary.hover" },
+            }
+          : {}
+      }
+    >
+      Log Out
+    </Button>
+  </Box>
+);
+
 
   const userId = user?.user?._id;
 

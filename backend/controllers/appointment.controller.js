@@ -82,7 +82,7 @@ export default class AppointmentController {
 
   async getAllAppointments(req, res, next) {
     try {
-      const appointments = await Appointment.find();
+      const appointments = await Appointment.find()
       res.json({
         appointments,
         message: "All appointments retrieved successfully",

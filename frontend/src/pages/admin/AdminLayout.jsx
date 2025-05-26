@@ -13,9 +13,9 @@ function AdminLayout() {
 
     const { data } = useGetMeQuery();
     const { admin, isAuthenticated } = useSelector((state) => state.admin);
-    console.log("admin", admin, isAuthenticated);
+    console.log("admin", admin?.admin?._id);
 
-    const adminId = admin?._id
+    const adminId = admin?.admin?._id
     
 
   return (
