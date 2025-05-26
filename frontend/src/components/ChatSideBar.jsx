@@ -17,12 +17,20 @@ import { setSelectedUser } from "../redux/features/chatSlice";
 import { useLazyLogoutQuery } from "../redux/api/authApi";
 import theme from "./Theme";
 import { useSocket } from "../context/SocketContext";
+import { clearUserInfo } from "../redux/features/authSlice";
+import { clearPsychologistInfo } from "../redux/features/psychologistAuthSlice";
 
 function ChatSidebar({ user }) {
   const [logout] = useLazyLogoutQuery();
   const navigate = useNavigate();
   const {onlineUsers} = useSocket()
   const currentUserId = user._id;
+
+    const {user: authUser, isAuthenticated} = useSelector(state => state.auth);
+    const { psychologist } = useSelector(state => state.psychologistAuth);
+
+    const isPsychologist = Boolean(psychologist);
+const isUser = Boolean(authUser);
 
   const dispatch = useDispatch();
   const selectedUser = useSelector((state) => state.chat.selectedUser);
@@ -33,6 +41,11 @@ function ChatSidebar({ user }) {
 
   const handleLogout = async () => {
     await logout().unwrap();
+    if (isPsychologist) {
+      dispatch(clearPsychologistInfo());
+    } else if (isUser) {
+      dispatch(clearUserInfo());
+    }
     navigate(0);
   };
 

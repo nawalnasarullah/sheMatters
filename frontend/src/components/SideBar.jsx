@@ -21,9 +21,8 @@ import { useSelector, useDispatch } from "react-redux";
 import theme from "./Theme";
 
 function SideBar({ menuItemsSidebar, adminId }) {
-
   const dispatch = useDispatch();
-  const { user} = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.auth);
   const [logout] = useLazyLogoutQuery();
   const navigate = useNavigate();
 
@@ -33,7 +32,11 @@ function SideBar({ menuItemsSidebar, adminId }) {
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
 
   const toggleDrawer = (open) => (event) => {
-    if (event?.type === "keydown" && (event.key === "Tab" || event.key === "Shift")) return;
+    if (
+      event?.type === "keydown" &&
+      (event.key === "Tab" || event.key === "Shift")
+    )
+      return;
     setDrawerOpen(open);
   };
 
@@ -41,7 +44,7 @@ function SideBar({ menuItemsSidebar, adminId }) {
     await logout().unwrap();
     if (adminId) dispatch(clearAdminInfo());
     else dispatch(clearUserInfo());
-    navigate('/');
+    navigate("/");
   };
 
   const handleDropdownOpen = (event) => setAnchorEl(event.currentTarget);
@@ -67,79 +70,88 @@ function SideBar({ menuItemsSidebar, adminId }) {
 
   const journalingDropdown = (
     <>
-      <Button
-        onClick={handleDropdownOpen}
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "flex-start",
-          width: "100%",
-        }}
-      >
-        <LibraryBooksRoundedIcon sx={{ marginRight: "10px", marginBottom: "3px" }} />
-        Journaling
-      </Button>
-      <Menu anchorEl={anchorEl} open={isDropdownOpen} onClose={handleDropdownClose}>
-        <MenuItem component={Link} to="/dashboard/journal">
-          <Typography variant="body2" fontWeight={600}>
-            Create Journal
-          </Typography>
-        </MenuItem>
-        <MenuItem component={Link} to="/dashboard/journal/all">
-          <Typography variant="body2" fontWeight={600}>
-            All Journals
-          </Typography>
-        </MenuItem>
-      </Menu>
+      {!adminId && (
+        <>
+          <Button
+            onClick={handleDropdownOpen}
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "flex-start",
+              width: "100%",
+            }}
+          >
+            <LibraryBooksRoundedIcon
+              sx={{ marginRight: "10px", marginBottom: "3px" }}
+            />
+            Journaling
+          </Button>
+          <Menu
+            anchorEl={anchorEl}
+            open={isDropdownOpen}
+            onClose={handleDropdownClose}
+          >
+            <MenuItem component={Link} to="/dashboard/journal">
+              <Typography variant="body2" fontWeight={600}>
+                Create Journal
+              </Typography>
+            </MenuItem>
+            <MenuItem component={Link} to="/dashboard/journal/all">
+              <Typography variant="body2" fontWeight={600}>
+                All Journals
+              </Typography>
+            </MenuItem>
+          </Menu>
+        </>
+      )}
     </>
   );
 
   const accountAndLogoutButtons = (
-  <Box
-    sx={{
-      display: "flex",
-      flexDirection: "column",
-      gap: 2,
-      alignItems: "center",
-      justifyContent: "center",
-      marginTop: "150px",
-    }}
-  >
-    {!adminId && (
-      <Button
-        component={Link}
-        to="/dashboard/accountInfo"
-        variant="contained"
-        sx={{
-          backgroundColor: "primary.main",
-          color: "white.main",
-          "&:hover": { backgroundColor: "primary.hover" },
-        }}
-      >
-        Account
-      </Button>
-    )}
-
-    <Button
-      onClick={handleLogout}
-      component={Link}
-      to="/"
-      variant={adminId ? "contained" : "text"}
-      sx={
-        adminId
-          ? {
-              backgroundColor: "primary.main",
-              color: "white.main",
-              "&:hover": { backgroundColor: "primary.hover" },
-            }
-          : {}
-      }
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 2,
+        alignItems: "center",
+        justifyContent: "center",
+        marginTop: "150px",
+      }}
     >
-      Log Out
-    </Button>
-  </Box>
-);
+      {!adminId && (
+        <Button
+          component={Link}
+          to="/dashboard/accountInfo"
+          variant="contained"
+          sx={{
+            backgroundColor: "primary.main",
+            color: "white.main",
+            "&:hover": { backgroundColor: "primary.hover" },
+          }}
+        >
+          Account
+        </Button>
+      )}
 
+      <Button
+        onClick={handleLogout}
+        component={Link}
+        to="/"
+        variant={adminId ? "contained" : "text"}
+        sx={
+          adminId
+            ? {
+                backgroundColor: "primary.main",
+                color: "white.main",
+                "&:hover": { backgroundColor: "primary.hover" },
+              }
+            : {}
+        }
+      >
+        Log Out
+      </Button>
+    </Box>
+  );
 
   const userId = user?.user?._id;
 
@@ -174,13 +186,23 @@ function SideBar({ menuItemsSidebar, adminId }) {
             PaperProps={{ sx: { width: 220, backgroundColor: "white.main" } }}
           >
             <Box sx={{ padding: "20px", position: "relative" }}>
-              <IconButton onClick={toggleDrawer(false)} sx={{ position: "absolute", top: 15, right: 8 }}>
+              <IconButton
+                onClick={toggleDrawer(false)}
+                sx={{ position: "absolute", top: 15, right: 8 }}
+              >
                 <CloseRoundedIcon />
               </IconButton>
               <Typography variant="h5" color="primary.main" fontWeight={600}>
                 SheMatters
               </Typography>
-              <Box sx={{ display: "flex", flexDirection: "column", gap: 2, marginTop: 2 }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 2,
+                  marginTop: 2,
+                }}
+              >
                 {renderMenuButtons()}
                 {userId !== adminId && journalingDropdown}
               </Box>

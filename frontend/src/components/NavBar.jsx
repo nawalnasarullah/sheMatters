@@ -19,13 +19,19 @@ import ArrowDropDownRoundedIcon from "@mui/icons-material/ArrowDropDownRounded";
 import theme from "./Theme";
 import { Link } from "react-router-dom";
 import { useGetMeQuery, useLazyLogoutQuery } from "../redux/api/authApi";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { clearUserInfo } from "../redux/features/authSlice";
+import { clearPsychologistInfo } from "../redux/features/psychologistAuthSlice";
 
 function NavBar() {
 
+  const dispatch = useDispatch();
   const { data } = useGetMeQuery();
   const {user, isAuthenticated} = useSelector(state => state.auth);
+  const { psychologist } = useSelector(state => state.psychologistAuth);
+  
+
   const[logout] = useLazyLogoutQuery();
   const  navigate  = useNavigate();
   
@@ -52,6 +58,11 @@ function NavBar() {
 
   const handleLogout = async () => {
     const res = await logout().unwrap();
+    if (user){
+      dispatch(clearUserInfo());
+    } else if (psychologist){
+      dispatch(clearPsychologistInfo());
+    }
     console.log("logout", res);
     navigate(0);
   }
@@ -197,6 +208,7 @@ function NavBar() {
                             "&:hover": {
                               backgroundColor: "primary.light",
                               borderRadius: "6px",
+                              cursor: "default",
                             },
                           }}
                         >
@@ -207,6 +219,7 @@ function NavBar() {
                             "&:hover": {
                               backgroundColor: "primary.light",
                               borderRadius: "6px",
+                              cursor: "default",
                             },
                           }}
                         >
@@ -227,16 +240,18 @@ function NavBar() {
                             "&:hover": {
                               backgroundColor: "primary.light",
                               borderRadius: "6px",
+                              cursor: "default",
                             },
                           }}
                         >
-                          Unlimited messaging therapy
+                          Messaging therapy
                         </MenuItem>
                         <MenuItem
                           sx={{
                             "&:hover": {
                               backgroundColor: "primary.light",
                               borderRadius: "6px",
+                              cursor: "default",
                             },
                           }}
                         >
@@ -247,7 +262,8 @@ function NavBar() {
                   </Grid>
                 </Box>
               </Menu>
-              <Button
+              { !user && !psychologist && (
+                <Button
                 component={Link}
                 to="/clinicians"
                 sx={{
@@ -260,6 +276,7 @@ function NavBar() {
                 For Clinicians
                
               </Button>
+              )}
               {/* <Button>For Business</Button> */}
               {isAuthenticated ? <Button onClick={handleLogout} component={Link}
                 to="/"

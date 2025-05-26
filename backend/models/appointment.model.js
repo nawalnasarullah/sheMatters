@@ -50,12 +50,6 @@ const appointmentSchema = mongoose.Schema({
   }
 });
 
-appointmentSchema.pre('save', function(next) {
-  const durationInHours = (this.endTime - this.startTime) / (1000 * 60 * 60);
-  if (durationInHours > 2) {
-    next(new Error('Appointment duration cannot exceed 2 hours'));
-  }
-  next();
-});
+
 
 export const Appointment = mongoose.model("appointment", appointmentSchema);
