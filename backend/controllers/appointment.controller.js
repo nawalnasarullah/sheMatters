@@ -1,6 +1,7 @@
 import { Appointment } from "../models/appointment.model.js";
 import { Psychologist } from "../models/psychologist.model.js";
 import { User } from "../models/user.model.js";
+import { parseTime12Hour } from "../services/helperFunctions.js";
 
 export default class AppointmentController {
   async bookAnAppointment(req, res, next) {
@@ -92,6 +93,53 @@ export default class AppointmentController {
       next(err);
     }
   }
+
+  // controllers/appointmentController.js
+
+ async getUpcomingAppointmentsById(req, res, next) {
+  try {
+    const { id } = req.params;
+    const now = new Date();
+
+    const appointments = await Appointment.find({
+      $or: [{ userId: id }, { psychologistId: id }],
+    });
+
+    const upcomingAppointments = [];
+
+    for (let appointment of appointments) {
+      const { hours, minutes } = parseTime12Hour(appointment.slotTime);
+
+      const appointmentDateTime = new Date(appointment.slotDate);
+      appointmentDateTime.setHours(hours, minutes, 0, 0);
+
+      if (
+        appointmentDateTime < now &&
+        !appointment.isCompleted &&
+        !appointment.isMissed
+      ) {
+        appointment.isMissed = true;
+        await appointment.save();
+      }
+
+      if (
+        appointmentDateTime >= now &&
+        !appointment.isCompleted &&
+        !appointment.isMissed
+      ) {
+        upcomingAppointments.push(appointment);
+      }
+    }
+
+    res.json({
+      appointments: upcomingAppointments,
+      message: "Upcoming appointments retrieved and old ones marked missed",
+      success: true,
+    });
+  } catch (err) {
+    next(err);
+  }
+}
 
   async getAppointmentById(req, res, next) {
     console.log("getAppointmentById");

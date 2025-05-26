@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
-  useGetAppointmentByIdQuery,
+  useGetUpcomingAppointmentsByIdQuery,
   useDeleteAppointmentByIdMutation,
   useMarkAppointmentCompletedMutation,
 } from "../redux/api/appointmentApi";
@@ -20,7 +20,11 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function AppointmentReminder({ userId }) {
-  const { data, error, isLoading, refetch } = useGetAppointmentByIdQuery(userId);
+  const { data, error, isLoading, refetch } = useGetUpcomingAppointmentsByIdQuery(userId);
+
+  console.log("Upcoming Appointments Data:", data?.appointments);
+  
+  
   const [deleteAppointmentById] = useDeleteAppointmentByIdMutation();
   const [markAppointmentCompleted] = useMarkAppointmentCompletedMutation();
 
@@ -36,12 +40,12 @@ function AppointmentReminder({ userId }) {
   }
 }, []);
   useEffect(() => {
-    if (!data?.appointment) return;
+    if (!data?.appointments) return;
 
     const checkNotifications = () => {
       const now = new Date().getTime();
 
-      data.appointment.forEach((appointment) => {
+      data.appointments.forEach((appointment) => {
         if (
           (appointment.userId === userId ||
             appointment.psychologistData?._id === userId) &&
@@ -67,7 +71,7 @@ function AppointmentReminder({ userId }) {
     const interval = setInterval(checkNotifications, 60 * 1000);
     checkNotifications();
     return () => clearInterval(interval);
-  }, [data?.appointment, userId]);
+  }, [data?.appointments, userId]);
 
   const sendBrowserNotification = (appointment) => {
     if (Notification.permission === "granted") {
@@ -136,9 +140,9 @@ function AppointmentReminder({ userId }) {
       </Typography>
 
       <div className="w-full overflow-x-scroll whitespace-nowrap scrollbar-hide scroll-smooth pb-2">
-        {data?.appointment?.length > 0 ? (
+        {data?.appointments?.length > 0 ? (
           <div className="flex space-x-4">
-            {data.appointment.map((appointment) => (
+            {data.appointments.map((appointment) => (
               <Card
                 key={appointment._id}
                 className="min-w-[320px] flex justify-between items-center mb-4 p-4 border rounded-lg shadow-md bg-white"

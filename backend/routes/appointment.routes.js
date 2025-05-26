@@ -9,5 +9,6 @@ router.route('/appointment/all').get(appointment.getAllAppointments);
 router.route('/appointment/:userId').get(appointment.getAppointmentById);
 router.route('/appointment/cancel/:appointmentId').delete(appointment.cancelAppointment);
 router.route('/appointment/complete/:appointmentId').patch(appointment.markAppointmentCompleted);
+router.route('/appointment/upcoming/:id').get(appointment.getUpcomingAppointmentsById);
 
 export default router;

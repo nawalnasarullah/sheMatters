@@ -32,7 +32,12 @@ export const appointmentApi = createApi({
         url: `/appointment/complete/${appointmentId}`,
         method: "PATCH",
       }),
-    })
+    }),
+
+    getUpcomingAppointmentsById: builder.query({
+      query: (id) => `appointment/upcoming/${id}/`,
+    }),
+
   }),
 });
 
@@ -41,5 +46,6 @@ export const {
   useGetAllAppointmentsQuery,
   useGetAppointmentByIdQuery,
   useDeleteAppointmentByIdMutation,
-  useMarkAppointmentCompletedMutation
+  useMarkAppointmentCompletedMutation,
+  useGetUpcomingAppointmentsByIdQuery,
 } = appointmentApi;
