@@ -29,7 +29,7 @@ function SideBar() {
   const dispatch = useDispatch();
   const { data } = useGetMeQuery();
   const psychologistId = useSelector(
-    (state) => state.psychologistAuth.psychologist._id
+    (state) => state.psychologistAuth?.psychologist?._id
   );
   const [logout] = useLazyLogoutQuery();
   const navigate = useNavigate();

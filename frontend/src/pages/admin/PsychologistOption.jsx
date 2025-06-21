@@ -1,12 +1,13 @@
 import { useGetAllPsychologistsQuery } from '../../redux/api/psychologistApi';
 import AdminPsychologistCard from './AdminPsychologistCard';
 import { Grid, Typography } from '@mui/material';
+import CircularProgress from '@mui/material/CircularProgress';
 
 function PsychologistOption() {
   const { data = [], isLoading } = useGetAllPsychologistsQuery();
   const psychologists = data.psychologists || [];
 
-  if (isLoading) return <Typography>Loading...</Typography>;
+  if (isLoading) return <CircularProgress variant="soft" className="mx-auto mt-10" />;
 
   return (
     <Grid container spacing={2} p={2}>

@@ -5,6 +5,7 @@ import {
   Typography,
   Box,
   ThemeProvider,
+  CircularProgress,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import CallIcon from "@mui/icons-material/Call";
@@ -22,7 +23,7 @@ function ChatHeader({ currentUser }) {
 
   if (!selectedUser) return null;
   if(!onlineUsers)
-    return <>Loading...</>
+    return <CircularProgress variant="soft" className="mx-auto mt-10" />
     
   return (
     <ThemeProvider theme={theme}>

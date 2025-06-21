@@ -9,6 +9,7 @@ import {
   Button,
   ListItemButton,
   ListItemAvatar,
+  CircularProgress,
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import { useGetUsersQuery } from "../redux/api/chatApi";
@@ -151,7 +152,7 @@ const isUser = Boolean(authUser);
     </Box>
   );
 
-  if (isLoading) return <Typography sx={{ p: 2 }}>Loading...</Typography>;
+  if (isLoading) return <CircularProgress variant="soft" className="mx-auto mt-10" />;
   if (isError)
     return <Typography sx={{ p: 2 }}>Error loading users.</Typography>;
 

@@ -63,7 +63,7 @@ export default function PsychologistProfile() {
   if (isLoading) {
     return (
       <div className="text-center py-10">
-        <CircularProgress />
+        <CircularProgress variant="soft"/>
       </div>
     );
   }

@@ -1,13 +1,13 @@
 
 import AdminUserCard from './AdminUserCard';
 import { useGetAllUsersQuery } from '../../redux/api/userApi';
-import { Grid, Typography } from '@mui/material';
+import { Grid, Typography, CircularProgress } from '@mui/material';
 
 function UserOption() {
   const { data = [], isLoading } = useGetAllUsersQuery();
   const users = data.users || [];
 
-  if (isLoading) return <Typography>Loading...</Typography>;
+  if (isLoading) return <CircularProgress variant="soft" className="mx-auto mt-10" />;
 
   return (
     <Grid container spacing={2} p={2}>

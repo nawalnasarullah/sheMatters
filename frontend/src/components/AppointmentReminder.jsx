@@ -14,17 +14,18 @@ import {
   DialogContent,
   DialogContentText,
   DialogActions,
+  CircularProgress,
 } from "@mui/material";
 import theme from "./Theme";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function AppointmentReminder({ userId }) {
-  const { data, error, isLoading, refetch } = useGetUpcomingAppointmentsByIdQuery(userId);
+  const { data, error, isLoading, refetch } =
+    useGetUpcomingAppointmentsByIdQuery(userId);
 
   console.log("Upcoming Appointments Data:", data?.appointments);
-  
-  
+
   const [deleteAppointmentById] = useDeleteAppointmentByIdMutation();
   const [markAppointmentCompleted] = useMarkAppointmentCompletedMutation();
 
@@ -35,10 +36,10 @@ function AppointmentReminder({ userId }) {
   const [selectedAppointmentId, setSelectedAppointmentId] = useState(null);
 
   useEffect(() => {
-  if ("Notification" in window && Notification.permission === "default") {
-    Notification.requestPermission();
-  }
-}, []);
+    if ("Notification" in window && Notification.permission === "default") {
+      Notification.requestPermission();
+    }
+  }, []);
   useEffect(() => {
     if (!data?.appointments) return;
 
@@ -106,12 +107,12 @@ function AppointmentReminder({ userId }) {
       if (dialogAction === "cancel") {
         await deleteAppointmentById(selectedAppointmentId).unwrap();
         toast.success("Appointment cancelled successfully!", {
-          progressClassName: "toast-progress-success"
+          progressClassName: "toast-progress-success",
         });
       } else if (dialogAction === "complete") {
         await markAppointmentCompleted(selectedAppointmentId).unwrap();
         toast.success("Appointment completed successfully!", {
-          progressClassName: "toast-progress-success"
+          progressClassName: "toast-progress-success",
         });
       }
       refetch();
@@ -122,7 +123,7 @@ function AppointmentReminder({ userId }) {
     }
   };
 
-  if (isLoading) return <p>Loading appointments...</p>;
+  if (isLoading) return <CircularProgress variant="soft" className="mx-auto mt-10" />;
   if (error) {
     const errorMessage =
       error?.data?.message || error?.message || "Something went wrong";
@@ -149,19 +150,32 @@ function AppointmentReminder({ userId }) {
               >
                 <div>
                   <p className="text-gray-600 flex items-baseline">
-                    <Typography variant="h6" sx={{ fontSize: "1rem", fontWeight: "bold" }}>
+                    <Typography
+                      variant="h6"
+                      sx={{ fontSize: "1rem", fontWeight: "bold" }}
+                    >
                       Date:
                     </Typography>
-                    <Typography sx={{ paddingLeft: "5px" }}>{appointment.slotDate}</Typography>
+                    <Typography sx={{ paddingLeft: "5px" }}>
+                      {appointment.slotDate}
+                    </Typography>
                   </p>
                   <p className="text-gray-600 flex items-baseline">
-                    <Typography variant="h6" sx={{ fontSize: "1rem", fontWeight: "bold" }}>
+                    <Typography
+                      variant="h6"
+                      sx={{ fontSize: "1rem", fontWeight: "bold" }}
+                    >
                       Time:
                     </Typography>
-                    <Typography sx={{ paddingLeft: "5px" }}>{appointment.slotTime}</Typography>
+                    <Typography sx={{ paddingLeft: "5px" }}>
+                      {appointment.slotTime}
+                    </Typography>
                   </p>
                   <p className="text-gray-600 flex items-baseline">
-                    <Typography variant="h6" sx={{ fontSize: "1rem", fontWeight: "bold" }}>
+                    <Typography
+                      variant="h6"
+                      sx={{ fontSize: "1rem", fontWeight: "bold" }}
+                    >
                       With:
                     </Typography>
                     <Typography sx={{ paddingLeft: "5px" }}>
@@ -174,7 +188,9 @@ function AppointmentReminder({ userId }) {
                     <Button
                       variant="contained"
                       size="small"
-                      onClick={() => handleOpenDialog("complete", appointment._id)}
+                      onClick={() =>
+                        handleOpenDialog("complete", appointment._id)
+                      }
                       sx={{
                         backgroundColor: "primary.main",
                         "&:hover": { backgroundColor: "primary.hover" },
@@ -189,7 +205,9 @@ function AppointmentReminder({ userId }) {
                         backgroundColor: "secondary.dark",
                         "&:hover": { backgroundColor: "secondary.dark" },
                       }}
-                      onClick={() => handleOpenDialog("cancel", appointment._id)}
+                      onClick={() =>
+                        handleOpenDialog("cancel", appointment._id)
+                      }
                     >
                       Cancelled
                     </Button>
@@ -206,21 +224,25 @@ function AppointmentReminder({ userId }) {
             ))}
           </div>
         ) : (
-          <p className="text-center text-gray-500 font-secondaryFont">
-            No appointments available.
-          </p>
+          <>
+           
+            <p className="text-center text-gray-500 font-secondaryFont">
+              No appointments available.
+            </p>
+          </>
         )}
-         <ToastContainer
-                position="top-center"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="light"/>
+        <ToastContainer
+          position="top-center"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
       </div>
 
       {/* Confirmation Dialog */}
@@ -233,18 +255,26 @@ function AppointmentReminder({ userId }) {
         <DialogContent>
           <DialogContentText sx={{ fontSize: "1rem" }}>
             Are you sure you want to{" "}
-            {dialogAction === "cancel" ? "cancel" : "complete"} this appointment?
+            {dialogAction === "cancel" ? "cancel" : "complete"} this
+            appointment?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDialog} color="secondary" variant="contained">
+          <Button
+            onClick={handleCloseDialog}
+            color="secondary"
+            variant="contained"
+          >
             No
           </Button>
-          <Button onClick={handleConfirmAction} color="primary" variant="contained">
+          <Button
+            onClick={handleConfirmAction}
+            color="primary"
+            variant="contained"
+          >
             Yes
           </Button>
         </DialogActions>
-
       </Dialog>
     </ThemeProvider>
   );

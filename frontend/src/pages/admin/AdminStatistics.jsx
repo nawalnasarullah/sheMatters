@@ -8,7 +8,7 @@ function AdminStatistics() {
   const { data, isLoading } = useGetAllAppointmentsQuery();
   console.log("AdminDashboardMain data:", data);
 
-  if (isLoading) return <CircularProgress />;
+  if (isLoading) return <CircularProgress variant="soft" className="mx-auto mt-10" />;
 
   const appointments = data?.appointments || [];
 

@@ -22,7 +22,7 @@ function ClinicianPatients() {
   const { data, error, isLoading } =
     useGetPatientsWithJournalsQuery(psychologistId);
 
-  if (isLoading) return <CircularProgress />;
+  if (isLoading) return<CircularProgress variant="soft" className="mx-auto mt-10" />;
   if (error)
     return <Typography color="error">Error loading patients.</Typography>;
 

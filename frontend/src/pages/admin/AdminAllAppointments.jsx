@@ -17,7 +17,7 @@ const AdminAllAppointments = () => {
   const [deleteAppointmentById] = useDeleteAppointmentByIdMutation();
   const [markAppointmentCompleted] = useMarkAppointmentCompletedMutation();
 
-  if (isLoading) return <CircularProgress />;
+  if (isLoading) return <CircularProgress variant="soft" className="mx-auto mt-10" />;
 
   const appointments = data?.appointments || [];
 

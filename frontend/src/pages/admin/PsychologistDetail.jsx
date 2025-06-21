@@ -36,7 +36,7 @@ function PsychologistDetail() {
     }
   };
 
-  if (isLoading) return <CircularProgress sx={{ m: 5 }} />;
+  if (isLoading) return <CircularProgress variant="soft" className="mx-auto mt-10" />;
   if (error || !psychologist)
     return <Typography color="error">Error loading data</Typography>;
 
