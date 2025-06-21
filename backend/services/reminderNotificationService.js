@@ -183,5 +183,5 @@ const checkAppointments = async () => {
 
 cron.schedule("* * * * *", async () => {
   await checkAppointments();
-  console.log("Checked appointment reminders & missed status...");
+  // console.log("Checked appointment reminders & missed status...");
 });
