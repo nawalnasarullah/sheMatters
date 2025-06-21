@@ -88,6 +88,7 @@ export default class psychologistController {
             matchCount: 1,
             experience: 1,
             fee: 1,
+            psychologistStatus: 1,
           },
         },
       ];

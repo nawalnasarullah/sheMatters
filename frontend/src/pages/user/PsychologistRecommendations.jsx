@@ -22,6 +22,8 @@ export default function PsychologistRecommendations() {
     _id: user?.user?._id || "",
   });
 
+  console.log("Psychologist Recommendations Data:", data);
+  
 
   const settings = {
     dots: false,
