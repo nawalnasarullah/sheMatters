@@ -24,10 +24,36 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker"
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider"
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
 import dayjs from "dayjs"
+import { questions } from "../components/Data"
+
+const Pill = ({ text, active, handleClick }) => {
+  return (
+    <button
+      onClick={() => handleClick(text)}
+      type="button"
+      className={
+        active
+          ? `bg-[#FCEAEA] rounded-full px-4 py-2 flex items-center`
+          : `bg-[gray] rounded-full px-4 py-2 flex items-center`
+      }
+    >
+      <Typography variant="body1" fontWeight="bold" className="capitalize">
+        {text.replace(/_/g, " ")}
+      </Typography>
+    </button>
+  )
+}
 
 function AccountInformation() {
   const { user } = useSelector((state) => state.auth)
-  const [updateUser, { isLoading, isSuccess, isError, error }] = useUpdateUserMutation()
+  const [updateUser, { isLoading, isSuccess, isError, error }] =
+    useUpdateUserMutation()
+  const all_labels = questions.map((q) => q.label)
+  const [userNonLabels, setUserNonLabels] = useState(
+    user?.user?.labels
+      ? all_labels.filter((label) => !user.user.labels.includes(label))
+      : []
+  )
 
   const dispatch = useDispatch()
   const [isDisabled, setIsDisabled] = useState(true)
@@ -112,10 +138,10 @@ function AccountInformation() {
       city: user?.user?.city || "",
       about: user?.user?.about || "",
       avatar: user?.user?.avatar || "",
+      labels: user?.user?.labels || [],
     },
     enableReinitialize: true,
     validationSchema: Yup.object({
-
       email: Yup.string().email("Email format is incorrect"),
 
       firstName: Yup.string()
@@ -145,8 +171,8 @@ function AccountInformation() {
       ), // 'Matches phone number with 10-15 digits and + is allowed'
 
       dateOfBirth: Yup.date()
-      .required('Date is required')
-      .max(new Date(), 'Date cannot be in the future'),
+        .required("Date is required")
+        .max(new Date(), "Date cannot be in the future"),
 
       city: Yup.string(),
       about: Yup.string(),
@@ -168,7 +194,24 @@ function AccountInformation() {
     },
   })
 
-  console.log("Form values : " , values)
+  const handleAddLabelToUser = (new_label) => {
+    if(isDisabled) return
+    
+    setFieldValue("labels", [...values.labels, new_label])
+    setUserNonLabels((labels) =>
+      userNonLabels.filter((label) => label != new_label)
+    )
+  }
+
+  const handleRemoveLabelFromUser = (new_label) => {
+    if(isDisabled) return
+
+    setFieldValue(
+      "labels",
+      values.labels.filter((label) => label != new_label)
+    )
+    setUserNonLabels((labels) => [...labels, new_label])
+  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -412,12 +455,14 @@ function AccountInformation() {
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
                       // value={ values.dateOfBirth && new Date()}
-                      value={values.dateOfBirth ? dayjs(values.dateOfBirth) : dayjs()}
+                      value={
+                        values.dateOfBirth ? dayjs(values.dateOfBirth) : dayjs()
+                      }
                       error={errors.dateOfBirth}
                       helperText={errors.dateOfBirth ? errors.dateOfBirth : " "}
                       label="Select a date"
                       name="dateOfBirth"
-                      onChange={(val) => setFieldValue('dateOfBirth' , val.$d)}
+                      onChange={(val) => setFieldValue("dateOfBirth", val.$d)}
                       variant="outlined"
                       fullWidth
                       disabled={isDisabled}
@@ -425,9 +470,11 @@ function AccountInformation() {
                         textField: {
                           fullWidth: true,
                           error: errors.dateOfBirth,
-                          helperText: errors.dateOfBirth ? errors.dateOfBirth : " ",
-                          sx: input_sx_prop, // ✅ Apply styles here!
-                        }
+                          helperText: errors.dateOfBirth
+                            ? errors.dateOfBirth
+                            : " ",
+                          sx: input_sx_prop,
+                        },
                       }}
                     />
                   </LocalizationProvider>
@@ -505,33 +552,59 @@ function AccountInformation() {
                     sx={input_sx_prop}
                   />
                 </Grid>
+                <Grid item xs={12} md={12}>
+                  <Box
+                    sx={{
+                      border: "1px solid #ccc",
+                      borderRadius: "4px",
+                      padding: 2,
+                      minHeight: 100,
+                    }}
+                  >
+                    <Box className="flex flex-wrap gap-4 mb-4">
+                      {values.labels.map((label) => (
+                        <Pill
+                          key={label}
+                          active={true}
+                          text={label}
+                          handleClick={handleRemoveLabelFromUser}
+                        />
+                      ))}
+                    </Box>
+                    <Box className="flex flex-wrap gap-4">
+                      {userNonLabels.map((label) => (
+                        <Pill
+                          key={label}
+                          active={false}
+                          text={label}
+                          handleClick={handleAddLabelToUser}
+                        />
+                      ))}
+                    </Box>
+                  </Box>
+                </Grid>
               </Grid>
             </Box>
-            {
-              isDisabled ? 
-                (
-                    <Button
-                    onClick={() => setIsDisabled(false)}
-                    type="submit"
-                    disabled={isLoading}
-                    variant="contained"
-                    sx={{ mt: 2 }}
-                  >
-                    Edit Profile
-                  </Button>
-                )
-                :
-                (
-                  <Button
-                    onClick={() => setIsDisabled(true)}
-                    disabled={isLoading}
-                    variant="contained"
-                    sx={{ mt: 2 }}
-                  >
-                    Save Changes
-                  </Button>
-                )
-            }
+            {isDisabled ? (
+              <Button
+                onClick={() => setIsDisabled(false)}
+                type="submit"
+                disabled={isLoading}
+                variant="contained"
+                sx={{ mt: 2 }}
+              >
+                Edit Profile
+              </Button>
+            ) : (
+              <Button
+                onClick={() => setIsDisabled(true)}
+                disabled={isLoading}
+                variant="contained"
+                sx={{ mt: 2 }}
+              >
+                Save Changes
+              </Button>
+            )}
           </form>
         </div>
         <ToastContainer />
