@@ -1,4 +1,3 @@
-import React from "react";
 import { useRef, useEffect, useState, useMemo, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { useGetMessagesQuery } from "../redux/api/chatApi";
@@ -34,7 +33,6 @@ import { useSocket } from "../context/SocketContext";
       messageEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages]);
-  
   //send handling new message event listener here
   useEffect(() => {
 

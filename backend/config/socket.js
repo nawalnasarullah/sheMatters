@@ -95,7 +95,6 @@ const initSocket = () => {
           socketId: socket.id
         })
       
-      console.log("Updated users : " , onlineUsers)
       // send active users
       io.emit("getUsers", onlineUsers)
     })
@@ -111,8 +110,8 @@ const initSocket = () => {
     socket.on('send-message' , (message) => {
 
       let reciever = onlineUsers.find( (user) => user.userId === message.reciever )
-      console.log("sending message to :" ,reciever['userId'] , " :  message : " , message['message'])
-      socket.to(reciever['socketId']).emit("recieve-message" , message)      
+      console.log("sending message to :" ,reciever?.userId , " :  message : " , message['message'])
+      socket.to(reciever?.socketId).emit("recieve-message" , message)      
     })
 
     socket.on('store-peer-id' , (user) => {

@@ -3,12 +3,12 @@ import mongoose from "mongoose";
 const appointmentSchema = mongoose.Schema({
   psychologistId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Psychologist",
+    ref: "psychologist",
     required: true,
   },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+    ref: "user",
     required: true,
   },
   slotTime: {
