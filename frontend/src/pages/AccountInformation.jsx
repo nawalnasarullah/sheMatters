@@ -113,6 +113,7 @@ function AccountInformation() {
       city: user?.user?.city || "",
       about: user?.user?.about || "",
       avatar: user?.user?.avatar || "",
+      labels: user?.user?.labels || [],
     },
     enableReinitialize: true,
     validationSchema: Yup.object({
@@ -145,6 +146,8 @@ function AccountInformation() {
       ), // 'Matches phone number with 10-15 digits and + is allowed'
 
       dateOfBirth: Yup.date()
+        .required("Date is required")
+        .max(new Date(), "Date cannot be in the future"),
         .required("Date is required")
         .max(new Date(), "Date cannot be in the future"),
 
@@ -524,8 +527,59 @@ function AccountInformation() {
                     sx={input_sx_prop}
                   />
                 </Grid>
+                <Grid item xs={12} md={12}>
+                  <Box
+                    sx={{
+                      border: "1px solid #ccc",
+                      borderRadius: "4px",
+                      padding: 2,
+                      minHeight: 100,
+                    }}
+                  >
+                    <Box className="flex flex-wrap gap-4 mb-4">
+                      {values.labels.map((label) => (
+                        <Pill
+                          key={label}
+                          active={true}
+                          text={label}
+                          handleClick={handleRemoveLabelFromUser}
+                        />
+                      ))}
+                    </Box>
+                    <Box className="flex flex-wrap gap-4">
+                      {userNonLabels.map((label) => (
+                        <Pill
+                          key={label}
+                          active={false}
+                          text={label}
+                          handleClick={handleAddLabelToUser}
+                        />
+                      ))}
+                    </Box>
+                  </Box>
+                </Grid>
               </Grid>
             </Box>
+            {isDisabled ? (
+              <Button
+                onClick={() => setIsDisabled(false)}
+                type="submit"
+                disabled={isLoading}
+                variant="contained"
+                sx={{ mt: 2 }}
+              >
+                Edit Profile
+              </Button>
+            ) : (
+              <Button
+                onClick={() => setIsDisabled(true)}
+                disabled={isLoading}
+                variant="contained"
+                sx={{ mt: 2 }}
+              >
+                Save Changes
+              </Button>
+            )}
             {isDisabled ? (
               <Button
                 onClick={() => setIsDisabled(false)}
