@@ -123,6 +123,40 @@ export const sendBookingConfirmation = async (appointment) => {
   });
 };
 
+export const sendCancellationConfirmation = async (appointment) => {
+  const { userData, psychologistData, slotDate, slotTime } = appointment;
+
+  // Email to user
+  const userHtml = generateEmailHtml({
+    title: "Appointment Cancelled",
+    greeting: `Hello ${userData.firstName || "there"},`,
+    body: `Your appointment with <strong>${psychologistData.firstName}</strong> scheduled for 
+           <strong>${slotDate}</strong> at <strong>${slotTime}</strong> has been cancelled. 
+           You can reschedule anytime on our website.`,
+  });
+
+  await sendMail({
+    to: userData.email,
+    subject: "Appointment Cancelled",
+    html: userHtml,
+  });
+
+  // Email to psychologist
+  const psychologistHtml = generateEmailHtml({
+    title: "Appointment Cancelled",
+    greeting: `Hello ${psychologistData.firstName || "there"},`,
+    body: `The appointment with <strong>${userData.firstName}</strong> scheduled for 
+           <strong>${slotDate}</strong> at <strong>${slotTime}</strong> has been cancelled.`,
+  });
+
+  await sendMail({
+    to: psychologistData.email,
+    subject: "Appointment Cancelled",
+    html: psychologistHtml,
+  });
+};
+
+
 const checkAppointments = async () => {
   const now = new Date();
   const appointments = await Appointment.find({

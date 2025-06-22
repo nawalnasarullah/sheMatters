@@ -2,7 +2,7 @@ import { Appointment } from "../models/appointment.model.js";
 import { Psychologist } from "../models/psychologist.model.js";
 import { User } from "../models/user.model.js";
 import { parseTime12Hour } from "../services/helperFunctions.js";
-import { sendBookingConfirmation } from "../services/reminderNotificationService.js";
+import { sendBookingConfirmation, sendCancellationConfirmation } from "../services/reminderNotificationService.js";
 
 export default class AppointmentController {
   async bookAnAppointment(req, res, next) {
@@ -219,6 +219,7 @@ export default class AppointmentController {
       const updated = await Psychologist.findById(psychologistId);
       console.log("Updated DB slots:", updated.slots_booked[slotDate]);
 
+      await sendCancellationConfirmation(appointment);
       await Appointment.findByIdAndDelete(appointmentId);
 
       res.json({
