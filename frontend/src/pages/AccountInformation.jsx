@@ -1,5 +1,5 @@
-import React, { useState } from "react"
-import { useSelector } from "react-redux"
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import {
   TextField,
   Box,
@@ -10,27 +10,28 @@ import {
   Grid,
   ThemeProvider,
   Container,
-} from "@mui/material"
-import EditRoundedIcon from "@mui/icons-material/EditRounded"
-import { useFormik } from "formik"
-import * as Yup from "yup"
-import VerifiedUserRoundedIcon from "@mui/icons-material/VerifiedUserRounded"
-import theme from "../components/Theme"
-import { useUpdateUserMutation } from "../redux/api/authApi"
-import { useDispatch } from "react-redux"
-import { updateUserProfile } from "../redux/features/authSlice"
-import { toast, ToastContainer } from "react-toastify"
-import { DatePicker } from "@mui/x-date-pickers/DatePicker"
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider"
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
-import dayjs from "dayjs"
+} from "@mui/material";
+import EditRoundedIcon from "@mui/icons-material/EditRounded";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import VerifiedUserRoundedIcon from "@mui/icons-material/VerifiedUserRounded";
+import theme from "../components/Theme";
+import { useUpdateUserMutation } from "../redux/api/authApi";
+import { useDispatch } from "react-redux";
+import { updateUserProfile } from "../redux/features/authSlice";
+import { toast, ToastContainer } from "react-toastify";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
 
 function AccountInformation() {
-  const { user } = useSelector((state) => state.auth)
-  const [updateUser, { isLoading, isSuccess, isError, error }] = useUpdateUserMutation()
+  const { user } = useSelector((state) => state.auth);
+  const [updateUser, { isLoading, isSuccess, isError, error }] =
+    useUpdateUserMutation();
 
-  const dispatch = useDispatch()
-  const [isDisabled, setIsDisabled] = useState(true)
+  const dispatch = useDispatch();
+  const [isDisabled, setIsDisabled] = useState(true);
 
   const input_sx_prop = {
     "& .MuiOutlinedInput-root": {
@@ -57,40 +58,40 @@ function AccountInformation() {
       fontSize: "15px",
       color: "primary.main",
     },
-  }
+  };
 
   const toggleEdit = () => {
-    setIsDisabled((state) => !state)
-  }
+    setIsDisabled((state) => !state);
+  };
 
   const parseDate = (dateString) => {
-    const date = new Date(dateString)
-    const day = String(date.getDate()).padStart(2, "0")
-    const month = String(date.getMonth() + 1).padStart(2, "0")
-    const year = date.getFullYear()
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
 
     // Return the formatted date
-    return `${day}/${month}/${year}`
-  }
+    return `${day}/${month}/${year}`;
+  };
 
   let handleImageUpload = (image) => {
-    console.log(image.target.files[0])
+    console.log(image.target.files[0]);
 
     if (image.target.files[0].size > 5097152) {
       //for 5MB
-      console.log("Image size too large")
-      formik.setFieldError("avatar", "image size should not exceed 5MB")
-      toast.error("Image size should not exceed 5MB")
-      return
+      console.log("Image size too large");
+      formik.setFieldError("avatar", "image size should not exceed 5MB");
+      toast.error("Image size should not exceed 5MB");
+      return;
     }
 
-    let reader = new FileReader()
-    reader.readAsDataURL(image.target.files[0])
+    let reader = new FileReader();
+    reader.readAsDataURL(image.target.files[0]);
 
     reader.onload = () => {
-      if (reader.readyState === 2) setFieldValue("avatar", reader.result)
-    }
-  }
+      if (reader.readyState === 2) setFieldValue("avatar", reader.result);
+    };
+  };
 
   const {
     handleChange,
@@ -115,7 +116,6 @@ function AccountInformation() {
     },
     enableReinitialize: true,
     validationSchema: Yup.object({
-
       email: Yup.string().email("Email format is incorrect"),
 
       firstName: Yup.string()
@@ -145,8 +145,8 @@ function AccountInformation() {
       ), // 'Matches phone number with 10-15 digits and + is allowed'
 
       dateOfBirth: Yup.date()
-      .required('Date is required')
-      .max(new Date(), 'Date cannot be in the future'),
+        .required("Date is required")
+        .max(new Date(), "Date cannot be in the future"),
 
       city: Yup.string(),
       about: Yup.string(),
@@ -157,18 +157,18 @@ function AccountInformation() {
         const res = await updateUser({
           ...values,
           _id: user.user._id,
-        }).unwrap()
+        }).unwrap();
 
-        dispatch(updateUserProfile({ user: res.user }))
-        setIsDisabled(true)
+        dispatch(updateUserProfile({ user: res.user }));
+        setIsDisabled(true);
       } catch (err) {
-        toast.error("Error updating information")
-        console.log("Error updating User Information : ", err)
+        toast.error("Error updating information");
+        console.log("Error updating User Information : ", err);
       }
     },
-  })
+  });
 
-  console.log("Form values : " , values)
+  console.log("Form values : ", values);
 
   return (
     <ThemeProvider theme={theme}>
@@ -411,23 +411,42 @@ function AccountInformation() {
                 <Grid item xs={12} md={6}>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
-                      // value={ values.dateOfBirth && new Date()}
-                      value={values.dateOfBirth ? dayjs(values.dateOfBirth) : dayjs()}
-                      error={errors.dateOfBirth}
-                      helperText={errors.dateOfBirth ? errors.dateOfBirth : " "}
                       label="Select a date"
-                      name="dateOfBirth"
-                      onChange={(val) => setFieldValue('dateOfBirth' , val.$d)}
-                      variant="outlined"
-                      fullWidth
+                      value={
+                        values.dateOfBirth ? dayjs(values.dateOfBirth) : dayjs()
+                      }
+                      onChange={(val) => setFieldValue("dateOfBirth", val?.$d)}
                       disabled={isDisabled}
                       slotProps={{
                         textField: {
                           fullWidth: true,
-                          error: errors.dateOfBirth,
-                          helperText: errors.dateOfBirth ? errors.dateOfBirth : " ",
-                          sx: input_sx_prop, // ✅ Apply styles here!
-                        }
+                          error: Boolean(errors.dateOfBirth),
+                          helperText: errors.dateOfBirth || " ",
+                          sx: {
+                            
+                            "& .MuiOutlinedInput-root, & .MuiPickersInputBase-root": {
+                              borderRadius: "12px",
+                              backgroundColor: "white",
+
+                              "&:hover fieldset": {
+                                borderColor: "primary.dark",
+                              },
+                              "&.Mui-focused fieldset": {
+                                borderColor: "primary.main",
+                              },
+                            },
+                            "& .MuiInputBase-input": {
+                              padding: "12px",
+                            },
+                            "& .MuiInputLabel-root": {
+                              fontSize: "15px",
+                              color: "primary.main",
+                            },
+                            "& .MuiPickersSectionList-root": {
+                              padding: "13px 0",
+                            },
+                          },
+                        },
                       }}
                     />
                   </LocalizationProvider>
@@ -507,37 +526,32 @@ function AccountInformation() {
                 </Grid>
               </Grid>
             </Box>
-            {
-              isDisabled ? 
-                (
-                    <Button
-                    onClick={() => setIsDisabled(false)}
-                    type="submit"
-                    disabled={isLoading}
-                    variant="contained"
-                    sx={{ mt: 2 }}
-                  >
-                    Edit Profile
-                  </Button>
-                )
-                :
-                (
-                  <Button
-                    onClick={() => setIsDisabled(true)}
-                    disabled={isLoading}
-                    variant="contained"
-                    sx={{ mt: 2 }}
-                  >
-                    Save Changes
-                  </Button>
-                )
-            }
+            {isDisabled ? (
+              <Button
+                onClick={() => setIsDisabled(false)}
+                type="submit"
+                disabled={isLoading}
+                variant="contained"
+                sx={{ mt: 2 }}
+              >
+                Edit Profile
+              </Button>
+            ) : (
+              <Button
+                onClick={() => setIsDisabled(true)}
+                disabled={isLoading}
+                variant="contained"
+                sx={{ mt: 2 }}
+              >
+                Save Changes
+              </Button>
+            )}
           </form>
         </div>
         <ToastContainer />
       </Box>
     </ThemeProvider>
-  )
+  );
 }
 
-export default AccountInformation
+export default AccountInformation;

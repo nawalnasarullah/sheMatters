@@ -3,41 +3,52 @@ import { v2 as cloudinary } from "cloudinary";
 import { io, getReceiverSocketId } from "../config/socket.js";
 import { Appointment } from "../models/appointment.model.js";
 export default class MessageController {
-  async getUsersForSidebar(req, res, next) {
-    try {
-      const { _id, role } = req.user;
+async getUsersForSidebar(req, res, next) {
+  try {
+    const { _id, role } = req.user;
 
-      if (role === "user")
-      {
+    if (role === "user") {
+      let psychologists = await Appointment
+        .find({ userId: _id })
+        .populate({
+          path: "psychologistId",
+          select: "_id firstName lastName username avatar",
+        })
+        .select("psychologistId");
 
-        let psychologists = await Appointment
-        .find({userId : _id}).populate("psychologistId")
-        .populate({ path : 'psychologistId' , select : "_id firstName lastName username avatar" })
-        .select("psychologistId")
-        psychologists = psychologists.map( psy => psy.psychologistId)
+      // Filter out appointments where psychologistId is null
+      psychologists = psychologists
+        .filter((psy) => psy.psychologistId)
+        .map((psy) => psy.psychologistId);
 
-        return res.json(psychologists);
-        
-      } 
-      else if (role === "psychologist")
-      {
+      return res.json(psychologists);
+    } 
+    
+    else if (role === "psychologist") {
+      let users = await Appointment
+        .find({ psychologistId: _id })
+        .populate({
+          path: "userId",
+          select: "_id firstName lastName username avatar",
+        })
+        .select("userId");
 
-        let users =  await Appointment
-        .find({psychologistId : _id})
-        .populate({ path : 'userId' , select : "_id firstName lastName username avatar" })
-        .select("userId")
-        users = users.map( user => user.userId)
+      // Filter out appointments where userId is null
+      users = users
+        .filter((user) => user.userId)
+        .map((user) => user.userId);
 
-        return res.json(users);
-      } 
-      else
-      {
-        return res.status(400).json({ error: "Invalid user role" });
-      }
-    } catch (err) {
-      next(err);
+      return res.json(users);
+    } 
+    
+    else {
+      return res.status(400).json({ error: "Invalid user role" });
     }
+  } catch (err) {
+    next(err);
   }
+}
+
 
   async getMessages(req, res, next) {
     try {

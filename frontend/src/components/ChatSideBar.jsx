@@ -25,7 +25,7 @@ function ChatSidebar({ user }) {
   const [logout] = useLazyLogoutQuery();
   const navigate = useNavigate();
   const {onlineUsers} = useSocket()
-  const currentUserId = user._id;
+  const currentUserId = user?._id;
 
   const {user: authUser, isAuthenticated} = useSelector(state => state.auth);
   const { psychologist } = useSelector(state => state.psychologistAuth);
@@ -37,6 +37,8 @@ function ChatSidebar({ user }) {
   const selectedUser = useSelector((state) => state.chat.selectedUser);
 
   const { data: users = [], isLoading, isError } = useGetUsersQuery();
+  console.log("Users in ChatSidebar:", users);
+  
 
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
 
@@ -54,79 +56,96 @@ function ChatSidebar({ user }) {
     dispatch(setSelectedUser(selectedUser));
   };
 
-  const renderUserList = () => (
-    <>
-      {
-        users?.length === 0 && <p className="mt-10">No one to chat to {':('}</p>
-      }
-      <List>
-        {users.map((user) => (
-          <ListItem key={user._id} disablePadding>
-            <ListItemButton
-              selected={selectedUser?._id === user._id}
-              onClick={() => handleSelectUser(user)}
-              sx={{
-                color: theme.palette.primary.main,
-                borderRadius: "8px",
-                marginBottom: "8px",
-                borderBottom: `1px solid ${theme.palette.grey.chatgrey}`,
-                "&.Mui-selected": {
-                  backgroundColor: theme.palette.primary.light,
-                  color: theme.palette.primary.main,
-                },
-                "&:hover": {
-                  backgroundColor: theme.palette.primary.light,
-                },
-              }}
-            >
-              <ListItemAvatar sx={{ position: "relative" }}>
-                <img
-                  src={user.avatar}
-                  alt={user.username}
-                  style={{
-                    width: "40px",
-                    height: "40px",
-                    borderRadius: "50%",
-                  }}
-                />
-                <Box
-                  sx={{
-                    position: "absolute",
-                    bottom: 0,
-                    right: 0,
-                    width: 12,
-                    height: 12,
-                    borderRadius: "50%",
-                    backgroundColor: onlineUsers?.some((onlineUser) => onlineUser.userId == user._id)
-                      ? "primary.main"
-                      : theme.palette.grey[400],
-                    border: "2px solid white",
-                  }}
-                />
-              </ListItemAvatar>
+ const renderUserList = () => {
+  if (!users || users.length === 0) {
+    return (
+      <Typography variant="h5" sx={{ mt: 10, fontSize: "1rem" }} textAlign="center">
+        No one to chat to 😔
+      </Typography>
+    );
+  }
 
-              <ListItemText
-                primary={
-                  <Typography fontWeight={600}>{user.username}</Typography>
+  return (
+    <List>
+      {users.map((user) => (
+        <ListItem key={user?._id} disablePadding>
+          <ListItemButton
+            selected={selectedUser?._id === user?._id}
+            onClick={() => handleSelectUser(user)}
+            sx={{
+              color: theme.palette.primary.main,
+              borderRadius: "8px",
+              marginBottom: "8px",
+              borderBottom: `1px solid ${theme.palette.grey.chatgrey}`,
+              "&.Mui-selected": {
+                backgroundColor: theme.palette.primary.light,
+                color: theme.palette.primary.main,
+              },
+              "&:hover": {
+                backgroundColor: theme.palette.primary.light,
+              },
+            }}
+          >
+            <ListItemAvatar sx={{ position: "relative" }}>
+              <img
+                src={
+                  user.avatar ||
+                  "https://cdn-icons-png.flaticon.com/512/149/149071.png"
                 }
-                secondary={
-                  <Typography
-                    sx={{
-                      color: onlineUsers?.some((onlineUser) => onlineUser.userId == user._id)
-                        ? "primary.main"
-                        : theme.palette.grey[500],
-                    }}
-                  >
-                    {onlineUsers?.some( onlineUser => onlineUser.userId == user._id ) ? "Online" : "Offline"}
-                  </Typography>
-                }
+                alt={user.username}
+                style={{
+                  width: "40px",
+                  height: "40px",
+                  borderRadius: "50%",
+                }}
               />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-    </>
+              <Box
+                sx={{
+                  position: "absolute",
+                  bottom: 0,
+                  right: 0,
+                  width: 12,
+                  height: 12,
+                  borderRadius: "50%",
+                  backgroundColor: onlineUsers?.some(
+                    (onlineUser) => onlineUser.userId == user?._id
+                  )
+                    ? "primary.main"
+                    : theme.palette.grey[400],
+                  border: "2px solid white",
+                }}
+              />
+            </ListItemAvatar>
+
+            <ListItemText
+              primary={
+                <Typography fontWeight={600}>{user.username}</Typography>
+              }
+              secondary={
+                <Typography
+                  sx={{
+                    color: onlineUsers?.some(
+                      (onlineUser) => onlineUser.userId == user?._id
+                    )
+                      ? "primary.main"
+                      : theme.palette.grey[500],
+                  }}
+                >
+                  {onlineUsers?.some(
+                    (onlineUser) => onlineUser.userId == user?._id
+                  )
+                    ? "Online"
+                    : "Offline"}
+                </Typography>
+              }
+            />
+          </ListItemButton>
+        </ListItem>
+      ))}
+    </List>
   );
+};
+
 
   const accountAndLogoutButtons = (
     <Box
