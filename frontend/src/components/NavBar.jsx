@@ -23,6 +23,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { clearUserInfo } from "../redux/features/authSlice";
 import { clearPsychologistInfo } from "../redux/features/psychologistAuthSlice";
+import { persistor } from "../redux/store";
 
 function NavBar() {
 
@@ -60,8 +61,10 @@ function NavBar() {
     const res = await logout().unwrap();
     if (user){
       dispatch(clearUserInfo());
+       persistor.purge(); 
     } else if (psychologist){
       dispatch(clearPsychologistInfo());
+       persistor.purge(); 
     }
     console.log("logout", res);
     navigate(0);

@@ -39,6 +39,8 @@ import PsychologistDetail from "./pages/admin/PsychologistDetail";
 import AdminDashboardMain from "./pages/admin/AdminDashboardMain";
 import UserOption from "./pages/admin/UserOption";
 import UserDetail from "./pages/admin/UserDetail";
+import PaymentSuccess from "./components/PaymentSuccess";
+import PaymentCancel from "./components/PaymentCancel";
 
 function App() {
   const router = createBrowserRouter(
@@ -57,6 +59,8 @@ function App() {
         <Route path="/loginAdmin" element={<LoginSignupAdmin />} />
         <Route path="/forgotPassword" element={<ForgotPassword />} />
         <Route path="/resetPassword" element={<ResetPassword />} />
+        <Route path="/payment-success" element={<PaymentSuccess />} />
+        <Route path="/payment-cancelled" element={<PaymentCancel />} />
         <Route path="/dashboard" element={<DashboardLayout />}>
             <Route index element={<UserDashboardMain/>} />
             <Route path="psychologist/profile/:id" element={<ClinicianProfile/>} />

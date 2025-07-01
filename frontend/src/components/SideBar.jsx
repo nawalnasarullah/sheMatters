@@ -19,6 +19,7 @@ import { clearAdminInfo } from "../redux/features/adminSlice";
 import { clearUserInfo } from "../redux/features/authSlice";
 import { useSelector, useDispatch } from "react-redux";
 import theme from "./Theme";
+import { persistor } from "../redux/store";
 
 function SideBar({ menuItemsSidebar, adminId }) {
   const dispatch = useDispatch();
@@ -42,8 +43,14 @@ function SideBar({ menuItemsSidebar, adminId }) {
 
   const handleLogout = async () => {
     await logout().unwrap();
-    if (adminId) dispatch(clearAdminInfo());
-    else dispatch(clearUserInfo());
+    if (adminId)
+      { 
+        dispatch(clearAdminInfo())
+         persistor.purge(); 
+      }
+    else {
+      dispatch(clearUserInfo())
+      persistor.purge();}
     navigate("/");
   };
 

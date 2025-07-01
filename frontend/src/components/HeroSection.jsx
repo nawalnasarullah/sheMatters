@@ -33,7 +33,8 @@ if (isUserAuthenticated) {
   const firstName = currentUser?.firstName || "";
   const lastName = currentUser?.lastName || "";
   const role = currentUser?.role || "";
-
+  console.log("Current User =====>:", currentUser);
+  
   const getGreeting = () => {
     switch (role) {
       case "admin":

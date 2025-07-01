@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useGetPsychologistByIdQuery } from "../../redux/api/psychologistApi";
-import { useBookAppointmentMutation } from "../../redux/api/appointmentApi";
+import { useBookAppointmentMutation, useCreateCheckoutSessionMutation } from "../../redux/api/appointmentApi";
 import {
   Typography,
   Card,
@@ -31,6 +31,8 @@ export default function PsychologistProfile() {
   const [selectedDate, setSelectedDate] = useState("");
 
   const [bookAppointment, { isLoading: isBooking }] = useBookAppointmentMutation();
+  const [createCheckoutSession, { isLoading: isPaying }] = useCreateCheckoutSessionMutation();
+
 
   useEffect(() => {
     if (isError) {
@@ -39,26 +41,31 @@ export default function PsychologistProfile() {
     }
   }, [isError, navigate]);
 
-  const handleBookAppointment = async () => {
-    if (!slotTime || !selectedDate) {
-      toast.warning("Please select a slot before booking.");
-      return;
-    }
+ const handleBookAppointment = async () => {
+  if (!slotTime || !selectedDate) {
+    toast.warning("Please select a slot before booking.");
+    return;
+  }
 
-    try {
-      await bookAppointment({
-        psychologistId: id,
-        userId: user?.user?._id,
-        slotDate: selectedDate,
-        slotTime,
-      }).unwrap();
-      toast.success("Appointment booked successfully!", {
-          progressClassName: "toast-progress-success"
-        });
-    } catch (error) {
-      toast.error(error?.data?.message || "Failed to book appointment.");
+  try {
+    const response = await createCheckoutSession({
+      psychologistId: id,
+      userId: user?.user?._id,
+      slotDate: selectedDate,
+      slotTime,
+    }).unwrap();
+
+    if (response?.url) {
+      window.location.href = response.url; // Redirect to Stripe Checkout
+    } else {
+      toast.error("Unable to redirect to payment.");
     }
-  };
+  } catch (error) {
+    console.error(error);
+    toast.error("Failed to initiate payment.");
+  }
+};
+
 
   if (isLoading) {
     return (

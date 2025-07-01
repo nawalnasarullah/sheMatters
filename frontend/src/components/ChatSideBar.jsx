@@ -20,6 +20,7 @@ import theme from "./Theme";
 import { useSocket } from "../context/SocketContext";
 import { clearUserInfo } from "../redux/features/authSlice";
 import { clearPsychologistInfo } from "../redux/features/psychologistAuthSlice";
+import { persistor } from "../redux/store";
 
 function ChatSidebar({ user }) {
   const [logout] = useLazyLogoutQuery();
@@ -46,8 +47,10 @@ function ChatSidebar({ user }) {
     await logout().unwrap();
     if (isPsychologist) {
       dispatch(clearPsychologistInfo());
+      persistor.purge(); // Clear persisted state for psychologist
     } else if (isUser) {
       dispatch(clearUserInfo());
+      persistor.purge(); // Clear persisted state for user
     }
     navigate(0);
   };

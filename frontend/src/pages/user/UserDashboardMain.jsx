@@ -4,8 +4,10 @@ import PsychologistRecommendations from "./PsychologistRecommendations";
 import AppointmentReminder from "../../components/AppointmentReminder";
 import { useSelector } from "react-redux";
 import { isProfileComplete, isQuestionnaireComplete } from "../../utils/utils";
-
+import { useGetMeQuery } from "../../redux/api/authApi";
 export default function UserDashboardMain() {
+  const { data, isLoading } = useGetMeQuery();  // if you dont wanna persist  add this  
+
   const { user, isAuthenticated } = useSelector((state) => state.auth);
   
   if (!isAuthenticated) return null;

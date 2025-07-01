@@ -24,6 +24,9 @@ function AppointmentReminder({ userId }) {
   const { data, error, isLoading, refetch } =
     useGetUpcomingAppointmentsByIdQuery(userId);
 
+    console.log("User ID:", userId, "Data:", data);
+    
+
   console.log("Upcoming Appointments Data:", data?.appointments);
 
   const [deleteAppointmentById] = useDeleteAppointmentByIdMutation();

@@ -14,6 +14,8 @@ function ProfileNav() {
  
 
   const User = user?.user;
+  console.log("User", User);
+  
   const Admin = admin?.admin;
  
   const isLoggedIn = !!User || !!Admin;

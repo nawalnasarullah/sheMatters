@@ -23,6 +23,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import theme from "../../components/Theme.jsx";
+import { persistor } from "../../redux/store.js";
 
 function SideBar() {
 
@@ -56,6 +57,7 @@ function SideBar() {
   const handleLogout = async () => {
     const res = await logout().unwrap();
     dispatch(clearPsychologistInfo());
+     persistor.purge(); 
     console.log("logout", res);
     navigate(0);
   };
