@@ -97,6 +97,7 @@ function LoginSignup() {
       }
 
       onSignUpReset();
+      navigate(0);
     },
   });
 

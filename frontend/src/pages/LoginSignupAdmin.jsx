@@ -100,6 +100,7 @@ function LoginSignupAdmin() {
       }
 
       onSignUpReset();
+      navigate(0);
     },
   });
 
