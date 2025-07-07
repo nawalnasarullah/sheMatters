@@ -22,6 +22,8 @@ export const SocketContextProvider = (props) => {
   const [localVideo, setLocalVideo] = useState(null);
   const [remoteVideo, setRemoteVideo] = useState(null);
   const [isCallEnded, setIsCallEnded] = useState(false);
+  const [callStartTime, setCallStartTime] = useState(null); // ✅ Added
+
 
   const currentSocketUser = onlineUsers?.find(
     (onlineUser) => onlineUser.userId === user?._id
@@ -53,6 +55,7 @@ export const SocketContextProvider = (props) => {
           call.on("stream", (remoteStream) => {
             console.log("recieveing a remote stream : ", remoteStream);
             setRemoteVideo(remoteStream);
+            setCallStartTime(new Date()); // ✅ Added
             setOngoingCall((ongoing) => {
               return { ...ongoing, isRinging: false, accepted: true };
             });
@@ -92,6 +95,7 @@ export const SocketContextProvider = (props) => {
         setLocalVideo(mediaStream);
         call.answer(mediaStream);
         call.on("stream", function (remoteStream) {
+          setCallStartTime(new Date()); // ✅ Added
           console.log("Recieving remote stream : ", remoteStream);
           setOngoingCall((ongoing) => {
             return { ...ongoing, isRinging: false, accepted: true };
@@ -102,42 +106,70 @@ export const SocketContextProvider = (props) => {
     );
   }, [ongoingCall]);
 
-  const handleHangup = () => {
-    if (!ongoingCall?.call) return;
+ const handleHangup = () => {
+  if (!ongoingCall?.call) return;
 
-    // End local peer connection
-    ongoingCall.call.close();
+  // End local peer connection
+  ongoingCall.call.close();
 
-    //  Emit 'hangup' to other user
-    if (socket) {
-      const otherUser = onlineUsers?.find(
-        (u) =>
-          u.peerId === ongoingCall?.callerPeerId ||
-          u.peerId === ongoingCall?.call?.peer
-      );
+  // ✅ Save call record before cleanup
+  const now = new Date();
+  const duration = callStartTime
+    ? Math.floor((now - new Date(callStartTime)) / 1000)
+    : 0;
 
-      if (otherUser?.socketId) {
-        socket.emit("hangup", {
-          senderId: user._id,
-          receiverSocketId: otherUser.socketId, // ✅ more reliable
-        });
-      }
+  if (socket && ongoingCall) {
+    const otherUser = onlineUsers?.find(
+      (u) =>
+        u.peerId === ongoingCall?.callerPeerId ||
+        u.peerId === ongoingCall?.call?.peer
+    );
+
+    socket.emit("save-call-record", {
+      callerId: user._id,
+      callerModel: user.role,
+      receiverId: otherUser?.userId,
+      receiverModel: user.role === "user" ? "psychologist" : "user",
+      callType: ongoingCall?.call?.metadata?.callType || "video",
+      startedAt: callStartTime?.toISOString(),
+      endedAt: now.toISOString(),
+      duration,
+    });
+  }
+
+  setCallStartTime(null); // ✅ Reset start time
+
+  // Emit 'hangup' to other user
+  if (socket) {
+    const otherUser = onlineUsers?.find(
+      (u) =>
+        u.peerId === ongoingCall?.callerPeerId ||
+        u.peerId === ongoingCall?.call?.peer
+    );
+
+    if (otherUser?.socketId) {
+      socket.emit("hangup", {
+        senderId: user._id,
+        receiverSocketId: otherUser.socketId,
+      });
     }
+  }
 
-    //  Stop and cleanup media tracks
-    if (localVideo) {
-      localVideo.getTracks().forEach((track) => track.stop());
-      setLocalVideo(null);
-    }
+  // Stop and cleanup media tracks
+  if (localVideo) {
+    localVideo.getTracks().forEach((track) => track.stop());
+    setLocalVideo(null);
+  }
 
-    if (remoteVideo) {
-      remoteVideo.getTracks().forEach((track) => track.stop());
-      setRemoteVideo(null);
-    }
+  if (remoteVideo) {
+    remoteVideo.getTracks().forEach((track) => track.stop());
+    setRemoteVideo(null);
+  }
 
-    setOngoingCall(null);
-    setIsCallEnded(true);
-  };
+  setOngoingCall(null);
+  setIsCallEnded(true);
+};
+
 
   // initialize socket
   useEffect(() => {

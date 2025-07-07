@@ -25,7 +25,7 @@ export default function CallTimer({ isCallActive }) {
 
   return (
         isCallActive && (
-            <Typography sx= {{ color : "primary.main" , textAlign : 'center' , fontWeight : 'bold' }}>
+            <Typography sx= {{ color : "primary.main" , textAlign : 'center' , fontWeight : 'bold',    mt: { xs: 26, sm: 0 },  }}>
                  Call Duration <br />
               {formatTime(secondsElapsed)}
             </Typography>

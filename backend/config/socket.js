@@ -2,7 +2,7 @@ import { Server } from "socket.io";
 import http from "http";
 import express from "express";
 import { ExpressPeerServer } from "peer";
-
+import { CallRecord } from "../models/callRecord.model.js";
 const app = express();
 const server = http.createServer(app);
 
@@ -119,6 +119,26 @@ const initSocket = () => {
       }
       socket.emit("getUsers", onlineUsers);
     });
+
+    socket.on("save-call-record", async (data) => {
+  try {
+    const newCall = new CallRecord({
+      callerId: data.callerId,
+      callerModel: data.callerModel,
+      receiverId: data.receiverId,
+      receiverModel: data.receiverModel,
+      callType: data.callType,
+      startedAt: data.startedAt,
+      endedAt: data.endedAt,
+      duration: data.duration,
+    });
+
+    await newCall.save();
+    console.log("✅ Call record saved in MongoDB");
+  } catch (error) {
+    console.error("❌ Failed to save call record:", error.message);
+  }
+});
 
     socket.on("call", onCall);
     socket.on("webrtcSignal", onWebrtcSignal);
