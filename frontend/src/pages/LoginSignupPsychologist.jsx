@@ -101,7 +101,9 @@ function LoginSignupPsychologist() {
     }
 
     onSignUpReset();
-    navigate(0);
+    setTimeout(() => {
+        navigate(0);
+      }, 5000);
   } catch (error) {
     toast.error(
       error?.data?.message?.[0] ||

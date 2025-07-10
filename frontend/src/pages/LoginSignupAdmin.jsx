@@ -100,7 +100,9 @@ function LoginSignupAdmin() {
       }
 
       onSignUpReset();
-      navigate(0);
+      setTimeout(() => {
+        navigate(0);
+      }, 5000);
     },
   });
 
