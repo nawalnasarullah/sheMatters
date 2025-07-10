@@ -9,61 +9,71 @@ import {
   Button,
   ListItemButton,
   ListItemAvatar,
+  CircularProgress,
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import { useGetUsersQuery } from "../redux/api/chatApi";
 import { useDispatch, useSelector } from "react-redux";
 import { setSelectedUser } from "../redux/features/chatSlice";
 import { useLazyLogoutQuery } from "../redux/api/authApi";
-import {
-  onOnlineUsersUpdate,
-  connectSocket,
-  disconnectSocket,
-} from "../utils/socket";
 import theme from "./Theme";
+import { useSocket } from "../context/SocketContext";
+import { clearUserInfo } from "../redux/features/authSlice";
+import { clearPsychologistInfo } from "../redux/features/psychologistAuthSlice";
+import { persistor } from "../redux/store";
 
 function ChatSidebar({ user }) {
   const [logout] = useLazyLogoutQuery();
   const navigate = useNavigate();
+  const {onlineUsers} = useSocket()
+  const currentUserId = user?._id;
 
-  const currentUserId = user._id;
+  const {user: authUser, isAuthenticated} = useSelector(state => state.auth);
+  const { psychologist } = useSelector(state => state.psychologistAuth);
 
-
-  const [onlineUsers, setOnlineUsers] = useState([]);
-  useEffect(() => {
-    connectSocket(user._id);
-
-    onOnlineUsersUpdate((users) => {
-      console.log("Online users:", users);
-      setOnlineUsers(users);
-    });
-    return () => {
-      disconnectSocket();
-    };
-  }, [currentUserId]);
+  const isPsychologist = Boolean(psychologist);
+  const isUser = Boolean(authUser);
 
   const dispatch = useDispatch();
   const selectedUser = useSelector((state) => state.chat.selectedUser);
 
   const { data: users = [], isLoading, isError } = useGetUsersQuery();
+  console.log("Users in ChatSidebar:", users);
+  
 
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
 
   const handleLogout = async () => {
     await logout().unwrap();
+    if (isPsychologist) {
+      dispatch(clearPsychologistInfo());
+      persistor.purge(); // Clear persisted state for psychologist
+    } else if (isUser) {
+      dispatch(clearUserInfo());
+      persistor.purge(); // Clear persisted state for user
+    }
     navigate(0);
   };
 
-  const handleSelectUser = (user) => {
-    dispatch(setSelectedUser(user));
+  const handleSelectUser = (selectedUser) => {
+    dispatch(setSelectedUser(selectedUser));
   };
 
-  const renderUserList = () => (
+ const renderUserList = () => {
+  if (!users || users.length === 0) {
+    return (
+      <Typography variant="h5" sx={{ mt: 10, fontSize: "1rem" }} textAlign="center">
+        No one to chat to 😔
+      </Typography>
+    );
+  }
+
+  return (
     <List>
       {users.map((user) => (
-        <ListItem key={user._id} disablePadding>
+        <ListItem key={user?._id} disablePadding>
           <ListItemButton
-            selected={selectedUser?._id === user._id}
+            selected={selectedUser?._id === user?._id}
             onClick={() => handleSelectUser(user)}
             sx={{
               color: theme.palette.primary.main,
@@ -81,7 +91,10 @@ function ChatSidebar({ user }) {
           >
             <ListItemAvatar sx={{ position: "relative" }}>
               <img
-                src={user.avatar}
+                src={
+                  user.avatar ||
+                  "https://cdn-icons-png.flaticon.com/512/149/149071.png"
+                }
                 alt={user.username}
                 style={{
                   width: "40px",
@@ -97,7 +110,9 @@ function ChatSidebar({ user }) {
                   width: 12,
                   height: 12,
                   borderRadius: "50%",
-                  backgroundColor: onlineUsers.includes(user._id)
+                  backgroundColor: onlineUsers?.some(
+                    (onlineUser) => onlineUser.userId == user?._id
+                  )
                     ? "primary.main"
                     : theme.palette.grey[400],
                   border: "2px solid white",
@@ -112,12 +127,18 @@ function ChatSidebar({ user }) {
               secondary={
                 <Typography
                   sx={{
-                    color: onlineUsers.includes(user._id)
+                    color: onlineUsers?.some(
+                      (onlineUser) => onlineUser.userId == user?._id
+                    )
                       ? "primary.main"
                       : theme.palette.grey[500],
                   }}
                 >
-                  {onlineUsers.includes(user._id) ? "Online" : "Offline"}
+                  {onlineUsers?.some(
+                    (onlineUser) => onlineUser.userId == user?._id
+                  )
+                    ? "Online"
+                    : "Offline"}
                 </Typography>
               }
             />
@@ -126,6 +147,8 @@ function ChatSidebar({ user }) {
       ))}
     </List>
   );
+};
+
 
   const accountAndLogoutButtons = (
     <Box
@@ -156,7 +179,7 @@ function ChatSidebar({ user }) {
     </Box>
   );
 
-  if (isLoading) return <Typography sx={{ p: 2 }}>Loading...</Typography>;
+  if (isLoading) return <CircularProgress variant="soft" className="mx-auto mt-10" />;
   if (isError)
     return <Typography sx={{ p: 2 }}>Error loading users.</Typography>;
 

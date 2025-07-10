@@ -1,134 +1,221 @@
-import nodemailer from "nodemailer";
 import cron from "node-cron";
+import nodemailer from "nodemailer";
 import { Appointment } from "../models/appointment.model.js";
-import { User } from "../models/user.model.js";
+import { parseTime12Hour } from "./helperFunctions.js";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  service: "Gmail",
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
 });
 
-const sendEmailReminder = async (appointment) => {
+const sendMail = async ({ to, subject, html }) => {
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to,
+    subject,
+    html,
+  };
+
   try {
-    const user = await User.findById(appointment.userId);
-    if (!user || !user.email) {
-      console.log(
-        `User not found or email missing for appointment ${appointment._id}`
-      );
-      return;
-    }
-
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: user.email,
-      subject: "Appointment Reminder",
-      html: `
-    <!DOCTYPE html>
-    <html lang="en">
-      <head>
-        <meta charset="UTF-8" />
-        <style>
-          body {
-            font-family: 'Signika', 'sans-serif';
-            background-color: #f8f8f8;
-            margin: 0;
-            padding: 0;
-            color: #000000;
-          }
-          .container {
-            max-width: 600px;
-            margin: auto;
-            background-color: #ffffff;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
-          }
-          .header {
-            background-color: #005c65;
-            color: #ffffff;
-            padding: 20px;
-            text-align: center;
-          }
-          .content {
-            padding: 30px 20px;
-            font-size: 14px;
-            line-height: 1.6;
-          }
-          .highlight {
-            color: #005c65;
-            font-weight: bold;
-          }
-          .footer {
-            background-color: #FCEAEA;
-            color: #aaa;
-            text-align: center;
-            padding: 10px;
-            font-size: 12px;
-          }
-        </style>
-      </head>
-      <body>
-        <div class="container">
-          <div class="header">
-            <h2>Appointment Reminder</h2>
-          </div>
-          <div class="content">
-            <p>Hello <span class="highlight">${user.firstName}</span>,</p>
-            <p>
-              This is a friendly reminder that you have an appointment scheduled on 
-              <span class="highlight">${appointment.slotDate}</span> at 
-              <span class="highlight">${appointment.slotTime}</span>.
-            </p>
-            <p>Please make sure to be on time.</p>
-            <p>Best regards,<br>Your Appointment Team</p>
-          </div>
-          <div class="footer">
-            This is an automated message. Please do not reply to this email.
-          </div>
-        </div>
-      </body>
-    </html>
-  `,
-    };
-
-    // Send email
     await transporter.sendMail(mailOptions);
-    console.log(`Email reminder sent to ${user.email}`);
-  } catch (error) {
-    console.error("Error sending email reminder:", error);
+    console.log(`Email sent to ${to}: ${subject}`);
+  } catch (err) {
+    console.error("Error sending email:", err);
   }
 };
 
-// Cron Job to check upcoming appointments every minute
-cron.schedule("* * * * *", async () => {
-  try {
-    console.log("Checking for upcoming appointments...");
 
-    const now = new Date();
-    const today = now.toISOString().split("T")[0]; 
-
-   
-    const upcomingAppointments = await Appointment.find({
-      slotDate: { $gte: today }, 
-      cancelled: false, 
-      isCompleted: false, 
-    });
-
-    for (const appointment of upcomingAppointments) {
-      const appointmentTime = new Date(
-        `${appointment.slotDate} ${appointment.slotTime}`
-      );
-      const timeDiff = appointmentTime - now;
-
-      if (timeDiff > 0 && timeDiff <= 10 * 60 * 1000) {
-
-        await sendEmailReminder(appointment);
-      }
+const generateEmailHtml = ({ title, greeting, body }) => `
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      font-family: 'Signika', sans-serif;
+      background-color: #f8f8f8;
+      margin: 0;
+      padding: 0;
+      color: #000;
     }
-  } catch (error) {
-    console.error("Error checking appointments:", error);
+    .container {
+      max-width: 600px;
+      background-color: white;
+      margin: 30px auto;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    .header {
+      background-color: #005c65;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    .content {
+      padding: 20px;
+      color: #333;
+      line-height: 1.6;
+    }
+    .footer {
+      padding: 10px;
+      font-size: 12px;
+      text-align: center;
+      color: #aaa;
+      background-color: #f9f9f9;
+    }
+    .highlight {
+      color: #005c65;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h2>${title}</h2>
+    </div>
+    <div class="content">
+      <p>${greeting}</p>
+      <p>${body}</p>
+      <p>Best regards,<br/><span class="highlight">SheMatters Team</span></p>
+    </div>
+    <div class="footer">
+      This is an automated message. Please do not reply.
+    </div>
+  </div>
+</body>
+</html>
+`;
+
+export const sendBookingConfirmation = async (appointment) => {
+  const { userData, psychologistData, slotDate, slotTime } = appointment;
+
+  const html = generateEmailHtml({
+    title: "Appointment Booked",
+    greeting: `Hello ${userData.firstName || "there"},`,
+    body: `Your appointment with <strong>${psychologistData.firstName}</strong> is confirmed for 
+           <strong>${slotDate}</strong> at <strong>${slotTime}</strong>. We're excited to see you!`,
+  });
+
+  await sendMail({
+    to: userData.email,
+    subject: "Appointment Booked",
+    html,
+  });
+
+  const psychologistHtml = generateEmailHtml({
+    title: "New Appointment Scheduled",
+    greeting: `Hello ${psychologistData.firstName || "there"},`,
+    body: `You have a new appointment with <strong>${userData.firstName}</strong> scheduled for 
+           <strong>${slotDate}</strong> at <strong>${slotTime}</strong>. Please be prepared.`,
+  });
+
+  await sendMail({
+    to: psychologistData.email,
+    subject: "New Appointment Scheduled",
+    html: psychologistHtml,
+  });
+};
+
+export const sendCancellationConfirmation = async (appointment) => {
+  const { userData, psychologistData, slotDate, slotTime } = appointment;
+
+  // Email to user
+  const userHtml = generateEmailHtml({
+    title: "Appointment Cancelled",
+    greeting: `Hello ${userData.firstName || "there"},`,
+    body: `Your appointment with <strong>${psychologistData.firstName}</strong> scheduled for 
+           <strong>${slotDate}</strong> at <strong>${slotTime}</strong> has been cancelled. 
+           You can reschedule anytime on our website.`,
+  });
+
+  await sendMail({
+    to: userData.email,
+    subject: "Appointment Cancelled",
+    html: userHtml,
+  });
+
+  // Email to psychologist
+  const psychologistHtml = generateEmailHtml({
+    title: "Appointment Cancelled",
+    greeting: `Hello ${psychologistData.firstName || "there"},`,
+    body: `The appointment with <strong>${userData.firstName}</strong> scheduled for 
+           <strong>${slotDate}</strong> at <strong>${slotTime}</strong> has been cancelled.`,
+  });
+
+  await sendMail({
+    to: psychologistData.email,
+    subject: "Appointment Cancelled",
+    html: psychologistHtml,
+  });
+};
+
+
+const checkAppointments = async () => {
+  const now = new Date();
+  const appointments = await Appointment.find({
+    isCompleted: false,
+    status: "booked",
+  });
+
+  for (const appointment of appointments) {
+    const { hours, minutes } = parseTime12Hour(appointment.slotTime);
+    const appointmentTime = new Date(appointment.slotDate);
+    appointmentTime.setHours(hours, minutes, 0, 0);
+
+    const diffMinutes = Math.floor((appointmentTime - now) / (1000 * 60));
+
+
+    if (diffMinutes === 10 && !appointment.reminderSent) {
+      const html = generateEmailHtml({
+        title: "Appointment Reminder",
+        greeting: `Hi ${appointment.userData.firstName || "there"},`,
+        body: `This is a friendly reminder that your appointment is in <strong>10 minutes</strong> at 
+               <strong>${appointment.slotTime}</strong> on <strong>${appointment.slotDate}</strong>.`,
+      });
+
+      await sendMail({
+        to: appointment.userData.email,
+        subject: "Appointment Reminder",
+        html,
+      });
+
+      appointment.reminderSent = true;
+      await appointment.save();
+    }
+
+    if (
+      now > appointmentTime &&
+      !appointment.isCompleted &&
+      !appointment.isMissed
+    ) {
+      appointment.status = "missed";
+      appointment.isMissed = true;
+      await appointment.save();
+
+      const html = generateEmailHtml({
+        title: "Missed Appointment",
+        greeting: `Hello ${appointment.userData.firstName || "there"},`,
+        body: `It looks like you missed your appointment on <strong>${appointment.slotDate}</strong> 
+               at <strong>${appointment.slotTime}</strong>. You can reschedule it on our website.`,
+      });
+
+      await sendMail({
+        to: appointment.userData.email,
+        subject: "Missed Appointment",
+        html,
+      });
+    }
   }
+};
+
+cron.schedule("* * * * *", async () => {
+  await checkAppointments();
+  // console.log("Checked appointment reminders & missed status...");
 });

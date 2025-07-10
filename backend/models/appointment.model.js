@@ -3,12 +3,12 @@ import mongoose from "mongoose";
 const appointmentSchema = mongoose.Schema({
   psychologistId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Psychologist",
+    ref: "psychologist",
     required: true,
   },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+    ref: "user",
     required: true,
   },
   slotTime: {
@@ -21,7 +21,7 @@ const appointmentSchema = mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ["booked", "available"], 
+    enum: ["booked", "available", "missed", "cancelled", "completed"], 
     default: "available" 
   },
   date : {
@@ -50,12 +50,6 @@ const appointmentSchema = mongoose.Schema({
   }
 });
 
-appointmentSchema.pre('save', function(next) {
-  const durationInHours = (this.endTime - this.startTime) / (1000 * 60 * 60);
-  if (durationInHours > 2) {
-    next(new Error('Appointment duration cannot exceed 2 hours'));
-  }
-  next();
-});
+
 
 export const Appointment = mongoose.model("appointment", appointmentSchema);

@@ -97,6 +97,10 @@ function LoginSignup() {
       }
 
       onSignUpReset();
+
+      setTimeout(() => {
+        navigate(0);
+      }, 5000);
     },
   });
 
@@ -132,11 +136,10 @@ function LoginSignup() {
     }),
     onSubmit: async (values) => {
       const res = await loginUser(values).unwrap();
- 
 
       if (res && res.success) {
         dispatch(setUserInfo(res));
-        console.log('login-response', res);
+        console.log("login-response", res);
 
         toast.success(res.message, {
           progressClassName: "toast-progress-success",
@@ -363,7 +366,12 @@ function LoginSignup() {
         <div className="panel left-panel">
           <div className="content">
             <h3>New here?</h3>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+            <p>
+              <span className="text-lg">Welcome to SheMatters,</span>{" "}
+              <span className="text-lg font-medium italic">
+                Rant kro, Relax kro
+              </span>
+            </p>
             <button
               className="btn transparent"
               id="sign-up-btn"
@@ -377,7 +385,12 @@ function LoginSignup() {
         <div className="panel right-panel">
           <div className="content">
             <h3>One of us?</h3>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+            <p>
+              <span className="text-lg">Welcome to SheMatters,</span>{" "}
+              <span className="text-lg font-medium italic">
+                Rant kro, Relax kro
+              </span>
+            </p>
             <button
               className="btn transparent"
               id="sign-in-btn"

@@ -4,9 +4,12 @@ import authRoutes from "./routes/auth.routes.js";
 import userRoutes from "./routes/user.routes.js";
 import psychologistAuthRoutes from "./routes/psychologist.auth.routes.js";
 import psychologistRoutes from "./routes/psychologist.routes.js";
+import adminRoutes from "./routes/admin.routes.js";
 import appointmentRoutes from "./routes/appointment.routes.js";
 import journalRoutes from "./routes/journal.routes.js";
 import messageRoutes from "./routes/message.routes.js";
+import paymentRoutes from "./routes/payment.routes.js";
+import webhookRoutes from "./routes/webhook.routes.js";
 import cookieParser from "cookie-parser";
 import "./services/reminderNotificationService.js";
 import { connectDB } from "./config/db.js";
@@ -28,8 +31,8 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-
 app.use(cors(corsOption));
+app.use('/payment', webhookRoutes);
 
 app.use(cookieParser());
 
@@ -41,9 +44,11 @@ app.use('/', authRoutes);
 app.use('/', userRoutes);
 app.use('/', psychologistAuthRoutes);
 app.use('/', psychologistRoutes);
+app.use('/', adminRoutes);
 app.use('/', journalRoutes);
 app.use('/', appointmentRoutes);
 app.use('/messages', messageRoutes);
+app.use("/payment", paymentRoutes);
 
 // app.use('*', (req, res, next)=>{
 //     res.json({

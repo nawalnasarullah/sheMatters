@@ -23,8 +23,6 @@ function LoginSignupPsychologist() {
 
   const [loginPsychologist] = useLoginPsychologistMutation();
 
-
-
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -90,21 +88,30 @@ function LoginSignupPsychologist() {
     }),
     onSubmit: async (values) => {
       delete values.cPassword;
-      console.log("values", values);
 
-      const psychologist = await registerPsychologist(values).unwrap();
-      console.log("ggggggg", psychologist);
+  try {
+    const psychologist = await registerPsychologist(values).unwrap();
 
-      if (psychologist && psychologist.success) {
-        console.log('success', psychologist.success);
-        
-        toast.success(psychologist.message, {
-          progressClassName: "toast-progress-success",
-        });
-      } else {
-        toast.error(psychologist.message);
-      }
-      onSignUpReset();
+    if (psychologist && psychologist.success) {
+      toast.success(psychologist.message || "Registration successful", {
+        progressClassName: "toast-progress-success",
+      });
+    } else {
+      toast.error(psychologist.message?.[0] || "Something went wrong");
+    }
+
+    onSignUpReset();
+    setTimeout(() => {
+        navigate(0);
+      }, 5000);
+  } catch (error) {
+    toast.error(
+      error?.data?.message?.[0] ||
+      error?.data?.error?.message?.[0] ||
+      error?.message ||
+      "Registration failed"
+    );
+  }
     },
   });
 
@@ -141,16 +148,15 @@ function LoginSignupPsychologist() {
       cnic: Yup.string().required("CNIC is required").trim(),
     }),
     onSubmit: async (values) => {
-      try{
-
+      try {
         const res = await loginPsychologist(values).unwrap();
-  
+
         console.log("login psychologist :", res);
-  
+
         if (res && res.success) {
           dispatch(setPsychologistInfo(res));
           console.log("dispatch psychologist", res);
-  
+
           toast.success(res.message, {
             progressClassName: "toast-progress-success",
           });
@@ -158,12 +164,10 @@ function LoginSignupPsychologist() {
         } else {
           toast.error(res.message);
         }
-  
+
         onSignInReset();
-      }
-      catch(err)
-      {
-        console.error("error signing in : " , err)
+      } catch (err) {
+        console.error("error signing in : ", err);
       }
     },
   });
@@ -197,7 +201,7 @@ function LoginSignupPsychologist() {
               <input
                 className="mb-3 mt-3"
                 type="email"
-                placeholder="Email"
+                placeholder="Email *"
                 name="email" // Make sure this name matches initialValues.email
                 value={signInValues.email}
                 onChange={onSignInChange}
@@ -216,7 +220,7 @@ function LoginSignupPsychologist() {
               <input
                 className="mb-3 mt-3"
                 type="text"
-                placeholder="CNIC"
+                placeholder="CNIC *"
                 name="cnic" // Make sure this name matches initialValues.email
                 value={signInValues.cnic}
                 onChange={onSignInChange}
@@ -235,7 +239,7 @@ function LoginSignupPsychologist() {
               <input
                 className="mb-3 mt-3"
                 type="password"
-                placeholder="Password"
+                placeholder="Password *"
                 name="password" // Make sure this name matches initialValues.password
                 value={signInValues.password}
                 onChange={onSignInChange}
@@ -268,7 +272,7 @@ function LoginSignupPsychologist() {
                 <input
                   className="mb-3 mt-3"
                   type="text"
-                  placeholder="First Name"
+                  placeholder="First Name *"
                   name="firstName"
                   value={signUpValues.firstName}
                   onChange={onSignUpChange}
@@ -286,7 +290,7 @@ function LoginSignupPsychologist() {
                 <input
                   className="mb-3 mt-3"
                   type="text"
-                  placeholder="Last Name"
+                  placeholder="Last Name *"
                   name="lastName"
                   value={signUpValues.lastName}
                   onChange={onSignUpChange}
@@ -304,7 +308,7 @@ function LoginSignupPsychologist() {
               <input
                 className="mb-3 mt-3"
                 type="text"
-                placeholder="CNIC"
+                placeholder="CNIC *"
                 name="cnic" // Make sure this name matches initialValues.email
                 value={signUpValues.cnic}
                 onChange={onSignUpChange}
@@ -322,7 +326,7 @@ function LoginSignupPsychologist() {
                 <input
                   className="mb-3 mt-3"
                   type="text"
-                  placeholder="Username"
+                  placeholder="Username *"
                   name="username"
                   value={signUpValues.username}
                   onChange={onSignUpChange}
@@ -339,7 +343,7 @@ function LoginSignupPsychologist() {
                 <input
                   className="mb-3 mt-3"
                   type="text"
-                  placeholder="Phone Number"
+                  placeholder="Phone Number *"
                   name="phoneNumber"
                   value={signUpValues.phoneNumber}
                   onChange={onSignUpChange}
@@ -352,13 +356,13 @@ function LoginSignupPsychologist() {
                 </strong>
               </div>
             </div>
-             
+
             <div className="input-field mr-1">
               <i className="fas fa-envelope" />
               <input
                 className="mb-3 mt-3"
                 type="email"
-                placeholder="Email"
+                placeholder="Email *"
                 name="email"
                 value={signUpValues.email}
                 onChange={onSignUpChange}
@@ -370,15 +374,14 @@ function LoginSignupPsychologist() {
                   : null}
               </strong>
             </div>
-            
-        
+
             <div style={{ display: "flex" }}>
               <div className="input-field" style={{ marginRight: 2 }}>
                 <i className="fas fa-lock" />
                 <input
                   className="mb-3 mt-3"
                   type="password"
-                  placeholder="Password"
+                  placeholder="Password *"
                   name="password"
                   value={signUpValues.password}
                   onChange={onSignUpChange}
@@ -395,7 +398,7 @@ function LoginSignupPsychologist() {
                 <input
                   className="mb-3 mt-3"
                   type="password"
-                  placeholder="Confirm Password"
+                  placeholder="Confirm Password *"
                   name="cPassword"
                   value={signUpValues.cPassword}
                   onChange={onSignUpChange}
@@ -420,7 +423,13 @@ function LoginSignupPsychologist() {
         <div className="panel left-panel">
           <div className="content">
             <h3>New here?</h3>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+            <p>
+              <span className="text-lg">Welcome to SheMatters,</span>{" "}
+              <span className="text-lg font-medium italic">
+                Rant kro, Relax kro
+              </span>
+            </p>
+
             <button
               className="btn transparent"
               id="sign-up-btn"
@@ -434,7 +443,12 @@ function LoginSignupPsychologist() {
         <div className="panel right-panel">
           <div className="content">
             <h3>One of us?</h3>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+            <p>
+              <span className="text-lg">Welcome to SheMatters,</span>{" "}
+              <span className="text-lg font-medium italic">
+                Rant kro, Relax kro
+              </span>
+            </p>
             <button
               className="btn transparent"
               id="sign-in-btn"

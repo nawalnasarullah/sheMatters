@@ -5,7 +5,7 @@ export const psychologistApi = createApi({
   baseQuery: fetchBaseQuery({
      baseUrl: "http://localhost:8000/" 
     }),
-  tagTypes: ["Psychologist"],
+  tagTypes: ["Psychologist", "Patients"],
   endpoints: (builder) => ({
 
     // createPsychologist: builder.mutation({
@@ -52,11 +52,18 @@ export const psychologistApi = createApi({
 
     deletePsychologist: builder.mutation({
       query: (id) => ({
-        url: `/psychologist?id=${id}`,
+        url: "/psychologist/delete",
         method: "DELETE",
+        body: { id },
       }),
-      invalidatesTags: (result, error, id) => [{ type: "Psychologist", id }],
+      
     }),
+
+    getPatientsWithJournals: builder.query({
+      query: (psychologistId) => `/psychologist/patients-with-journals/${psychologistId}`,
+      providesTags: ['Patients'],
+    }),
+
   }),
 });
 
@@ -67,4 +74,5 @@ export const {
   useGetPsychologistByIdQuery,
   useUpdatePsychologistMutation,
   useDeletePsychologistMutation,
+  useGetPatientsWithJournalsQuery,
 } = psychologistApi;

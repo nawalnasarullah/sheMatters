@@ -22,10 +22,19 @@ export default function PsychologistRecommendations() {
     _id: user?.user?._id || "",
   });
 
+  console.log("Psychologist Recommendations Data:", data?.psychologists);
+
+  //  const allApproved = data?.psychologists?.every(
+  //   (psychologist) => psychologist.psychologistStatus === "approved"
+  // );
+
+  const approvedPsychologists = data?.psychologists?.filter(
+    (psychologist) => psychologist.psychologistStatus === "approved"
+  );
 
   const settings = {
     dots: false,
-    infinite: false, 
+    infinite: false,
     speed: 500,
     slidesToShow: 3,
     slidesToScroll: 1,
@@ -48,16 +57,25 @@ export default function PsychologistRecommendations() {
   if (isLoading) {
     return (
       <div className="text-center py-10">
-        <CircularProgress />
+        <CircularProgress variant="soft" />
       </div>
     );
   }
 
-  if (isError || !data?.psychologists?.length) {
+  if (isError || !data?.psychologists?.length || approvedPsychologists?.length === 0) {
     return (
-      <p className="text-center text-gray-500 font-secondaryFont">
-        No recommendations available.
-      </p>
+      <>
+        <Typography
+          variant="h5"
+          color="primary.main"
+          sx={{ fontWeight: 600, mb: 2 }}
+        >
+          Psychologist Recommendations
+        </Typography>
+        <p className="text-center text-gray-500 font-secondaryFont">
+          No recommendations available.
+        </p>
+      </>
     );
   }
 
@@ -71,13 +89,15 @@ export default function PsychologistRecommendations() {
         Psychologist Recommendations
       </Typography>
 
-      <Slider {...settings}>
-        {data.psychologists.map((psychologist) => (
-          <div key={psychologist._id}>
-            <PsychologistCard psychologist={psychologist} />
-          </div>
-        ))}
-      </Slider>
+      {approvedPsychologists?.length > 0 && (
+        <Slider {...settings}>
+          {approvedPsychologists.map((psychologist) => (
+            <div key={psychologist._id}>
+              <PsychologistCard psychologist={psychologist} />
+            </div>
+          ))}
+        </Slider>
+      )}
     </>
   );
 }

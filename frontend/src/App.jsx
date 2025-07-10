@@ -30,7 +30,17 @@ import ClinicianDashboardMain from "./pages/clinician/ClinicianDashboardMain";
 import ClinicianProfile from "./pages/clinician/ClinicianProfile";
 import UserConsultingPage from "./pages/user/UserConsultingPage";
 import ClinicianConsultingPage from "./pages/clinician/ClinicianConsultingPage";
-
+import ClinicianPatients from "./pages/clinician/ClinicianPatients";
+import PatientJournals from "./pages/clinician/PatientsJournal";
+import AdminLayout from "./pages/admin/AdminLayout";
+import SocketProvider from "./provider/SocketProvider";
+import PsychologistOption from "./pages/admin/PsychologistOption";
+import PsychologistDetail from "./pages/admin/PsychologistDetail";
+import AdminDashboardMain from "./pages/admin/AdminDashboardMain";
+import UserOption from "./pages/admin/UserOption";
+import UserDetail from "./pages/admin/UserDetail";
+import PaymentSuccess from "./components/PaymentSuccess";
+import PaymentCancel from "./components/PaymentCancel";
 
 function App() {
   const router = createBrowserRouter(
@@ -49,31 +59,43 @@ function App() {
         <Route path="/loginAdmin" element={<LoginSignupAdmin />} />
         <Route path="/forgotPassword" element={<ForgotPassword />} />
         <Route path="/resetPassword" element={<ResetPassword />} />
+        <Route path="/payment-success" element={<PaymentSuccess />} />
+        <Route path="/payment-cancelled" element={<PaymentCancel />} />
         <Route path="/dashboard" element={<DashboardLayout />}>
-          <Route index element={<UserDashboardMain/>} />
-          <Route path="psychologist/profile/:id" element={<ClinicianProfile/>} />
-          <Route path="user/questionnaire" element={<UserQuestionnaireForm />} />
-          <Route path="accountInfo" element={<AccountInformation />} />
-          <Route path="journal" element={<Journal />} />
-          <Route path="journal/all" element={<AllJournals />} />
-          <Route path="journal/:id" element={<JournalDetails />} />
-          <Route path="user/consultations" element={<UserConsultingPage />} />
+            <Route index element={<UserDashboardMain/>} />
+            <Route path="psychologist/profile/:id" element={<ClinicianProfile/>} />
+            <Route path="user/questionnaire" element={<UserQuestionnaireForm />} />
+            <Route path="accountInfo" element={<AccountInformation />} />
+            <Route path="journal" element={<Journal />} />
+            <Route path="journal/all" element={<AllJournals />} />
+            <Route path="journal/:id" element={<JournalDetails />} />
+            <Route path="user/consultations" element={<UserConsultingPage />} />
         </Route>
         <Route path="/clinician/dashboard" element={<ClinicianDashboardLayout />}>
           <Route index element={<ClinicianDashboardMain/>} />
           <Route path="accountInfo" element={<ClinicianAccountInformation />} />
           <Route path="consultations" element={<ClinicianConsultingPage />} />
+          <Route path="patients-with-journals/:psychologistId" element={<ClinicianPatients />} />
+          <Route path="patient/:patientId/journals" element={<PatientJournals />} />
         </Route>
-        
+        <Route path="/admin/dashboard" element={<AdminLayout />}>
+          <Route index element={<AdminDashboardMain/>} />
+          <Route path="psychologists" element={<PsychologistOption/>} />
+          <Route path="psychologists/:id" element={<PsychologistDetail />} />
+          <Route path="users" element={<UserOption/>} />
+          <Route path="users/:id" element={<UserDetail />} />
+        </Route>
       </Route>
     )
   );
 
   return (
     <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <RouterProvider router={router} />
-      </PersistGate>
+      <SocketProvider>
+        <PersistGate loading={null} persistor={persistor}>
+          <RouterProvider router={router} />
+        </PersistGate>
+      </SocketProvider>
     </Provider>
   );
 }

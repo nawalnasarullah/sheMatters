@@ -32,7 +32,20 @@ export const appointmentApi = createApi({
         url: `/appointment/complete/${appointmentId}`,
         method: "PATCH",
       }),
-    })
+    }),
+
+    getUpcomingAppointmentsById: builder.query({
+      query: (id) => `appointment/upcoming/${id}/`,
+    }),
+
+      createCheckoutSession: builder.mutation({
+      query: (payload) => ({
+        url: "/payment/create-checkout-session",
+        method: "POST",
+        body: payload,
+      }),
+    }),
+
   }),
 });
 
@@ -41,5 +54,7 @@ export const {
   useGetAllAppointmentsQuery,
   useGetAppointmentByIdQuery,
   useDeleteAppointmentByIdMutation,
-  useMarkAppointmentCompletedMutation
+  useMarkAppointmentCompletedMutation,
+  useGetUpcomingAppointmentsByIdQuery,
+  useCreateCheckoutSessionMutation,
 } = appointmentApi;

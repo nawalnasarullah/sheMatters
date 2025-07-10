@@ -12,18 +12,18 @@ import {
 } from "@mui/material";
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
-
 import LibraryBooksRoundedIcon from "@mui/icons-material/LibraryBooksRounded";
 import { Link, useNavigate } from "react-router-dom";
 import { useGetMeQuery, useLazyLogoutQuery } from "../redux/api/authApi";
-import { useSelector } from "react-redux";
+import { clearAdminInfo } from "../redux/features/adminSlice";
+import { clearUserInfo } from "../redux/features/authSlice";
+import { useSelector, useDispatch } from "react-redux";
 import theme from "./Theme";
+import { persistor } from "../redux/store";
 
-
-
-function SideBar({menuItemsSidebar}) {
-  const { data } = useGetMeQuery();
-  const { user, isAuthenticated } = useSelector((state) => state.auth);
+function SideBar({ menuItemsSidebar, adminId }) {
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
   const [logout] = useLazyLogoutQuery();
   const navigate = useNavigate();
 
@@ -33,15 +33,25 @@ function SideBar({menuItemsSidebar}) {
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
 
   const toggleDrawer = (open) => (event) => {
-    if (event?.type === "keydown" && (event.key === "Tab" || event.key === "Shift")) {
+    if (
+      event?.type === "keydown" &&
+      (event.key === "Tab" || event.key === "Shift")
+    )
       return;
-    }
     setDrawerOpen(open);
   };
 
   const handleLogout = async () => {
     await logout().unwrap();
-    navigate(0);
+    if (adminId)
+      { 
+        dispatch(clearAdminInfo())
+         persistor.purge(); 
+      }
+    else {
+      dispatch(clearUserInfo())
+      persistor.purge();}
+    navigate("/");
   };
 
   const handleDropdownOpen = (event) => setAnchorEl(event.currentTarget);
@@ -67,30 +77,40 @@ function SideBar({menuItemsSidebar}) {
 
   const journalingDropdown = (
     <>
-      <Button
-        onClick={handleDropdownOpen}
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "flex-start",
-          width: "100%",
-        }}
-      >
-        <LibraryBooksRoundedIcon sx={{ marginRight: "10px", marginBottom: "3px" }} />
-        Journaling
-      </Button>
-      <Menu anchorEl={anchorEl} open={isDropdownOpen} onClose={handleDropdownClose}>
-        <MenuItem component={Link} to="/dashboard/journal">
-          <Typography variant="body2" fontWeight={600}>
-            Create Journal
-          </Typography>
-        </MenuItem>
-        <MenuItem component={Link} to="/dashboard/journal/all">
-          <Typography variant="body2" fontWeight={600}>
-            All Journals
-          </Typography>
-        </MenuItem>
-      </Menu>
+      {!adminId && (
+        <>
+          <Button
+            onClick={handleDropdownOpen}
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "flex-start",
+              width: "100%",
+            }}
+          >
+            <LibraryBooksRoundedIcon
+              sx={{ marginRight: "10px", marginBottom: "3px" }}
+            />
+            Journaling
+          </Button>
+          <Menu
+            anchorEl={anchorEl}
+            open={isDropdownOpen}
+            onClose={handleDropdownClose}
+          >
+            <MenuItem component={Link} to="/dashboard/journal">
+              <Typography variant="body2" fontWeight={600}>
+                Create Journal
+              </Typography>
+            </MenuItem>
+            <MenuItem component={Link} to="/dashboard/journal/all">
+              <Typography variant="body2" fontWeight={600}>
+                All Journals
+              </Typography>
+            </MenuItem>
+          </Menu>
+        </>
+      )}
     </>
   );
 
@@ -105,23 +125,42 @@ function SideBar({menuItemsSidebar}) {
         marginTop: "150px",
       }}
     >
+      {!adminId && (
+        <Button
+          component={Link}
+          to="/dashboard/accountInfo"
+          variant="contained"
+          sx={{
+            backgroundColor: "primary.main",
+            color: "white.main",
+            "&:hover": { backgroundColor: "primary.hover" },
+          }}
+        >
+          Account
+        </Button>
+      )}
+
       <Button
+        onClick={handleLogout}
         component={Link}
-        to="/dashboard/accountInfo"
-        variant="contained"
-        sx={{
-          backgroundColor: "primary.main",
-          color: "white.main",
-          "&:hover": { backgroundColor: "primary.hover" },
-        }}
+        to="/"
+        variant={adminId ? "contained" : "text"}
+        sx={
+          adminId
+            ? {
+                backgroundColor: "primary.main",
+                color: "white.main",
+                "&:hover": { backgroundColor: "primary.hover" },
+              }
+            : {}
+        }
       >
-        Account
-      </Button>
-      <Button onClick={handleLogout} component={Link} to="/">
         Log Out
       </Button>
     </Box>
   );
+
+  const userId = user?.user?._id;
 
   return (
     <ThemeProvider theme={theme}>
@@ -154,15 +193,25 @@ function SideBar({menuItemsSidebar}) {
             PaperProps={{ sx: { width: 220, backgroundColor: "white.main" } }}
           >
             <Box sx={{ padding: "20px", position: "relative" }}>
-              <IconButton onClick={toggleDrawer(false)} sx={{ position: "absolute", top: 15, right: 8 }}>
+              <IconButton
+                onClick={toggleDrawer(false)}
+                sx={{ position: "absolute", top: 15, right: 8 }}
+              >
                 <CloseRoundedIcon />
               </IconButton>
               <Typography variant="h5" color="primary.main" fontWeight={600}>
                 SheMatters
               </Typography>
-              <Box sx={{ display: "flex", flexDirection: "column", gap: 2, marginTop: 2 }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 2,
+                  marginTop: 2,
+                }}
+              >
                 {renderMenuButtons()}
-                {journalingDropdown}
+                {userId !== adminId && journalingDropdown}
               </Box>
               {accountAndLogoutButtons}
             </Box>
@@ -185,7 +234,7 @@ function SideBar({menuItemsSidebar}) {
               SheMatters
             </Typography>
             {renderMenuButtons()}
-            {journalingDropdown}
+            {userId !== adminId && journalingDropdown}
           </Box>
           {accountAndLogoutButtons}
         </Drawer>

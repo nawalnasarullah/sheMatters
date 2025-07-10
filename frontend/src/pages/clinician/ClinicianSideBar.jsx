@@ -18,12 +18,20 @@ import EventNoteRoundedIcon from "@mui/icons-material/EventNoteRounded";
 import LibraryBooksRoundedIcon from "@mui/icons-material/LibraryBooksRounded";
 import { Link } from "react-router-dom";
 import { useGetMeQuery, useLazyLogoutQuery } from "../../redux/api/psychologistAuthApi";
+import { clearPsychologistInfo } from "../../redux/features/psychologistAuthSlice.js";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import theme from "../../components/Theme.jsx";
+import { persistor } from "../../redux/store.js";
 
 function SideBar() {
+
+  const dispatch = useDispatch();
   const { data } = useGetMeQuery();
+  const psychologistId = useSelector(
+    (state) => state.psychologistAuth?.psychologist?._id
+  );
   const [logout] = useLazyLogoutQuery();
   const navigate = useNavigate();
 
@@ -48,6 +56,8 @@ function SideBar() {
 
   const handleLogout = async () => {
     const res = await logout().unwrap();
+    dispatch(clearPsychologistInfo());
+     persistor.purge(); 
     console.log("logout", res);
     navigate(0);
   };
@@ -208,7 +218,7 @@ function SideBar() {
                     },
                   }}
                   component={Link}
-                  to="/dashboard/journal"
+                  to={`/clinician/dashboard/patients-with-journals/${psychologistId}`}
                 >
                   <Typography variant="h5" color="primary.main" sx={{ fontSize: "0.8rem", fontWeight: "600", textTransform: "Uppercase" }}>
                     View Patients
@@ -321,6 +331,8 @@ function SideBar() {
             </Button> */}
             
             <Button
+            component={Link}
+            to={`/clinician/dashboard/patients-with-journals/${psychologistId}`}
               sx={{
                 display: "flex",
                 alignItems: "center",

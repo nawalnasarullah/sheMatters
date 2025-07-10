@@ -3,9 +3,9 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { useLoginUserMutation } from "../redux/api/authApi";
-import { useRegisterUserMutation } from "../redux/api/authApi";
-import { setUserInfo } from "../redux/features/authSlice";
+import { useLoginAdminMutation } from "../redux/api/adminApi";
+import { useRegisterAdminMutation } from "../redux/api/adminApi";
+import { setAdminInfo } from "../redux/features/adminSlice";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 function LoginSignupAdmin() {
@@ -19,8 +19,8 @@ function LoginSignupAdmin() {
     setIsSignUpMode(false);
   };
 
-  const [registerUser] = useRegisterUserMutation();
-  const [loginUser] = useLoginUserMutation();
+  const [registerAdmin] = useRegisterAdminMutation();
+  const [loginAdmin] = useLoginAdminMutation();
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -88,18 +88,21 @@ function LoginSignupAdmin() {
       delete values.cPassword;
       values.role = "admin";
 
-      const user = await registerUser(values).unwrap();
-      console.log("ggggggg", user);
+      const admin = await registerAdmin(values).unwrap();
+      console.log("ggggggg", admin);
 
-      if (user && user.success) {
-        toast.success(user.message, {
+      if (admin && admin.success) {
+        toast.success(admin.message, {
           progressClassName: "toast-progress-success",
         });
       } else {
-        toast.error(user.message);
+        toast.error(admin.message);
       }
 
       onSignUpReset();
+      setTimeout(() => {
+        navigate(0);
+      }, 5000);
     },
   });
 
@@ -134,18 +137,17 @@ function LoginSignupAdmin() {
       password: Yup.string().required("Password is required").trim(),
     }),
     onSubmit: async (values) => {
-    
-      const res = await loginUser(values).unwrap();
+      const res = await loginAdmin(values).unwrap();
       console.log("res", res);
 
-      if (res && res.success && res.user.role=='admin') {
-        dispatch(setUserInfo(res));
+      if (res && res.success && res.admin.role == "admin") {
+        dispatch(setAdminInfo(res));
         console.log(res);
 
         toast.success(res.message, {
           progressClassName: "toast-progress-success",
         });
-        navigate("/");
+        navigate("/admin/dashboard");
       } else {
         toast.error(res.message || "You do not have admin access.");
       }
@@ -367,7 +369,12 @@ function LoginSignupAdmin() {
         <div className="panel left-panel">
           <div className="content">
             <h3>New here?</h3>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+            <p>
+              <span className="text-lg">Welcome to SheMatters,</span>{" "}
+              <span className="text-lg font-medium italic">
+                Rant kro, Relax kro
+              </span>
+            </p>
             <button
               className="btn transparent"
               id="sign-up-btn"
@@ -381,7 +388,12 @@ function LoginSignupAdmin() {
         <div className="panel right-panel">
           <div className="content">
             <h3>One of us?</h3>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+            <p>
+              <span className="text-lg">Welcome to SheMatters,</span>{" "}
+              <span className="text-lg font-medium italic">
+                Rant kro, Relax kro
+              </span>
+            </p>
             <button
               className="btn transparent"
               id="sign-in-btn"
@@ -390,7 +402,11 @@ function LoginSignupAdmin() {
               Sign in
             </button>
           </div>
-          <img src="/images/admin-signup.svg" className="image w-[80%]" alt="" />
+          <img
+            src="/images/admin-signup.svg"
+            className="image w-[80%]"
+            alt=""
+          />
         </div>
       </div>
     </div>

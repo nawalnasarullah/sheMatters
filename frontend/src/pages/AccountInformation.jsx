@@ -20,22 +20,88 @@ import { useUpdateUserMutation } from "../redux/api/authApi";
 import { useDispatch } from "react-redux";
 import { updateUserProfile } from "../redux/features/authSlice";
 import { toast, ToastContainer } from "react-toastify";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
+import { questions } from "../components/Data";
+
+const Pill = ({ text, active, handleClick }) => {
+  return (
+    <button
+      onClick={() => handleClick(text)}
+      type="button"
+      className={
+        active
+          ? `bg-secondary rounded-full px-4 py-2 flex items-center`
+          : `bg-primary text-white rounded-full px-4 py-2 flex items-center`
+      }
+    >
+      <Typography variant="body1" fontWeight="bold" className="capitalize">
+        {text.replace(/_/g, " ")}
+      </Typography>
+    </button>
+  );
+};
+
 function AccountInformation() {
-  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
   const [updateUser, { isLoading, isSuccess, isError, error }] =
     useUpdateUserMutation();
-  const { user } = useSelector((state) => state.auth);
+  const all_labels = questions.map((q) => q.label);
+  const [userNonLabels, setUserNonLabels] = useState(
+    user?.user?.labels
+      ? all_labels.filter((label) => !user.user.labels.includes(label))
+      : []
+  );
+
+  const dispatch = useDispatch();
   const [isDisabled, setIsDisabled] = useState(true);
 
+  const input_sx_prop = {
+    "& .MuiPickersInputBase-root ,& .MuiOutlinedInput-root": {
+      borderRadius: "12px",
+      "&:hover fieldset": {
+        borderColor: "primary.dark",
+      },
+
+      "&.Mui-focused": {
+        backgroundColor: "white",
+      },
+    },
+
+    "& .MuiInputBase-input": {
+      padding: "12px",
+      backgroundColor: "white",
+      "&:focus": {
+        backgroundColor: "white",
+      },
+      "&:-webkit-autofill": {
+        WebkitBoxShadow: "0 0 0px 1000px white inset",
+        backgroundColor: "white !important",
+      },
+    },
+
+    "& .MuiInputLabel-root": {
+      fontSize: "15px",
+      color: "primary.main",
+    },
+
+    // Add this new section
+    "& .MuiPickersSectionList-root": {
+      padding: "13px 0",
+    },
+
+    "& .MuiFormHelperText-root": {
+      margin: 0,
+    },
+  };
   const toggleEdit = () => {
     setIsDisabled((state) => !state);
   };
 
   const parseDate = (dateString) => {
     const date = new Date(dateString);
-
-    console.log(date);
-
     const day = String(date.getDate()).padStart(2, "0");
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const year = date.getFullYear();
@@ -65,11 +131,9 @@ function AccountInformation() {
 
   const {
     handleChange,
-    handleBlur,
     handleSubmit,
     handleReset,
     errors,
-    touched,
     values,
     setFieldValue,
   } = useFormik({
@@ -81,52 +145,84 @@ function AccountInformation() {
       phoneNumber: user?.user?.phoneNumber || "",
       dateOfBirth: user?.user?.dateOfBirth
         ? parseDate(user.user.dateOfBirth)
-        : "",
+        : null,
       city: user?.user?.city || "",
       about: user?.user?.about || "",
       avatar: user?.user?.avatar || "",
+      labels: user?.user?.labels || [],
     },
     enableReinitialize: true,
     validationSchema: Yup.object({
+      email: Yup.string().email("Email format is incorrect"),
+
       firstName: Yup.string()
         .matches(/^[A-Za-z ]*$/, "Please enter valid first name")
         .min(3, "Minimum 3 letters")
         .max(25, "Maximum 25 letters")
         .required("First Name is required")
         .trim(),
+
       lastName: Yup.string()
         .matches(/^[A-Za-z ]*$/, "Please enter valid last name")
         .min(3, "Minimum 3 letters")
         .max(25, "Maximum 25 letters")
         .required("Last Name is required")
         .trim(),
+
       username: Yup.string()
         .matches(/^[A-Za-z ]*$/, "Please enter valid Username")
         .min(3, "Minimum 3 letters")
         .max(25, "Maximum 25 letters")
         .required("Username is required")
         .trim(),
-      dateOfBirth: Yup.date(),
+
+      phoneNumber: Yup.string().matches(
+        /^(\+)?[0-9]{10,15}$/,
+        "Phone Number format is incorrect"
+      ), // 'Matches phone number with 10-15 digits and + is allowed'
+
+      dateOfBirth: Yup.date()
+        .required("Date is required")
+        .max(new Date(), "Date cannot be in the future"),
+
       city: Yup.string(),
       about: Yup.string(),
     }),
 
     onSubmit: async (values, errors) => {
-      console.log("submitted values : ", values);
       try {
-        console.log("submission errors : ", errors);
         const res = await updateUser({
           ...values,
           _id: user.user._id,
         }).unwrap();
+
         dispatch(updateUserProfile({ user: res.user }));
         setIsDisabled(true);
-        console.log("updated user info : ", res);
       } catch (err) {
-        console.log("error : ", err);
+        toast.error("Error updating information");
+        console.log("Error updating User Information : ", err);
       }
     },
   });
+
+  const handleAddLabelToUser = (new_label) => {
+    if (isDisabled) return;
+
+    setFieldValue("labels", [...values.labels, new_label]);
+    setUserNonLabels((labels) =>
+      userNonLabels.filter((label) => label != new_label)
+    );
+  };
+
+  const handleRemoveLabelFromUser = (new_label) => {
+    if (isDisabled) return;
+
+    setFieldValue(
+      "labels",
+      values.labels.filter((label) => label != new_label)
+    );
+    setUserNonLabels((labels) => [...labels, new_label]);
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -185,6 +281,8 @@ function AccountInformation() {
               <Grid container spacing={3}>
                 <Grid item xs={12} md={12}>
                   <TextField
+                    error={errors.username}
+                    helperText={errors.username ? errors.username : " "}
                     disabled={isDisabled}
                     label="User Name"
                     variant="outlined"
@@ -215,36 +313,13 @@ function AccountInformation() {
                         </IconButton>
                       ),
                     }}
-                    sx={{
-                      "& .MuiOutlinedInput-root": {
-                        borderRadius: "12px",
-                        "&:hover fieldset": {
-                          borderColor: "primary.dark",
-                        },
-                        "&.Mui-focused": {
-                          backgroundColor: "white",
-                        },
-                      },
-                      "& .MuiInputBase-input": {
-                        padding: "12px",
-                        backgroundColor: "white",
-                        "&:focus": {
-                          backgroundColor: "white",
-                        },
-                        "&:-webkit-autofill": {
-                          WebkitBoxShadow: "0 0 0px 1000px white inset",
-                          backgroundColor: "white !important",
-                        },
-                      },
-                      "& .MuiInputLabel-root": {
-                        fontSize: "15px",
-                        color: "primary.main",
-                      },
-                    }}
+                    sx={input_sx_prop}
                   />
                 </Grid>
                 <Grid item xs={12} md={6}>
                   <TextField
+                    error={errors.firstName}
+                    helperText={errors.firstName ? errors.firstName : " "}
                     disabled={isDisabled}
                     label="First Name"
                     variant="outlined"
@@ -275,36 +350,13 @@ function AccountInformation() {
                         </IconButton>
                       ),
                     }}
-                    sx={{
-                      "& .MuiOutlinedInput-root": {
-                        borderRadius: "12px",
-                        "&:hover fieldset": {
-                          borderColor: "primary.dark",
-                        },
-                        "&.Mui-focused": {
-                          backgroundColor: "white",
-                        },
-                      },
-                      "& .MuiInputBase-input": {
-                        padding: "12px",
-                        backgroundColor: "white",
-                        "&:focus": {
-                          backgroundColor: "white",
-                        },
-                        "&:-webkit-autofill": {
-                          WebkitBoxShadow: "0 0 0px 1000px white inset",
-                          backgroundColor: "white !important",
-                        },
-                      },
-                      "& .MuiInputLabel-root": {
-                        fontSize: "15px",
-                        color: "primary.main",
-                      },
-                    }}
+                    sx={input_sx_prop}
                   />
                 </Grid>
                 <Grid item xs={12} md={6}>
                   <TextField
+                    error={errors.lastName}
+                    helperText={errors.lastName ? errors.lastName : " "}
                     disabled={isDisabled}
                     label="Last Name"
                     variant="outlined"
@@ -335,36 +387,13 @@ function AccountInformation() {
                         </IconButton>
                       ),
                     }}
-                    sx={{
-                      "& .MuiOutlinedInput-root": {
-                        borderRadius: "12px",
-                        "&:hover fieldset": {
-                          borderColor: "primary.dark",
-                        },
-                        "&.Mui-focused": {
-                          backgroundColor: "white",
-                        },
-                      },
-                      "& .MuiInputBase-input": {
-                        padding: "12px",
-                        backgroundColor: "white",
-                        "&:focus": {
-                          backgroundColor: "white",
-                        },
-                        "&:-webkit-autofill": {
-                          WebkitBoxShadow: "0 0 0px 1000px white inset",
-                          backgroundColor: "white !important",
-                        },
-                      },
-                      "& .MuiInputLabel-root": {
-                        fontSize: "15px",
-                        color: "primary.main",
-                      },
-                    }}
+                    sx={input_sx_prop}
                   />
                 </Grid>
                 <Grid item xs={12} md={6}>
                   <TextField
+                    error={errors.phoneNumber}
+                    helperText={errors.phoneNumber ? errors.phoneNumber : " "}
                     disabled={isDisabled}
                     label="Phone Number"
                     variant="outlined"
@@ -394,36 +423,13 @@ function AccountInformation() {
                         </IconButton>
                       ),
                     }}
-                    sx={{
-                      "& .MuiOutlinedInput-root": {
-                        borderRadius: "12px",
-                        "&:hover fieldset": {
-                          borderColor: "primary.dark",
-                        },
-                        "&.Mui-focused": {
-                          backgroundColor: "white",
-                        },
-                      },
-                      "& .MuiInputBase-input": {
-                        padding: "12px",
-                        backgroundColor: "white",
-                        "&:focus": {
-                          backgroundColor: "white",
-                        },
-                        "&:-webkit-autofill": {
-                          WebkitBoxShadow: "0 0 0px 1000px white inset",
-                          backgroundColor: "white !important",
-                        },
-                      },
-                      "& .MuiInputLabel-root": {
-                        fontSize: "15px",
-                        color: "primary.main",
-                      },
-                    }}
+                    sx={input_sx_prop}
                   />
                 </Grid>
                 <Grid item xs={12} md={6}>
                   <TextField
+                    error={errors.email}
+                    helperText={errors.email ? errors.email : " "}
                     disabled={isDisabled}
                     label="Email"
                     variant="outlined"
@@ -453,96 +459,45 @@ function AccountInformation() {
                         </IconButton>
                       ),
                     }}
-                    sx={{
-                      "& .MuiOutlinedInput-root": {
-                        borderRadius: "12px",
-                        "&:hover fieldset": {
-                          borderColor: "primary.dark",
-                        },
-                        "&.Mui-focused": {
-                          backgroundColor: "white",
-                        },
-                      },
-                      "& .MuiInputBase-input": {
-                        padding: "12px",
-                        backgroundColor: "white",
-                        "&:focus": {
-                          backgroundColor: "white",
-                        },
-                        "&:-webkit-autofill": {
-                          WebkitBoxShadow: "0 0 0px 1000px white inset",
-                          backgroundColor: "white !important",
-                        },
-                      },
-                      "& .MuiInputLabel-root": {
-                        fontSize: "15px",
-                        color: "primary.main",
-                      },
-                    }}
+                    sx={input_sx_prop}
                   />
                 </Grid>
                 <Grid item xs={12} md={6}>
-                  <TextField
-                    disabled={isDisabled}
-                    label="Date Of Birth"
-                    variant="outlined"
-                    fullWidth
-                    name="dateOfBirth"
-                    value={values.dateOfBirth}
-                    onChange={handleChange}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    InputProps={{
-                      endAdornment: (
-                        <IconButton
-                          onClick={toggleEdit}
-                          sx={{
-                            "&:hover": { backgroundColor: "primary.light" },
-                          }}
-                        >
-                          <EditRoundedIcon
-                            sx={{
-                              fontSize: "20px",
-                              "&:hover": {
-                                color: "primary.main",
-                                transition: "0.3s",
-                              },
-                            }}
-                          />
-                        </IconButton>
-                      ),
-                    }}
-                    sx={{
-                      "& .MuiOutlinedInput-root": {
-                        borderRadius: "12px",
-                        "&:hover fieldset": {
-                          borderColor: "primary.dark",
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker
+                      value={
+                        values.dateOfBirth ? dayjs(values.dateOfBirth) : dayjs()
+                      }
+                      error={errors.dateOfBirth}
+                      helperText={errors.dateOfBirth ? errors.dateOfBirth : " "}
+                      label="Select a date"
+                      name="dateOfBirth"
+                      onChange={(val) => setFieldValue("dateOfBirth", val.$d)}
+                      variant="outlined"
+                      fullWidth
+                      disabled={isDisabled}
+                      slotProps={{
+                        textField: {
+                          fullWidth: true,
+                          error: errors.dateOfBirth,
+                          helperText: errors.dateOfBirth
+                            ? errors.dateOfBirth
+                            : " ",
+                          sx: {
+                            ...input_sx_prop,
+                            "& .MuiInputLabel-root.Mui-disabled": {
+                              color: "rgba(0, 0, 0, 0.38)",
+                            },
+                          },
                         },
-                        "&.Mui-focused": {
-                          backgroundColor: "white",
-                        },
-                      },
-                      "& .MuiInputBase-input": {
-                        padding: "12px",
-                        backgroundColor: "white",
-                        "&:focus": {
-                          backgroundColor: "white",
-                        },
-                        "&:-webkit-autofill": {
-                          WebkitBoxShadow: "0 0 0px 1000px white inset",
-                          backgroundColor: "white !important",
-                        },
-                      },
-                      "& .MuiInputLabel-root": {
-                        fontSize: "15px",
-                        color: "primary.main",
-                      },
-                    }}
-                  />
+                      }}
+                    />
+                  </LocalizationProvider>
                 </Grid>
                 <Grid item xs={12} md={6}>
                   <TextField
+                    error={errors.city}
+                    helperText={errors.city ? errors.city : " "}
                     disabled={isDisabled}
                     label="City"
                     variant="outlined"
@@ -573,35 +528,50 @@ function AccountInformation() {
                         </IconButton>
                       ),
                     }}
-                    sx={{
-                      "& .MuiOutlinedInput-root": {
-                        borderRadius: "12px",
-                        "&:hover fieldset": {
-                          borderColor: "primary.dark",
-                        },
-                        "&.Mui-focused": {
-                          backgroundColor: "white",
-                        },
-                      },
-                      "& .MuiInputBase-input": {
-                        padding: "12px",
-                        backgroundColor: "white",
-                        "&:focus": {
-                          backgroundColor: "white",
-                        },
-                        "&:-webkit-autofill": {
-                          WebkitBoxShadow: "0 0 0px 1000px white inset",
-                          backgroundColor: "white !important",
-                        },
-                      },
-                      "& .MuiInputLabel-root": {
-                        fontSize: "15px",
-                        color: "primary.main",
-                      },
-                    }}
+                    sx={input_sx_prop}
                   />
                 </Grid>
-                <Grid item xs={12} md={12}>
+                <Grid item sx={{ paddingTop: "0 !important" }} xs={12} md={12}>
+                  <Typography
+                    variant="h5"
+                    color="primary.main"
+                    sx={{ fontWeight: 600, fontSize: "1.4rem" }}
+                    gutterBottom
+                  >
+                    Labels
+                  </Typography>
+                  <Box
+                    sx={{
+                      border: "1px solid #ccc",
+                      borderRadius: "12px",
+                      padding: 2,
+                      minHeight: 100,
+                    }}
+                  >
+                    <Box className="flex flex-wrap gap-4 mb-4">
+                      {values.labels.map((label) => (
+                        <Pill
+                          key={label}
+                          active={true}
+                          text={label}
+                          handleClick={handleRemoveLabelFromUser}
+                        />
+                      ))}
+                    </Box>
+                    <Box className="flex flex-wrap gap-4">
+                      {userNonLabels.map((label) => (
+                        <Pill
+                          key={label}
+                          active={false}
+                          color="primary.main"
+                          text={label}
+                          handleClick={handleAddLabelToUser}
+                        />
+                      ))}
+                    </Box>
+                  </Box>
+                </Grid>
+                <Grid sx={{ pt: 0 }} item xs={12} md={12}>
                   <TextField
                     disabled={isDisabled}
                     label="About"
@@ -634,45 +604,31 @@ function AccountInformation() {
                         </IconButton>
                       ),
                     }}
-                    sx={{
-                      "& .MuiOutlinedInput-root": {
-                        borderRadius: "12px",
-                        "&:hover fieldset": {
-                          borderColor: "primary.dark",
-                        },
-                        "&.Mui-focused": {
-                          backgroundColor: "white", // Keeps background white when focused
-                        },
-                      },
-                      "& .MuiInputBase-input": {
-                        padding: 0,
-                        backgroundColor: "white", // Ensures the input always has a white background
-                        "&:focus": {
-                          backgroundColor: "white", // Keeps white background when typing
-                        },
-                        "&:-webkit-autofill": {
-                          WebkitBoxShadow: "0 0 0px 1000px white inset", // Forces white background for autofill
-                          backgroundColor: "white !important", // Ensures autofill stays white
-                        },
-                      },
-                      "& .MuiInputLabel-root": {
-                        fontSize: "15px",
-                        color: "primary.main",
-                      },
-                    }}
+                    sx={input_sx_prop}
                   />
                 </Grid>
               </Grid>
             </Box>
-            <Button
-              onClick={() => console.log("Button clicked")}
-              type="submit"
-              disabled={isLoading}
-              variant="contained"
-              sx={{ mt: 2 }}
-            >
-              Save Changes
-            </Button>
+            {isDisabled ? (
+              <Button
+                onClick={() => setIsDisabled(false)}
+                type="submit"
+                disabled={isLoading}
+                variant="contained"
+                sx={{ mt: 2 }}
+              >
+                Edit Profile
+              </Button>
+            ) : (
+              <Button
+                onClick={() => setIsDisabled(true)}
+                disabled={isLoading}
+                variant="contained"
+                sx={{ mt: 2 }}
+              >
+                Save Changes
+              </Button>
+            )}
           </form>
         </div>
         <ToastContainer />
