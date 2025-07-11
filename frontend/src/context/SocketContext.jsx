@@ -175,7 +175,11 @@ export const SocketContextProvider = (props) => {
   useEffect(() => {
     if (!user?._id) return;
 
-    const newSocket = io(import.meta.env.VITE_API_URL, {withCredentials: true});
+    const newSocket = io(import.meta.env.VITE_API_URL, {
+    withCredentials: true,
+    transports: ["websocket", "polling"],
+    secure: true,
+  });
     console.log("set new socket : ", newSocket);
     setSocket(newSocket);
 
