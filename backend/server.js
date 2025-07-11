@@ -19,7 +19,7 @@ import cors from "cors";
 import { app, server,  initSocket } from "./config/socket.js";
 
 const corsOption = {
-    origin: "http://localhost:5173",
+    origin: ["http://localhost:5173", "https://shematters.netlify.app"],
     credentials: true
 }
 
