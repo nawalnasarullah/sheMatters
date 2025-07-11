@@ -6,6 +6,13 @@ import { CallRecord } from "../models/callRecord.model.js";
 const app = express();
 const server = http.createServer(app);
 
+const io = new Server(server, {
+  cors: {
+    origin: ["http://localhost:5173", "https://shematters.netlify.app"],
+    credentials: true,
+  },
+});
+
 //this creates a peer server which is responsible for handling peer to peer connections
 //gg ez hqhqhqhqhq
 const peerServer = ExpressPeerServer(server, {
@@ -14,12 +21,12 @@ const peerServer = ExpressPeerServer(server, {
 
 app.use("/peerjs", peerServer);
 
-const io = new Server(server, {
-  cors: {
-    origin: ["http://localhost:5173", "https://shematters.netlify.app"],
-    credentials: true,
-  },
-});
+// const io = new Server(server, {
+//   cors: {
+//     origin: ["http://localhost:5173", "https://shematters.netlify.app"],
+//     credentials: true,
+//   },
+// });
 
 // Track online users
 const userSocketMap = {}; // { userId: socket.id }
