@@ -101,6 +101,10 @@ const app = express();
 app.set("trust proxy", 1); // ✅ Trust Railway/Netlify Proxy Headers
 
 const server = http.createServer(app);
+app.use(cors({
+  origin: ["http://localhost:5173", "https://shematters.netlify.app"],
+  credentials: true,
+}));
 
 // Socket.IO setup
 const io = new Server(server, {
@@ -125,10 +129,6 @@ cloudinary.config({
 });
 
 // Middleware setup
-app.use(cors({
-  origin: ["http://localhost:5173", "https://shematters.netlify.app"],
-  credentials: true,
-}));
 app.use('/payment', webhookRoutes); // Stripe Webhook before body-parser JSON!
 app.use(cookieParser());
 app.use(express.json({ limit: "50mb" }));
