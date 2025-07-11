@@ -4,7 +4,7 @@ import {setPsychologistInfo, clearPsychologistInfo} from "../features/psychologi
 export const psychologistAuthApi = createApi({
   reducerPath: "psychologistAuthApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:8000/",
+    baseUrl: import.meta.env.VITE_API_URL,
     credentials: "include",
   }),
   endpoints: (builder) => ({

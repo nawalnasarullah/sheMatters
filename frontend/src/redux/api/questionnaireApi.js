@@ -2,7 +2,7 @@
 
 // export const questionnaireApi = createApi({
 //   reducerPath: "questionnaireApi",
-//   baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:8000/" }),
+//   baseQuery: fetchBaseQuery({ baseUrl: import.meta.env.VITE_API_URL }),
 //   endpoints: (builder) => ({
 
 //     saveAnswers : builder.query({

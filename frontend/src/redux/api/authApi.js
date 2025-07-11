@@ -4,7 +4,7 @@ import { clearUserInfo, setUserInfo } from "../features/authSlice"
 export const authApi = createApi({
   reducerPath: "authApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:8000/",
+    baseUrl: "https://shematters-production.up.railway.app",
     credentials: "include",
   }),
   endpoints: (builder) => ({

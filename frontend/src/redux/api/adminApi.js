@@ -4,7 +4,7 @@ import { setAdminInfo, clearAdminInfo } from "../features/adminSlice";
 export const adminApi = createApi({
   reducerPath: "adminApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:8000/",
+    baseUrl: import.meta.env.VITE_API_URL,
     credentials: "include",
   }),
   tagTypes: ["Admin", "Psychologists", "Users"],

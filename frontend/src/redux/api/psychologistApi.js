@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const psychologistApi = createApi({
   reducerPath: "psychologistApi",
   baseQuery: fetchBaseQuery({
-     baseUrl: "http://localhost:8000/" 
+     baseUrl: import.meta.env.VITE_API_URL 
     }),
   tagTypes: ["Psychologist", "Patients"],
   endpoints: (builder) => ({
