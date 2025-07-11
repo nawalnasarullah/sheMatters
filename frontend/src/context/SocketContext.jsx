@@ -175,7 +175,7 @@ export const SocketContextProvider = (props) => {
   useEffect(() => {
     if (!user?._id) return;
 
-    const newSocket = io("http://localhost:8000");
+    const newSocket = io(import.meta.env.VITE_API_URL, {withCredentials: true});
     console.log("set new socket : ", newSocket);
     setSocket(newSocket);
 
