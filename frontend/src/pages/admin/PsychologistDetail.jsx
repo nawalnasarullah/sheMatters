@@ -36,7 +36,13 @@ function PsychologistDetail() {
     }
   };
 
-  if (isLoading) return <CircularProgress variant="soft" className="mx-auto mt-10" />;
+  if (isLoading) return <div className="flex justify-center items-center h-screen">
+        <CircularProgress
+          style={{ color: "var(--web-primary)" }}
+          size={48}
+          thickness={4}
+        />
+      </div>
   if (error || !psychologist)
     return <Typography color="error">Error loading data</Typography>;
 

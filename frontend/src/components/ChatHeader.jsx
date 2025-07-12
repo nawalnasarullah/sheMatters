@@ -23,7 +23,13 @@ function ChatHeader({ currentUser }) {
 
   if (!selectedUser) return null;
   if(!onlineUsers)
-    return <CircularProgress variant="soft" className="mx-auto mt-10" />
+    return  <div className="flex justify-center items-center h-screen">
+          <CircularProgress
+            style={{ color: "var(--web-primary)" }}
+            size={30}
+            thickness={4}
+          />
+        </div>
     
   return (
     <ThemeProvider theme={theme}>

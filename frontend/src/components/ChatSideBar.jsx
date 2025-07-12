@@ -179,7 +179,13 @@ function ChatSidebar({ user }) {
     </Box>
   );
 
-  if (isLoading) return <CircularProgress variant="soft" className="mx-auto mt-10" />;
+  if (isLoading) return <div className="flex justify-center items-center h-screen">
+        <CircularProgress
+          style={{ color: "var(--web-primary)" }}
+          size={30}
+          thickness={4}
+        />
+      </div>
   if (isError)
     return <Typography sx={{ p: 2 }}>Error loading users.</Typography>;
 

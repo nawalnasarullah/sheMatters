@@ -69,9 +69,13 @@ export default function PsychologistProfile() {
 
   if (isLoading) {
     return (
-      <div className="text-center py-10">
-        <CircularProgress variant="soft"/>
-      </div>
+      <div className="flex justify-center items-center h-screen">
+            <CircularProgress
+              style={{ color: "var(--web-primary)" }}
+              size={48}
+              thickness={4}
+            />
+          </div>
     );
   }
 
