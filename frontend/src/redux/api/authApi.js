@@ -4,7 +4,7 @@ import { clearUserInfo, setUserInfo } from "../features/authSlice"
 export const authApi = createApi({
   reducerPath: "authApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://shematters-production.up.railway.app",
+    baseUrl: import.meta.env.VITE_API_URL,
     credentials: "include",
   }),
   endpoints: (builder) => ({

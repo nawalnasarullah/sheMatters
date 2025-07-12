@@ -8,7 +8,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origins: ["http://localhost:5173", "https://shematters.netlify.app"],
+    origin: ["http://localhost:5173", "https://shematters.netlify.app"],
     methods: ["GET", "POST"],
     credentials: true,
   },

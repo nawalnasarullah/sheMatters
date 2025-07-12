@@ -12,7 +12,7 @@ function UserConsultingPage() {
   const selectedUser = useSelector((state) => state.chat.selectedUser);
   const user = data.user;
   const isSmallOrMediumScreen = useMediaQuery(theme.breakpoints.down('md'));
-
+  console.log("UserConsultingPage user:", user);
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ display: 'flex', height: '100vh' }}>
