@@ -77,13 +77,24 @@ export default class Auth {
     console.log('logout was called');
     
     try {
-      res
-        .cookie("auth_token", null, { expiresIn: Date().now })
-        .json({
-          success: true,
-          // token,
-          message: "You are logged out"
-        });
+      // res
+      //   .cookie("auth_token", null, { expiresIn: Date().now })
+      //   .json({
+      //     success: true,
+      //     // token,
+      //     message: "You are logged out"
+      //   });
+
+      res.clearCookie("auth_token", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "None",
+    });
+
+      res.json({
+      success: true,
+      message: "You are logged out",
+    });
     } catch (error) {
       next(error);
     }
