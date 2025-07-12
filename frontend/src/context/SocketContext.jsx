@@ -192,13 +192,13 @@ export const SocketContextProvider = (props) => {
   useEffect(() => {
     if (peerRef.current || !socket || !user._id) return;
 
-    // const peer = new Peer();
-    const peer = new Peer(undefined, {
-  host: "shematters-production.up.railway.app",
-  port: 443,
-  path: "/peerjs",
-  secure: true,
-});
+    const peer = new Peer();
+//     const peer = new Peer(undefined, {
+//   host: "shematters-production.up.railway.app",
+//   port: 443,
+//   path: "/peerjs",
+//   secure: true,
+// });
     setPeer(peer);
 
     peer.on("open", (id) => {
