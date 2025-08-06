@@ -1,5 +1,9 @@
 # 💖 SheMatters - Empowering Women's Mental Health
 
+🌐 **Live Demo:**  
+- 🔗 [Frontend](https://shematters.netlify.app/)  
+- 🛠️ [Backend API](https://shematters-production.up.railway.app/)
+
 **SheMatters** is an online psychotherapy platform designed exclusively for women in Pakistan. It provides a **safe, judgment-free digital space** where women can access certified mental health professionals, share their stories, track their mental health progress, and connect with others going through similar experiences.
 
 ---
@@ -10,8 +14,8 @@
 - 📔 **Journaling Tool** to track mood and emotional well-being
 - 📅 **Appointment Scheduling System**
 - 🔐 **Secure Login/Signup with Role-Based Authentication**
-- 💬 **Video/Audio Calls** with Psychologists (Coming Soon)
-- 📰 **Blog Section** to learn about mental health topics
+- 💬 **Video/Audio Calls** with Psychologists 
+- 📰 **Blog Section** to learn about mental health topics (Planned)
 - 📈 **Progress Dashboard** for users to see their journey
 - 🎗️ **Community Forums** for anonymous discussions (Planned)
 
@@ -24,9 +28,9 @@
 | **Frontend**  | React.js, Material UI, Tailwind CSS, RTK Query |
 | **Backend**   | Node.js, Express.js                         |
 | **Database**  | MongoDB (Mongoose)                          |
-| **Authentication** | JWT, Firebase Auth (for social login - planned) |
+| **Authentication** | JWT + HTTP-only Cookies, RBAC (Role-Based Access Control) |
 | **APIs**      | RESTful APIs (built using Express)          |
-| **Communication** | WebRTC (Planned for video sessions)        |
+| **Communication** | Socket.IO (Real-Time Chat), Peer.js + WebRTC (Video/Audio Calls) |
 | **State Management** | Redux Toolkit (RTK Query for API handling) |
 
 ---
@@ -57,7 +61,7 @@ cd frontend
 npm install
 
 # 4. Install backend dependencies
-cd ../backend
+cd backend
 npm install
 
 # 5. Set up environment variables
@@ -67,8 +71,8 @@ Create a `.env` file in backend with:
 - PORT (optional)
 
 # 6. Run the backend server
-npm run dev
+npm start
 
 # 7. Run the frontend
-cd ../frontend
-npm start
+cd frontend
+npm run dev
