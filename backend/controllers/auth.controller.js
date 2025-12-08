@@ -124,6 +124,7 @@ export default class Auth {
 
   async forgotPassword(req, res, next) {
   try {
+    console.log("Received forgot password request:", req.body);
     const { email } = req.body;
     if (!email) return next(new Error("Please provide an email"));
 
@@ -136,13 +137,17 @@ export default class Auth {
       { expiresIn: "15m" }
     );
 
-    const resetLink = `${process.env.CLIENT_URL}/resetPassword?token=${token}`;
+    // const resetLink = `${process.env.CLIENT_URL}/resetPassword?token=${token}`;
+  
+    const resetLink = `https://shematters.netlify.app/resetPassword?token=${token}`;
+
     user.resetPasswordToken = token;
     user.resetPasswordExpires = Date.now() + 15 * 60 * 1000;
 
     await user.save();
 
     try {
+      console.log("Sending password reset email to ---:", user.email);
       await sendEmail(user.email, resetLink);
     } catch (emailError) {
       console.error("Failed to send email:", emailError);
