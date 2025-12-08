@@ -100,27 +100,66 @@ export default class Auth {
     }
   }
 
+  // async forgotPassword(req, res, next) {
+  //   const { email } = req.body;
+  //   if (!email) return next(new Error("Please provide an email"));
+  //   const user = await User.findOne({ email });
+  //   if (!user) return next(new Error("Email not registered"));
+
+  //   const token = jwt.sign({ id: user._id, email: user.email,type: 'password-reset' }, process.env.JWT_SECRET, { expiresIn: '15m' });
+
+  //   const resetLink = `${process.env.CLIENT_URL}/resetPassword?token=${token}`;
+  //   user.resetPasswordToken = token;
+  //   user.resetPasswordExpires = Date.now() + 15 * 60 * 1000;
+  //   await user.save();
+
+  //   await sendEmail(user.email, resetLink);
+    
+
+  //   res.json({
+  //     success: true,
+  //     message: "Password reset link sent to your email",
+  // });
+  // }
+
   async forgotPassword(req, res, next) {
+  try {
     const { email } = req.body;
     if (!email) return next(new Error("Please provide an email"));
+
     const user = await User.findOne({ email });
     if (!user) return next(new Error("Email not registered"));
 
-    const token = jwt.sign({ id: user._id, email: user.email,type: 'password-reset' }, process.env.JWT_SECRET, { expiresIn: '15m' });
+    const token = jwt.sign(
+      { id: user._id, email: user.email, type: "password-reset" },
+      process.env.JWT_SECRET,
+      { expiresIn: "15m" }
+    );
 
     const resetLink = `${process.env.CLIENT_URL}/resetPassword?token=${token}`;
     user.resetPasswordToken = token;
     user.resetPasswordExpires = Date.now() + 15 * 60 * 1000;
+
     await user.save();
 
-    await sendEmail(user.email, resetLink);
-    
+    try {
+      await sendEmail(user.email, resetLink);
+    } catch (emailError) {
+      console.error("Failed to send email:", emailError);
+      return next(new Error("Failed to send reset email. Try again later."));
+    }
 
     res.json({
       success: true,
       message: "Password reset link sent to your email",
-  });
+    });
+
+  } catch (err) {
+    console.error("Forgot Password Error:", err);
+    next(err);
   }
+}
+
 
   async resetPassword(req, res, next) {
     console.log("Received request to reset password:", req.body);
